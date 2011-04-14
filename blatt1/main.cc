@@ -63,7 +63,7 @@ int main() {
   double anomalie_middle = anomalie_excent;
   double phi = 0;
   int i = 0;
-  while (((anomalie_excent - anomalie_excent_last) < 10^-9) || i < 5) {
+  while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 5) {
 	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
 	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
