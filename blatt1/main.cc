@@ -1,4 +1,5 @@
 ﻿#include <cmath>
+#include <iostream>
 
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
@@ -36,6 +37,10 @@ float e_next(float anomalie_excent, float excent, float anomalie_middle) {
   }
 }
 
+float m_current(float anomalie_excent, float excent) {
+  return anomalie_excent - excent * sin(anomalie_excent);
+}
+
   
 
 
@@ -48,9 +53,13 @@ float e_next(float anomalie_excent, float excent, float anomalie_middle) {
 	 
 	 
 int main() {
-  float anomalie_excent, excent, anomalie_middle;
+  float anomalie_excent = 0;
+  float excent = 0.205;
+  float anomalie_middle = 0;
   while (true) {
+	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
+	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << std::endl;
   }
 
   return 0;
