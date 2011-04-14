@@ -56,7 +56,7 @@ float m_current(float anomalie_excent, float excent, float anomalie_middle) {
 int main() {
   float anomalie_excent = 1.7;
   float excent = 0.967;
-  float anomalie_middle = 0.1;
+  float anomalie_middle = anomalie_excent;
   int i = 0;
   while (i < 5) {
 	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << std::endl;
