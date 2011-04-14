@@ -61,21 +61,31 @@ double m_current(double anomalie_excent, double excent, double anomalie_middle) 
 	 
 	 
 int main() {
-  double anomalie_excent = 1.7;
+  double t = 0;
+  double t0 = 0;
+  double temp_except = 0;
+  double excent = 0.205;
+  double P = 100;
+  
+  for (int i = 0; i < 100; i++) {
+    t += 10 * i;
+	
+	temp_except = generate_anomalie_excent(excent, t, t0, P);
+	phi = calc_phi(anomalie_excent, excent);
+	std::cout << "phi:" << phi << std::endl;
+  }
+  return 0;
+}
+
+float generate_anomalie_excent(double excent, double t, double t0, double P) {
   double anomalie_excent_last = 0;
-  double excent = 0.1;
-  double anomalie_middle = 0.2;
-  double phi = 0;
+  double anomalie_middle = 2 * 3.1415926 * (t - t0) / (P);
+  double anomalie_excent = anomalie_middle;
+  
   int i = 0;
   while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 100) {
 	// std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
-	std::cout << "phi:" << phi << std::endl;
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
-	//anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
-	phi = calc_phi(anomalie_excent, excent);
-
 	i++;
   }
-
-  return 0;
 }
