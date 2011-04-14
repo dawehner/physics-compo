@@ -63,8 +63,8 @@ double m_current(double anomalie_excent, double excent, double anomalie_middle) 
 int main() {
   double anomalie_excent = 1.7;
   double anomalie_excent_last = 0;
-  double excent = 0.9;
-  double anomalie_middle = 0.8;
+  double excent = 0.1;
+  double anomalie_middle = anomalie_excent;
   double phi = 0;
   int i = 0;
   while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 100) {
