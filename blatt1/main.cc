@@ -57,7 +57,7 @@ float m_current(float anomalie_excent, float excent, float anomalie_middle) {
 	 
 int main() {
   float anomalie_excent = 1.7;
-  float excent = 0.967;
+  float excent = 0.2;
   float anomalie_middle = anomalie_excent;
   float phi = 0;
   int i = 0;
