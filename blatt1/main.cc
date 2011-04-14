@@ -86,7 +86,7 @@ int main() {
     t += 10 * i;
 	
 	temp_except = generate_anomalie_excent(excent, t, t0, P);
-	phi = calc_phi(anomalie_excent, excent);
+	phi = calc_phi(temp_except, excent);
 	std::cout << "phi:" << phi << std::endl;
   }
   return 0;
