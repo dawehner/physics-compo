@@ -25,8 +25,8 @@ double iteration_newton(double anomalie_excent, double excent, double anomalie_m
   double result = anomalie_excent
     - (funcvalue / diffvalue);
 	
-  std::cout << "iteration_newton:intput: E:" << anomalie_excent << ":M:" << anomalie_middle << ":e:" << excent << std::endl;
-  std::cout << "iteration_newton: f:" << funcvalue << ":f':" << diffvalue << ":E:" << anomalie_excent << std::endl;
+  // std::cout << "iteration_newton:intput: E:" << anomalie_excent << ":M:" << anomalie_middle << ":e:" << excent << std::endl;
+  // std::cout << "iteration_newton: f:" << funcvalue << ":f':" << diffvalue << ":E:" << anomalie_excent << std::endl;
   return result;
 }
 
@@ -34,7 +34,7 @@ double iteration_newton(double anomalie_excent, double excent, double anomalie_m
  * This code could be OPP.
  */
 double e_next(double anomalie_excent, double excent, double anomalie_middle) {
-  std::cout << "e_next: E:" << anomalie_excent << ":M:" << anomalie_middle << ":e:" << excent << std::endl;
+  // std::cout << "e_next: E:" << anomalie_excent << ":M:" << anomalie_middle << ":e:" << excent << std::endl;
   switch (ITERATION) {
     case ITERATION_EASY:
 	  return iteration_easy(anomalie_excent, excent, anomalie_middle);
@@ -67,8 +67,9 @@ int main() {
   double anomalie_middle = 0.8;
   double phi = 0;
   int i = 0;
-  while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 5) {
-	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
+  while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 100) {
+	// std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
+	std::count << "phi:" << phi << std::endl;
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
 	//anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
 	phi = calc_phi(anomalie_excent, excent);
