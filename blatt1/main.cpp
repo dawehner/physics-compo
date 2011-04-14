@@ -41,3 +41,10 @@ float iteration_newton() {
     - function(anomalie_excent, excent, anomalie_middle)
     / function_diff(anomalie_excent, excent, anomalie_middle);
 }
+
+/**
+ * Generate some variables.
+ */
+ function calc_phi(float anomalie_excent, float excent) {
+   return 2 * atan(
+     sqrt((1+excent)/(1-
