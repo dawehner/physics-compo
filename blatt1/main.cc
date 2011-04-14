@@ -64,7 +64,7 @@ int main() {
   double anomalie_excent = 1.7;
   double anomalie_excent_last = 0;
   double excent = 0.6;
-  double anomalie_middle = anomalie_excent;
+  double anomalie_middle = 0.8;
   double phi = 0;
   int i = 0;
   while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 5) {
