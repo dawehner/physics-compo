@@ -1,4 +1,6 @@
-﻿int main() {
+﻿#include <cmath>
+
+int main() {
   
 }
 
