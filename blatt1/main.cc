@@ -56,10 +56,12 @@ int main() {
   float anomalie_excent = 0;
   float excent = 0.205;
   float anomalie_middle = 0;
-  while (true) {
+  int i = 0
+  while (i < 100) {
 	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
 	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << std::endl;
+	i++;
   }
 
   return 0;
