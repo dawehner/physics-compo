@@ -41,7 +41,7 @@ float e_next(float anomalie_excent, float excent, float anomalie_middle) {
 }
 
 float m_current(float anomalie_excent, float excent, float anomalie_middle) {
-  std::cout << "e_next:" << anomalie_excent << excent << anomalie_middle << std::endl;
+  std::cout << "m_current:" << anomalie_excent << excent << anomalie_middle << std::endl;
   return anomalie_excent - excent * sin(anomalie_excent);
 }
 
