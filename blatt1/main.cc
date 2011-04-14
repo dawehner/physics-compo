@@ -48,7 +48,7 @@ float m_current(float anomalie_excent, float excent, float anomalie_middle) {
 /**
  * Generate some variables.
  */
- function calc_phi(float anomalie_excent, float excent) {
+ float calc_phi(float anomalie_excent, float excent) {
   return 2 * atan(
      sqrt((1+excent)/(1-excent)) *
 	 tan(anomalie_excent / 2));
