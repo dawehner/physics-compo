@@ -58,6 +58,21 @@ double m_current(double anomalie_excent, double excent, double anomalie_middle) 
      sqrt((1+excent)/(1-excent)) *
 	 tan(anomalie_excent / 2));
  }
+ 
+ 
+
+float generate_anomalie_excent(double excent, double t, double t0, double P) {
+  double anomalie_excent_last = 0;
+  double anomalie_middle = 2 * 3.1415926 * (t - t0) / (P);
+  double anomalie_excent = anomalie_middle;
+  
+  int i = 0;
+  while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 100) {
+	// std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
+	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
+	i++;
+  }
+}
 	 
 	 
 int main() {
@@ -75,17 +90,4 @@ int main() {
 	std::cout << "phi:" << phi << std::endl;
   }
   return 0;
-}
-
-float generate_anomalie_excent(double excent, double t, double t0, double P) {
-  double anomalie_excent_last = 0;
-  double anomalie_middle = 2 * 3.1415926 * (t - t0) / (P);
-  double anomalie_excent = anomalie_middle;
-  
-  int i = 0;
-  while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 100) {
-	// std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
-	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
-	i++;
-  }
 }
