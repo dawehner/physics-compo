@@ -48,20 +48,25 @@ float m_current(float anomalie_excent, float excent, float anomalie_middle) {
 /**
  * Generate some variables.
  */
- // function calc_phi(float anomalie_excent, float excent) {
-   // return 2 * atan(
-     // sqrt((1+excent)/(1-
+ function calc_phi(float anomalie_excent, float excent) {
+  return 2 * atan(
+     sqrt((1+excent)/(1-excent)) *
+	 tan(anomalie_excent / 2));
+ }
 	 
 	 
 int main() {
   float anomalie_excent = 1.7;
   float excent = 0.967;
   float anomalie_middle = anomalie_excent;
+  float phi = 0;
   int i = 0;
   while (i < 5) {
-	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << std::endl;
+	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
 	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
+	phi = calc_phi(anomalie_excent, excent);
+
 	i++;
   }
 
