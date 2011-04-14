@@ -1,17 +1,9 @@
 ﻿#include <cmath>
 
-const ITERATION_EASY = 0;
-const ITERATION_NEWTON = 1;
+const int ITERATION_EASY = 0;
+const int ITERATION_NEWTON = 1;
 
 const ITERATION = ITERATION_EASY;
-int main() {
-  float anomalie_excent, excent, anomalie_middle;
-  while (TRUE) {
-	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
-  }
-
-  return 0;
-}
 
 /**
  * This code could be OPP.
@@ -50,3 +42,13 @@ float iteration_newton() {
  // function calc_phi(float anomalie_excent, float excent) {
    // return 2 * atan(
      // sqrt((1+excent)/(1-
+	 
+	 
+int main() {
+  float anomalie_excent, excent, anomalie_middle;
+  while (true) {
+	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
+  }
+
+  return 0;
+}
