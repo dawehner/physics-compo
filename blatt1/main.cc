@@ -56,7 +56,7 @@ int main() {
   float anomalie_excent = 0;
   float excent = 0.205;
   float anomalie_middle = 0;
-  int i = 0
+  int i = 0;
   while (i < 100) {
 	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
