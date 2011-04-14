@@ -3,7 +3,18 @@
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
 
-const ITERATION = ITERATION_EASY;
+const int ITERATION = ITERATION_EASY;
+
+
+float iteration_easy(float anomalie_excent, float excent, float anomalie_middle) {
+  return anomalie_middle + excent * sin(anomalie_excent);
+}
+
+float iteration_newton() {
+  return anomalie_excent
+    - function(anomalie_excent, excent, anomalie_middle)
+    / function_diff(anomalie_excent, excent, anomalie_middle);
+}
 
 /**
  * This code could be OPP.
@@ -26,15 +37,6 @@ float function_diff(float excent, float anomalie_excent) {
 }
   
 
-float iteration_easy(float anomalie_excent, float excent, float anomalie_middle) {
-  return anomalie_middle + excent * sin(anomalie_excent);
-}
-
-float iteration_newton() {
-  return anomalie_excent
-    - function(anomalie_excent, excent, anomalie_middle)
-    / function_diff(anomalie_excent, excent, anomalie_middle);
-}
 
 /**
  * Generate some variables.
