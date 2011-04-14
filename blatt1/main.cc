@@ -22,6 +22,7 @@ float iteration_easy(float anomalie_excent, float excent, float anomalie_middle)
 float iteration_newton(float anomalie_excent, float excent, float anomalie_middle) {
   float funcvalue = function(anomalie_excent, excent, anomalie_middle);
   float diffvalue = function_diff(anomalie_excent, excent, anomalie_middle);
+  cout << "func:" << funcvalue << endl;
   return anomalie_excent
     - (funcvalue / diffvalue);
 }
