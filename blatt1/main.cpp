@@ -9,6 +9,8 @@ int main() {
   while (TRUE) {
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
   }
+
+  return 0;
 }
 
 /**
@@ -45,6 +47,6 @@ float iteration_newton() {
 /**
  * Generate some variables.
  */
- function calc_phi(float anomalie_excent, float excent) {
-   return 2 * atan(
-     sqrt((1+excent)/(1-
+ // function calc_phi(float anomalie_excent, float excent) {
+   // return 2 * atan(
+     // sqrt((1+excent)/(1-
