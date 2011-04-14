@@ -31,6 +31,7 @@ float iteration_newton(float anomalie_excent, float excent, float anomalie_middl
  * This code could be OPP.
  */
 float e_next(float anomalie_excent, float excent, float anomalie_middle) {
+  std::cout << "e_next:" << anomalie_excent << excent << anomalie_middle << std::endl;
   switch (ITERATION) {
     case ITERATION_EASY:
 	  return iteration_easy(anomalie_excent, excent, anomalie_middle);
@@ -40,6 +41,7 @@ float e_next(float anomalie_excent, float excent, float anomalie_middle) {
 }
 
 float m_current(float anomalie_excent, float excent, float anomalie_middle) {
+  std::cout << "e_next:" << anomalie_excent << excent << anomalie_middle << std::endl;
   return anomalie_excent - excent * sin(anomalie_excent);
 }
 
