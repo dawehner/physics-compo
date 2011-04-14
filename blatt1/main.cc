@@ -84,7 +84,7 @@ int main() {
   double phi = 0;
   
   for (int i = 0; i < 100; i++) {
-    t += 10 * i;
+    t += i;
 	
 	temp_except = generate_anomalie_excent(excent, t, t0, P);
 	phi = calc_phi(temp_except, excent);
