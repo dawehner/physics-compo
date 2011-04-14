@@ -37,7 +37,7 @@ float e_next(float anomalie_excent, float excent, float anomalie_middle) {
   }
 }
 
-float m_current(float anomalie_excent, float excent) {
+float m_current(float anomalie_excent, float excent, float anomalie_middle) {
   return anomalie_excent - excent * sin(anomalie_excent);
 }
 
