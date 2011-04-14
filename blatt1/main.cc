@@ -7,21 +7,21 @@ const int ITERATION_NEWTON = 1;
 const int ITERATION = ITERATION_NEWTON;
 
 
-float function(float anomalie_excent, float excent, float anomalie_middle) {
+double function(double anomalie_excent, double excent, double anomalie_middle) {
   return anomalie_excent - excent * sin(anomalie_excent) - anomalie_middle;
 }
 
-float function_diff(float anomalie_excent, float excent, float anomalie_middle) {
+double function_diff(double anomalie_excent, double excent, double anomalie_middle) {
   return 1.0 - excent * cos(anomalie_excent);
 }
 
-float iteration_easy(float anomalie_excent, float excent, float anomalie_middle) {
+double iteration_easy(double anomalie_excent, double excent, double anomalie_middle) {
   return anomalie_middle + excent * sin(anomalie_excent);
 }
 
-float iteration_newton(float anomalie_excent, float excent, float anomalie_middle) {
-  float funcvalue = function(anomalie_excent, excent, anomalie_middle);
-  float diffvalue = function_diff(anomalie_excent, excent, anomalie_middle);
+double iteration_newton(double anomalie_excent, double excent, double anomalie_middle) {
+  double funcvalue = function(anomalie_excent, excent, anomalie_middle);
+  double diffvalue = function_diff(anomalie_excent, excent, anomalie_middle);
   return anomalie_excent
     - (funcvalue / diffvalue);
 }
@@ -29,7 +29,7 @@ float iteration_newton(float anomalie_excent, float excent, float anomalie_middl
 /**
  * This code could be OPP.
  */
-float e_next(float anomalie_excent, float excent, float anomalie_middle) {
+double e_next(double anomalie_excent, double excent, double anomalie_middle) {
   switch (ITERATION) {
     case ITERATION_EASY:
 	  return iteration_easy(anomalie_excent, excent, anomalie_middle);
@@ -38,7 +38,7 @@ float e_next(float anomalie_excent, float excent, float anomalie_middle) {
   }
 }
 
-float m_current(float anomalie_excent, float excent, float anomalie_middle) {
+double m_current(double anomalie_excent, double excent, double anomalie_middle) {
   return anomalie_excent - excent * sin(anomalie_excent);
 }
 
@@ -48,7 +48,7 @@ float m_current(float anomalie_excent, float excent, float anomalie_middle) {
 /**
  * Generate some variables.
  */
- float calc_phi(float anomalie_excent, float excent) {
+ double calc_phi(double anomalie_excent, double excent) {
   return 2 * atan(
      sqrt((1+excent)/(1-excent)) *
 	 tan(anomalie_excent / 2));
@@ -56,12 +56,13 @@ float m_current(float anomalie_excent, float excent, float anomalie_middle) {
 	 
 	 
 int main() {
-  float anomalie_excent = 1.7;
-  float excent = 0.2;
-  float anomalie_middle = anomalie_excent;
-  float phi = 0;
+  double anomalie_excent = 1.7;
+  double anomalie_excent_last = 0;
+  double excent = 0.2;
+  double anomalie_middle = anomalie_excent;
+  double phi = 0;
   int i = 0;
-  while (i < 5) {
+  while ((anomalie_excent - anomalie_excent_last) < 10^-9) {
 	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
 	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
