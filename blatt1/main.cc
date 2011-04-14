@@ -10,7 +10,7 @@ float iteration_easy(float anomalie_excent, float excent, float anomalie_middle)
   return anomalie_middle + excent * sin(anomalie_excent);
 }
 
-float iteration_newton() {
+float iteration_newton(float anomalie_excent, float excent, float anomalie_middle) {
   return anomalie_excent
     - function(anomalie_excent, excent, anomalie_middle)
     / function_diff(anomalie_excent, excent, anomalie_middle);
