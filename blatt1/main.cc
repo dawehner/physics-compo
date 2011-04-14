@@ -4,7 +4,7 @@
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
 
-const int ITERATION = ITERATION_EASY;
+const int ITERATION = ITERATION_NEWTON;
 
 
 float function(float anomalie_excent, float excent, float anomalie_middle) {
