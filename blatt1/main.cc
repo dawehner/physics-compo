@@ -30,6 +30,7 @@ double iteration_newton(double anomalie_excent, double excent, double anomalie_m
  * This code could be OPP.
  */
 double e_next(double anomalie_excent, double excent, double anomalie_middle) {
+std::cout << "e_next: E:" << anomalie_excent << ":M:" << anomalie_middle << ":e:" << excent << std::endl ;
   switch (ITERATION) {
     case ITERATION_EASY:
 	  return iteration_easy(anomalie_excent, excent, anomalie_middle);
@@ -62,7 +63,7 @@ int main() {
   double anomalie_middle = anomalie_excent;
   double phi = 0;
   int i = 0;
-  while ((anomalie_excent - anomalie_excent_last) < 10^-9) {
+  while (((anomalie_excent - anomalie_excent_last) < 10^-9) || i < 5) {
 	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
 	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
 	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
