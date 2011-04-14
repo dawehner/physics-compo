@@ -62,7 +62,7 @@ double m_current(double anomalie_excent, double excent, double anomalie_middle) 
 int main() {
   double anomalie_excent = 1.7;
   double anomalie_excent_last = 0;
-  double excent = 0.2;
+  double excent = 0.6;
   double anomalie_middle = anomalie_excent;
   double phi = 0;
   int i = 0;
