@@ -7,10 +7,10 @@ const int ITERATION = ITERATION_EASY;
 
 
 float function(float anomalie_excent, float excent, float anomalie_middle) {
-  return anomolie - excent * sin(anomolie) - anomalie_middle;
+  return anomalie_excent - excent * sin(anomalie_excent) - anomalie_middle;
 }
 
-float function_diff(float excent, float anomalie_excent) {
+float function_diff(float anomalie_excent, float excent, float anomalie_middle) {
   return 1.0 - excent * cos(anomalie_excent);
 }
 
