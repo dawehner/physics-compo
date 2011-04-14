@@ -6,6 +6,14 @@ const int ITERATION_NEWTON = 1;
 const int ITERATION = ITERATION_EASY;
 
 
+float function(float anomalie_excent, float excent, float anomalie_middle) {
+  return anomolie - excent * sin(anomolie) - anomalie_middle;
+}
+
+float function_diff(float excent, float anomalie_excent) {
+  return 1.0 - excent * cos(anomalie_excent);
+}
+
 float iteration_easy(float anomalie_excent, float excent, float anomalie_middle) {
   return anomalie_middle + excent * sin(anomalie_excent);
 }
@@ -28,13 +36,6 @@ float e_next(float anomalie_excent, float excent, float anomalie_middle) {
   }
 }
 
-float function(float anomalie_excent, float excent, float anomalie_middle) {
-  return anomolie - excent * sin(anomolie) - anomalie_middle;
-}
-
-float function_diff(float excent, float anomalie_excent) {
-  return 1.0 - excent * cos(anomalie_excent);
-}
   
 
 
