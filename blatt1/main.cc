@@ -81,6 +81,7 @@ int main() {
   double temp_except = 0;
   double excent = 0.205;
   double P = 100;
+  double phi = 0;
   
   for (int i = 0; i < 100; i++) {
     t += 10 * i;
