@@ -22,15 +22,18 @@ double iteration_easy(double anomalie_excent, double excent, double anomalie_mid
 double iteration_newton(double anomalie_excent, double excent, double anomalie_middle) {
   double funcvalue = function(anomalie_excent, excent, anomalie_middle);
   double diffvalue = function_diff(anomalie_excent, excent, anomalie_middle);
-  return anomalie_excent
+  double result = anomalie_excent
     - (funcvalue / diffvalue);
+	
+  std::cout << "iteration_newton: f:" << funcvalue << ":f':" << diffvalue << ":E:" << anomalie_excent << std::endl;
+  return result;
 }
 
 /**
  * This code could be OPP.
  */
 double e_next(double anomalie_excent, double excent, double anomalie_middle) {
-std::cout << "e_next: E:" << anomalie_excent << ":M:" << anomalie_middle << ":e:" << excent << std::endl ;
+  std::cout << "e_next: E:" << anomalie_excent << ":M:" << anomalie_middle << ":e:" << excent << std::endl;
   switch (ITERATION) {
     case ITERATION_EASY:
 	  return iteration_easy(anomalie_excent, excent, anomalie_middle);
