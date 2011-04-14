@@ -20,9 +20,10 @@ float iteration_easy(float anomalie_excent, float excent, float anomalie_middle)
 }
 
 float iteration_newton(float anomalie_excent, float excent, float anomalie_middle) {
+  float funcvalue = function(anomalie_excent, excent, anomalie_middle);
+  float diffvalue = function_diff(anomalie_excent, excent, anomalie_middle);
   return anomalie_excent
-    - function(anomalie_excent, excent, anomalie_middle)
-    / function_diff(anomalie_excent, excent, anomalie_middle);
+    - (funcvalue / diffvalue);
 }
 
 /**
@@ -58,9 +59,9 @@ int main() {
   float anomalie_middle = 0.1;
   int i = 0;
   while (i < 100) {
-	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
 	anomalie_middle = m_current(anomalie_excent, excent, anomalie_middle);
-	std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << std::endl;
+	anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
+	// std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << std::endl;
 	i++;
   }
 
