@@ -93,13 +93,20 @@ int main() {
   double excent = 0.205;
   double P = 1000;
   double phi = 0;
+  double r = 0;
+  double x = 0;
+  double y = 0;
+  double a = 1000;
   
   for (int i = 0; i < 10000; i++) {
     t += i;
-	
-	temp_except = generate_anomalie_excent(excent, t, t0, P);
-	phi = calc_phi(temp_except, excent);
-	std::cout << "phi:" << phi << std::endl;
+
+	  temp_except = generate_anomalie_excent(excent, t, t0, P);
+	  phi = calc_phi(temp_except, excent);
+    r = calc_r(a, excent, phi, phi0);
+    x = calc_x(r, phi, phi0);
+    y = calc_y(r, phi, phi0);
+    std::count<<"r" << r << std::endl;
   }
   return 0;
 }
