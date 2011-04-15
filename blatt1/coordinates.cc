@@ -19,4 +19,7 @@ double calc_x(double r, double phi, double phi0) {
 double calc_y(double r, double phi, double phi0) {
   return r * sin(phi + phi0);
 }
- 
+
+double grad_to_rad(double grad) {
+  return M_PI * grad / 180.0;
+}
