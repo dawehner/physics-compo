@@ -33,10 +33,11 @@ float generate_anomalie_excent(double excent, double anomalie_middle) {
   int i = 0;
   double min = 0.000000001;
   while (((anomalie_excent - anomalie_excent_last) < min) && i < 10) {
+    cout << "123" << endl;
 	  // std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
     anomalie_excent_last = anomalie_excent;
 	  anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
-    cout << "d:"<< anomalie_excent - anomalie_excent_last << endl;
+    cout << "d:" << anomalie_excent - anomalie_excent_last << endl;
 	  i++;
   }
   cout << ":count:" << i;
