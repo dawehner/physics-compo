@@ -97,7 +97,7 @@ int main() {
   double x = 0;
   double y = 0;
   double a = 1000;
-  double phi0 = 102.95 * pi() / 180.0;
+  double phi0 = 102.95 * 3.1415926 / 180.0;
   
   for (int i = 0; i < 10000; i++) {
     t += i;
