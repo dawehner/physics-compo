@@ -99,6 +99,8 @@ int main() {
   double a = 1000;
   double phi0 = 102.95 * 3.1415926 / 180.0;
   
+  FILE* plots;
+  plots = fopen('plots.txt', 'a+');
   for (int i = 0; i < 100000; i++) {
     t += i * 0.05;
 
@@ -111,6 +113,12 @@ int main() {
     std::cout<<"x" << x;
     std::cout<<"y" << y;
     std::cout << std::endl;
+    fprintf(plots, x);
+    fprintf(plots, ";");
+    fprintf(plots, y);
+    fprintf(plots, "\n");
   }
+  fclose(plots);
+
   return 0;
 }
