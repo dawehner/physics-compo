@@ -31,8 +31,8 @@ int main() {
     x = calc_x(r, phi, phi0);
     y = calc_y(r, phi, phi0);
 
-    cout<<"r" << r;
-    cout<<"phi" << phi << endl;
+    // cout<<"r" << r;
+    // cout<<"phi" << phi << endl;
 
     // std::cout<<"x" << x;
     // std::cout<<"y" << y;

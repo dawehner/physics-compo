@@ -25,7 +25,7 @@ int main() {
   for (int i = 0; i < 100000; i++) {
     t += i * 0.00005;
 
-	  temp_except = generate_anomalie_excent(excent, t, t0, P);
+	  temp_except = generate_anomalie_excent_per_time(excent, t, t0, P);
 	  phi = calc_phi(temp_except, excent);
     r = calc_r(a, excent, phi, phi0);
     x = calc_x(r, phi, phi0);
