@@ -24,7 +24,7 @@ int main() {
   // Additional the count of steps are counted and printed out.
   double anomalie_middle = 0.0;
   double anomalie_excent = 0.0;
-  for (int i = 1; i < 2; i++) {
+  for (int i = 0; i < 100; i++) {
     anomalie_middle = i;
     cout << i;
     anomalie_excent  = generate_anomalie_excent(excent, anomalie_middle);
