@@ -1,0 +1,1 @@
+﻿ plot 'plots.txt' using 1:2
