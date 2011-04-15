@@ -26,12 +26,14 @@ double m_current(double anomalie_excent, double excent, double anomalie_middle) 
 
 
 float generate_anomalie_excent(double excent, double anomalie_middle) {
-  double anomalie_excent_last = 0;
-  double anomalie_excent = anomalie_middle;
+  double anomalie_excent_start = anomalie_middle;
+  double anomalie_excent = 0;
+  double anomalie_excent_last = 1;
   
   int i = 0;
   while (((anomalie_excent - anomalie_excent_last) < 10^-9) && i < 10000) {
 	  // std::cout << "E:" << anomalie_excent << ":M:" << anomalie_middle << ":phi:" << phi << std::endl ;
+    anomalie_excent_last = anomalie_excent;
 	  anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
     cout << "d:"<< anomalie_excent - anomalie_excent_last << endl;
 	  i++;
