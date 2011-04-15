@@ -1,10 +1,12 @@
+#include <iostream>
+#include "iteration.cc"
+
 
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
 
 const int ITERATION = ITERATION_EASY;
 
-#include "iteration.cc"
 /**
  * This code could be OPP.
  */
