@@ -107,7 +107,7 @@ int main() {
   // fstream plots;
   // plots.open("../plots.txt", ios::out);
   for (int i = 0; i < 100000; i++) {
-    t += i * 0.0005;
+    t += i * 0.00005;
 
 	  temp_except = generate_anomalie_excent(excent, t, t0, P);
 	  phi = calc_phi(temp_except, excent);
