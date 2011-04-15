@@ -100,7 +100,7 @@ int main() {
   double phi0 = 102.95 * 3.1415926 / 180.0;
   
   for (int i = 0; i < 100000; i++) {
-    t += i;
+    t += i * 0.05;
 
 	  temp_except = generate_anomalie_excent(excent, t, t0, P);
 	  phi = calc_phi(temp_except, excent);
