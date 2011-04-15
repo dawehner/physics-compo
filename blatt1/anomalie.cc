@@ -24,13 +24,6 @@ double m_current(double anomalie_excent, double excent, double anomalie_middle) 
   return anomalie_excent - excent * sin(anomalie_excent);
 }
 
- 
- float generate_anomalie_excent_per_time(double excent, double t, double t0, double P) {
- // Generate a middle anomalie to calc with.
-  double anomalie_middle = 2 * 3.1415926 * (t - t0) / (P);
-  cout << "am:" << anomalie_middle << endl;
-  return generate_anomalie_excent(excent, anomalie_middle);
-}
 
 float generate_anomalie_excent(double excent, double anomalie_middle) {
   double anomalie_excent_last = 0;
@@ -44,4 +37,11 @@ float generate_anomalie_excent(double excent, double anomalie_middle) {
   }
 
   return anomalie_excent;
+}
+ 
+ float generate_anomalie_excent_per_time(double excent, double t, double t0, double P) {
+ // Generate a middle anomalie to calc with.
+  double anomalie_middle = 2 * 3.1415926 * (t - t0) / (P);
+  cout << "am:" << anomalie_middle << endl;
+  return generate_anomalie_excent(excent, anomalie_middle);
 }
