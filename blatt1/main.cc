@@ -1,5 +1,10 @@
 ﻿#include <cmath>
 #include <iostream>
+#include <fstream>
+
+using namespace std;
+
+
 
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
@@ -99,8 +104,8 @@ int main() {
   double a = 1000;
   double phi0 = 102.95 * 3.1415926 / 180.0;
   
-  FILE* plots;
-  plots = fopen('plots.txt', 'a+');
+  fstream plots;
+  plots.open('plots.txt', ios::out);
   for (int i = 0; i < 100000; i++) {
     t += i * 0.05;
 
@@ -110,15 +115,11 @@ int main() {
     x = calc_x(r, phi, phi0);
     y = calc_y(r, phi, phi0);
     // std::cout<<"r" << r;
-    std::cout<<"x" << x;
-    std::cout<<"y" << y;
-    std::cout << std::endl;
-    fprintf(plots, x);
-    fprintf(plots, ";");
-    fprintf(plots, y);
-    fprintf(plots, "\n");
+    // std::cout<<"x" << x;
+    // std::cout<<"y" << y;
+    plots << x << ";" << y << endl;
   }
-  fclose(plots);
+  plots.close();
 
   return 0;
 }
