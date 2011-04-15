@@ -1,6 +1,6 @@
 #include <iostream>
 #include "iteration.cc"
-
+using namespace std;
 
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
