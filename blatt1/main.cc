@@ -4,7 +4,7 @@
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
 
-const int ITERATION = ITERATION_NEWTON;
+const int ITERATION = ITERATION_EASY;
 
 
 double function(double anomalie_excent, double excent, double anomalie_middle) {
