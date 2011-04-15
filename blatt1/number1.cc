@@ -11,7 +11,7 @@ int main() {
   double t = 0;
   double t0 = 0;
   double temp_except = 0;
-  double excent = 0.205;
+  double excent = 0.967;
   double P = 10000;
   double phi = 0;
   double r = 0;
