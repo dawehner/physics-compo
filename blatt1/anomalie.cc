@@ -5,7 +5,7 @@ using namespace std;
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
 
-const int ITERATION = ITERATION_EASY;
+const int ITERATION = ITERATION_NEWTON;
 
 /**
  * This code could be OPP.
