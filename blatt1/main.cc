@@ -105,7 +105,7 @@ int main() {
   double phi0 = 102.95 * 3.1415926 / 180.0;
   
   fstream plots;
-  plots.open('plots.txt', ios::out);
+  plots.open("plots.txt", ios::out);
   for (int i = 0; i < 100000; i++) {
     t += i * 0.05;
 
