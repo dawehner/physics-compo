@@ -91,7 +91,7 @@ int main() {
   double t0 = 0;
   double temp_except = 0;
   double excent = 0.205;
-  double P = 1000;
+  double P = 10000;
   double phi = 0;
   double r = 0;
   double x = 0;
@@ -99,7 +99,7 @@ int main() {
   double a = 1000;
   double phi0 = 102.95 * 3.1415926 / 180.0;
   
-  for (int i = 0; i < 10000; i++) {
+  for (int i = 0; i < 100000; i++) {
     t += i;
 
 	  temp_except = generate_anomalie_excent(excent, t, t0, P);
@@ -107,7 +107,10 @@ int main() {
     r = calc_r(a, excent, phi, phi0);
     x = calc_x(r, phi, phi0);
     y = calc_y(r, phi, phi0);
-    std::cout<<"r" << r << std::endl;
+    // std::cout<<"r" << r;
+    std::cout<<"x" << x;
+    std::cout<<"y" << y;
+    std::cout << std::endl;
   }
   return 0;
 }
