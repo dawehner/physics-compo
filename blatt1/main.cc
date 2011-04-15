@@ -106,7 +106,7 @@ int main() {
     r = calc_r(a, excent, phi, phi0);
     x = calc_x(r, phi, phi0);
     y = calc_y(r, phi, phi0);
-    std::count<<"r" << r << std::endl;
+    std::cout<<"r" << r << std::endl;
   }
   return 0;
 }
