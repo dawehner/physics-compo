@@ -122,7 +122,7 @@ int main() {
     // std::cout<<"y" << y;
     // plots << x << ";" << y << endl;
   }
-  plots.close();
+  // plots.close();
 
   return 0;
 }
