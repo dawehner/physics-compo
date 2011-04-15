@@ -1,7 +1,7 @@
 ﻿#include <cmath>
 #include <iostream>
 #include <fstream>
-#include "ccordinates.cc"
+#include "coordinates.cc"
 #include "anomalie.cc"
 
 using namespace std;
