@@ -20,7 +20,8 @@ int main() {
   double a = 1000;
   double phi0 = 102.95 * 3.1415926 / 180.0;
 
-  // Generate 100 values of M
+  // Generate 100 values of M and calculate the E for it.
+  // Additional the count of steps are counted and printed out.
   double anomalie_middle = 0.0;
   double anomalie_excent = 0.0;
   for (int i = 0; i < 100; i++) {
