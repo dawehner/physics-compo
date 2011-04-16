@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 int main() {
   double t = 0;
   double t0 = 0;
@@ -24,11 +23,11 @@ int main() {
   // Additional the count of steps are counted and printed out.
   double anomalie_middle = 0.0;
   double anomalie_excent = 0.0;
+
+  output_header();
   for (int i = 0; i < 100; i++) {
     anomalie_middle = i;
-    cout << i;
     anomalie_excent  = generate_anomalie_excent(excent, anomalie_middle);
-    cout << endl;
   }
 
   return 0;

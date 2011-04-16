@@ -1,3 +1,2 @@
-﻿set terminal gif
-set output "output.gif" 
-plot "plots.txt" using 1:2
+﻿set polar
+plot "build/number1.dat"
