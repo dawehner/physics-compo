@@ -50,7 +50,7 @@ int main() {
 
   // let's choose not too many steps
   int size = 1000;
-  int t0 = starttime = - 20 * year_seconds;
+  int t0, starttime = - 20 * year_seconds;
   int endtime = 5 * year_seconds;
   // Let's start from 2000 - 20 years and go until 2000 + 5 year'
   for (signed int i = (starttime / size) ; i < (endtime / size); i++) {
