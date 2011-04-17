@@ -10,10 +10,19 @@ const double anstromical_unit = 149598000;
 const int day_seconds = 3600 * 24;
 const int year_seconds = 3600 * 365 * 24;
 
+struct sunsystem_object {
+  double a;
+  double e;
+  double phi0;
+  double m;
+  double p;
+};
 
 int main() {
   double t0 = 0;
   double t = t0;
+  double temp_except;
+  double excent;
 
   double a_earth = 1.0;
   double e_earth = 0.0167;
