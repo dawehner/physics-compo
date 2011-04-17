@@ -24,19 +24,21 @@ int main() {
   double temp_except;
   double excent;
 
-  double a_earth = 1.0;
-  double e_earth = 0.0167;
-  double phi0_earth = grad_to_rad(102.95);
-  double lambda_earth = 100.46;
-  double m_earth = lambda_earth - phi0_earth;
-  double p_earth = year_seconds;
+  sunsystem_object earth;
+  earth.a = 1.0;
+  earth.e = 0.0167;
+  earth.phi0 = grad_to_rad(102.95);
+  earth.lambda = 100.46;
+  earth.m = earth.lambda - earth.phi0;
+  earth.p = year_seconds;
 
-  double a_mars = 1.524;
-  double e_mars = 0.0934;
-  double phi0_mars = grad_to_rad(336.04);
-  double lambda_mars = 355.46;
-  double m_mars = lambda_mars - phi0_mars;
-  double p_mars = day_seconds * 779.94;
+  sunsystem_object mars;
+  mars.a_mars = 1.524;
+  mars.e_mars = 0.0934;
+  mars.phi0 = grad_to_rad(336.04);
+  mars.lambda = 355.46;
+  mars.m = mars.lambda - mars.phi0;
+  mars.p = day_seconds * 779.94;
 
   // fstream plots;
   // plots.open("../plots.txt", ios::out);
