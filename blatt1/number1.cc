@@ -10,8 +10,8 @@ int main() {
   double t = 0;
   double t0 = 0;
   double temp_except = 0;
-  double excent = 0.967;
-  double P = 10000;
+  double excent = 0.205;
+  double P = 3600 * 365 * 24;
   double phi = 0;
   double r = 0;
   double x = 0;
@@ -26,7 +26,8 @@ int main() {
 
   output_header();
   for (int i = 0; i < 100; i++) {
-    anomalie_middle = i;
+    // Generate a value between 0 and 2pi
+    anomalie_middle = ((2 * M_PI) / 100) * i;
     anomalie_excent  = generate_anomalie_excent(excent, anomalie_middle);
   }
 
