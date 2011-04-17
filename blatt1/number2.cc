@@ -3,6 +3,7 @@
 #include <fstream>
 #include "anomalie.cc"
 #include "coordinates.cc"
+#include <string>
 
 using namespace std;
 
@@ -16,6 +17,7 @@ struct sunsystem_object {
   double phi0;
   double m;
   double p;
+  string name;
 };
 
 int main() {
@@ -25,6 +27,7 @@ int main() {
   double excent;
 
   sunsystem_object earth;
+  earth.name = "Earth";
   earth.a = 1.0;
   earth.e = 0.0167;
   earth.phi0 = grad_to_rad(102.95);
@@ -33,6 +36,7 @@ int main() {
   earth.p = year_seconds;
 
   sunsystem_object mars;
+  mars.name = "Mars";
   mars.a_mars = 1.524;
   mars.e_mars = 0.0934;
   mars.phi0 = grad_to_rad(336.04);
@@ -46,7 +50,7 @@ int main() {
 
   // let's choose not too many steps
   int size = 1000;
-  int starttime = - 20 * year_seconds;
+  int t0 = starttime = - 20 * year_seconds;
   int endtime = 5 * year_seconds;
   // Let's start from 2000 - 20 years and go until 2000 + 5 year'
   for (signed int i = (starttime / size) ; i < (endtime / size); i++) {
