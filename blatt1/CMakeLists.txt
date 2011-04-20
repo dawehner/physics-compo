@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 project (physics-compo-blatt1)
+set(CMAKE_CXX_FLAGS "-g -Wall")
 
 ADD_EXECUTABLE(number1 number1)
 ADD_EXECUTABLE(number2 number2)

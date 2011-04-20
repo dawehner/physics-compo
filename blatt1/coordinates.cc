@@ -9,7 +9,7 @@ double calc_phi(double anomalie_excent, double excent) {
     tan(anomalie_excent / 2));
  }
 double calc_r(double a, double e, double phi, double phi0) {
-  return a * (1 - e * e) / (1 + e * cos(phi - phi0));
+  return (a * (1 - e * e)) / (1 + e * cos(phi - phi0));
 }
 
 double calc_x(double r, double phi, double phi0) {
