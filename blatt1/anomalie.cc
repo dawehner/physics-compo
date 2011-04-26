@@ -1,12 +1,12 @@
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include "iteration.cc"
 using namespace std;
 
 const int ITERATION_EASY = 0;
 const int ITERATION_NEWTON = 1;
 
-int ITERATION = ITERATION_EASY;
+int ITERATION = ITERATION_NEWTON;
 ofstream emptystream;
 
 /**
@@ -27,6 +27,9 @@ double m_current(double anomalie_excent, double excent, double anomalie_middle) 
 }
 
 
+/**
+ * Generate the "extentrische anomalie" from certain "startbedingungen" with a certain iteration method.
+ */
 float generate_anomalie_excent(double excent, double anomalie_middle, ofstream &output_file = emptystream) {
   double anomalie_excent = anomalie_middle;
   double anomalie_excent_last = 0;
@@ -46,6 +49,9 @@ float generate_anomalie_excent(double excent, double anomalie_middle, ofstream &
   return anomalie_excent;
 }
 
+/**
+ * Generate the "extentrische anomalie" based on a certain time, time t0 and perdionendauer.
+ */
 float generate_anomalie_excent_per_time(double excent, double t, double t0, double P, ofstream &output_file = emptystream) {
  // Generate a middle anomalie to calc with.
   double anomalie_middle = 2 * 3.1415926 * (t - t0) / (P);

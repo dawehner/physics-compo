@@ -1,7 +1,7 @@
 #include "function.cc"
 
 double iteration_easy(double anomalie_excent, double excent, double anomalie_middle) {
-  return anomalie_middle - excent * sin(anomalie_excent);
+  return anomalie_middle + excent * sin(anomalie_excent);
 }
 
 double iteration_newton(double anomalie_excent, double excent, double anomalie_middle) {

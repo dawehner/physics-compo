@@ -6,10 +6,15 @@
 #include <string>
 #include <limits>
 #include <stdlib.h>
+#include <ctime>
 
 using std::numeric_limits;
 
-
+/**
+ * @todo
+ *   Try to be able to reuse some parts.
+ *   Calculate with unix timestamps where it's possible.
+ */
 using namespace std;
 
 const double anstromical_unit = 149598000;
@@ -48,8 +53,9 @@ double distince_sunsystem_objects(sunsystem_object obj1, double anomalie_excent1
 
 
 int main(int argc, char **argv) {
-  double t = 0;
+  int t = 0;
   double distance;
+  double max_distance;
 
   double earth_temp_except;
   double mars_temp_except;
@@ -75,50 +81,52 @@ int main(int argc, char **argv) {
 
   int c;
   char *output_filename = "output2.dat";
-  int size = 100000;
+  int size = 10000;
+
+  int t0 = 0;
+  int starttime = 15 * year_seconds;
+  t0 = starttime;
+  int endtime = 32 * year_seconds;
+  int thirty_years = 30 * year_seconds;
+
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":o:")) != -1) {
+  while ((c = getopt(argc, argv, ":s:b:e:o:")) != -1) {
     switch (c) {
+      // output file
       case 'o':
         output_filename = optarg;
         break;
+      // step size
       case 's':
         size = atoi(optarg);
+        break;
+      // starttime
+      case 'b':
+        starttime = atoi(optarg);
+        break;
+      case 'e':
+        endtime = atoi(optarg);
         break;
     }
   }
 
-  // fstream plots;
-  // plots.open("../plots.txt", ios::out);
-  // plots.close();
   ofstream output_file;
   output_file.open(output_filename);
 
-  // let's choose not too many steps
-  int t0 = 0;
-  int starttime = - 20 * year_seconds;
-  t0 = starttime;
-  int endtime = 5 * year_seconds;
-
-//   double max_distance;
-//   int max_t;
-
-  // Set precision so gnuplot can handle it.
-  cout.precision(numeric_limits<double>::digits10 + 1);
-
   // Let's start from 2000 - 20 years and go until 2000 + 5 year'
+  // Remember that unix time stamps are used here, so we have to reduce 30 years.
+  starttime -= thirty_years;
+  endtime -= thirty_years;
+  for (signed int i = starttime ; i < endtime; i += size) {
+    t = i;
 
-  for (signed int i = (starttime / size) ; i < (endtime / size); i++) {
-    t = i * size;
-//     cout << t << endl;
-
-    mars_temp_except = generate_anomalie_excent_per_time(mars.e, t, t0, mars.p);
-    earth_temp_except = generate_anomalie_excent_per_time(earth.e, t, t0, earth.p);
+    // calculate the excentric anomalies and based on this the distance of the earth and mars
+    mars_temp_except = generate_anomalie_excent_per_time(mars.e, (double) t, t0, mars.p);
+    earth_temp_except = generate_anomalie_excent_per_time(earth.e, (double) t, t0, earth.p);
 
     distance = distince_sunsystem_objects(earth, earth_temp_except, mars, mars_temp_except);
-    output_file << t << " " << distance << endl;
-//     max_distance = distance > max_distance ? distance : max_distance;
+    output_file << t + thirty_years << " " << distance << endl;
   }
   output_file.close();
 

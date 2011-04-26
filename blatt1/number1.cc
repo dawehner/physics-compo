@@ -4,6 +4,7 @@
 #include "anomalie.cc"
 #include "coordinates.cc"
 #include <stdlib.h>
+#include <string>
 
 using namespace std;
 
