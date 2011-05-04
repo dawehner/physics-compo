@@ -1,5 +1,10 @@
 #include <cmath>
 
+/**
+ * @todo:
+ *   Implement all this stuff for vector.cpp
+ */
+
 inline double calc_metrik(double r1[], double r2[]);
 inline double calc_norm(double r[]);
 double calc_big_a(double r[3], double v[3], double m[]);
