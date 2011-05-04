@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include "iteration.cc"
+#include <limits>
+
 using namespace std;
 
 const int ITERATION_EASY = 0;
@@ -10,7 +12,9 @@ int ITERATION = ITERATION_NEWTON;
 ofstream emptystream;
 
 /**
- * This code could be OPP.
+ * This code could be OOP.
+ *
+ * Calculate the next e.
  */
 double e_next(double anomalie_excent, double excent, double anomalie_middle) {
   switch (ITERATION) {
@@ -36,7 +40,7 @@ float generate_anomalie_excent(double excent, double anomalie_middle, ofstream &
 
   int i = 0;
   double min = 10e-9;
-  while (((anomalie_excent - anomalie_excent_last) > min) && i < 10000) {
+  while ((abs(anomalie_excent - anomalie_excent_last) > min) && i < 10000) {
     anomalie_excent_last = anomalie_excent;
     anomalie_excent = e_next(anomalie_excent, excent, anomalie_middle);
     i++;

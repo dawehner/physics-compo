@@ -29,6 +29,7 @@ struct sunsystem_object {
   double p;
   string name;
   double lambda;
+  double t0;
 };
 
 
@@ -48,7 +49,7 @@ double distince_sunsystem_objects(sunsystem_object obj1, double anomalie_excent1
   x2 = calc_x(r2, phi2, obj2.phi0);
   y2 = calc_y(r2, phi2, obj2.phi0);
 
-  return (x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2);
+  return sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
 }
 
 
@@ -62,7 +63,7 @@ int main(int argc, char **argv) {
 
   sunsystem_object earth;
   earth.name = "Earth";
-  earth.a = 1.0 * anstromical_unit;
+  earth.a = 1.0;// * anstromical_unit;
   earth.e = 0.0167;
   earth.phi0 = grad_to_rad(102.95);
   earth.lambda = 100.46;
@@ -71,21 +72,22 @@ int main(int argc, char **argv) {
 
   sunsystem_object mars;
   mars.name = "Mars";
-  mars.a = 1.524 * anstromical_unit;
+  mars.a = 1.524;// * anstromical_unit;
   mars.e = 0.0934;
   mars.phi0 = grad_to_rad(336.04);
   mars.lambda = 355.46;
   mars.m = mars.lambda - mars.phi0;
   mars.p = day_seconds * 779.94;
 
+  // Calculate the t0 based on the given parameters.
+  mars.t0 = mars.p/(2*M_PI) * (- mars.lambda + mars.phi0);
+  earth.t0 = earth.p/(2*M_PI) * (- earth.lambda + earth.phi0);
 
   int c;
   char *output_filename = "output2.dat";
-  int size = 10000;
+  int size = year_seconds / 365;
 
-  int t0 = 0;
   int starttime = 15 * year_seconds;
-  t0 = starttime;
   int endtime = 32 * year_seconds;
   int thirty_years = 30 * year_seconds;
 
@@ -114,7 +116,7 @@ int main(int argc, char **argv) {
   ofstream output_file;
   output_file.open(output_filename);
 
-  // Let's start from 2000 - 20 years and go until 2000 + 5 year'
+  // Let's start from 2000 - 15 years and go until 2000 + 2 years
   // Remember that unix time stamps are used here, so we have to reduce 30 years.
   starttime -= thirty_years;
   endtime -= thirty_years;
@@ -122,8 +124,8 @@ int main(int argc, char **argv) {
     t = i;
 
     // calculate the excentric anomalies and based on this the distance of the earth and mars
-    mars_temp_except = generate_anomalie_excent_per_time(mars.e, (double) t, t0, mars.p);
-    earth_temp_except = generate_anomalie_excent_per_time(earth.e, (double) t, t0, earth.p);
+    mars_temp_except = generate_anomalie_excent_per_time(mars.e, (double) t, mars.t0, mars.p);
+    earth_temp_except = generate_anomalie_excent_per_time(earth.e, (double) t, earth.t0, earth.p);
 
     distance = distince_sunsystem_objects(earth, earth_temp_except, mars, mars_temp_except);
     output_file << t + thirty_years << " " << distance << endl;

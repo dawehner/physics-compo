@@ -1,2 +1,0 @@
-﻿set polar
-plot "build/number1.dat"

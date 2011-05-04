@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
     y = calc_y(r, phi, phi0);
 
     output_file << anomalie_middle << " " << x << " " << y;
+
     // Generate a value between 0 and 2pi
     anomalie_middle = ((2 * M_PI) / 100) * i;
     anomalie_excent  = generate_anomalie_excent(excent, anomalie_middle, output_file);

@@ -1,4 +1,5 @@
 #include "function.cc"
+#include <cmath>
 
 double iteration_easy(double anomalie_excent, double excent, double anomalie_middle) {
   return anomalie_middle + excent * sin(anomalie_excent);
