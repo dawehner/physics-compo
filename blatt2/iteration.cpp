@@ -1,34 +1,21 @@
 #include <cmath>
 
-
 const int ITERATION_EULER = 0;
 const int ITERATION_HEUN = 1;
 const int ITERATION_RUNGE_KUTTA = 2;
 
-double iteration();
-inline double iteration_euler(double yk, double h, double fk, double fk1);
-inline double iteration_heun(double yk, double h, double fk, double fk1);
-inline double iteration_runge_kutta_4();
+void iteration_next(solarsystem, method);
 
-inline double iteration_euler(double yk, double h, double fk, double fk1) {
-  return yk + h * fk;
+void iteration_euler(vector2d yk, double xk, double h);
+void iteration_heun(vector2d yk, double xk, double h);
+void iteration_runge_kutta_4(vector2d yk, double xk, double h);
+
+void iteration_euler(vector2d yk, vector2d double xk, double h) {
+  return yk + 
 }
 
-inline double iteration_heun(double yk, double h, double fk, double fk1) {
-  double k1 = fk;
-  double k2 = fk1;
-  return yk + h/2 * (k1 + k2);
-}
+void iteration_heun(vector2d yk, double xk, double h) { }
 
-inline double iteration_runge_kutta_4() { }
+void iteration_runge_kutta_4(vector2d yk, double xk, double h) { }
 
-double iteration(int method) {
-  switch (method) {
-    case ITERATION_EULER:
-      break;
-    case ITERATION_HEUN:
-      break;
-    case ITERATION_RUNGE_KUTTA:
-      break;
-  }
-}
+void iteration_next(solarsystem, method) { }
