@@ -107,28 +107,28 @@ void iteration_runge_kutta_r(vector< vector2d >& r, vector< vector2d >& v, vecto
 }
 
 void iteration_runge_kutta_v(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector<double>& m, double h) {
-  vector <vector2d> k1;
-  vector <vector2d> k2;
-  vector <vector2d> k3;
-  vector <vector2d> k4;
+  vector <vector2d> k1 = a;
+  vector <vector2d> k2 = a;
+  vector <vector2d> k3 = a;
+  vector <vector2d> k4 = a;
 
   k1 = a;
 
 
   // Calc all the temporary values.
-  vector <vector2d> rk1;
+  vector <vector2d> rk1 = r;
   for (vector< vector<int> >::size_type i = 0; i < a.size(); i++) {
     rk1[i] = r[i] + h * 1/2 * k1[i];
   }
   calc_accel_multiple(rk1, k2, m);
 
-  vector <vector2d> rk2;
+  vector <vector2d> rk2 = r;
   for (vector< vector<int> >::size_type i = 0; i < a.size(); i++) {
-    rk2[i] = r[i] + h * 1/2 * k2[i];
+    rk2[i] = r[i] + h/2 * k2[i];
   }
   calc_accel_multiple(rk2, k3, m);
 
-  vector <vector2d> rk3;
+  vector <vector2d> rk3 = r;
   for (vector< vector<int> >::size_type i = 0; i < a.size(); i++) {
     rk3[i] = r[i] + h * k3[i];
   }
