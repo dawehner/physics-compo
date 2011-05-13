@@ -16,8 +16,8 @@ void output_orbital_parameters(double a1, double a2, double e1, double e2, ofstr
 
 int main(int argc, char **argv) {
   int c;
-  void (*method_r) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, double tk, double h);
-  void (*method_v) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, double tk, double h);
+  void (*method_r) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, double h);
+  void (*method_v) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, double h);
 
   vector< vector2d > r;
   vector< vector2d > v;
@@ -87,7 +87,8 @@ int main(int argc, char **argv) {
       method_v = iteration_heun_v;
     break;
     case ITERATION_RUNGE_KUTTA:
-      // @todo: IMplement it.
+      method_r = iteration_runge_kutta_r;;
+      method_v = iteration_runge_kutta_v;
       break;
   }
 
@@ -131,11 +132,11 @@ int main(int argc, char **argv) {
 
   // Here comes the main loop
   int count = 0;
-  int t_max = calc_t_max(P, 10, 100);
+  int t_max = calc_t_max(P, 10, 100) * 100;
   cout << t_max << endl;
 
   while (count < t_max) {
-    iteration_next(r, v, a, m, tk, h, method_r, method_v);
+    iteration_next(r, v, a, m, h, method_r, method_v);
     count++;
     output_movement_data(r, v, a, m, output_file);
 

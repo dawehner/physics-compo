@@ -21,9 +21,10 @@ vector2d::vector2d(double new_x, double new_y) {
 }
 
 vector2d::vector2d() {
-  x = 0;
-  y = 0;
+  x = 0.0;
+  y = 0.0;
 }
+
 
 struct vector3d {
   double x;
@@ -58,6 +59,7 @@ vector2d operator*(double number, vector2d vec1) {
   vec.y = vec1.y * number;
   return vec;
 }
+
 
 vector2d operator/(vector2d vec1, double number) {
   vector2d vec;
