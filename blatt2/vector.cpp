@@ -7,24 +7,10 @@
 using namespace std;
 
 
-class vector2d {
-public:
+struct vector2d {
   double x;
   double y;
-  vector2d(double new_x, double new_y);
-  vector2d();
 };
-
-vector2d::vector2d(double new_x, double new_y) {
-  x = new_x;
-  y= new_y;
-}
-
-vector2d::vector2d() {
-  x = 0.0;
-  y = 0.0;
-}
-
 
 struct vector3d {
   double x;
@@ -45,6 +31,17 @@ vector2d operator+(vector2d vec1, vector2d vec2) {
   vec.y = vec1.y + vec2.y;
   return vec;
 }
+
+void operator+=(vector2d& vec1, vector2d vec2) {
+  vec1.x += vec2.x;
+  vec1.y += vec2.y;
+}
+
+void operator*=(vector2d& vec1, double number) {
+  vec1.x *= number;
+  vec1.y *= number;
+}
+
 
 vector2d operator*(vector2d vec1, double number) {
   vector2d vec;
@@ -88,7 +85,7 @@ template<typename _Tp>
 // @todo:
 //   A fast metrik for vector2d/vector3d could be written here.
 
-double norm(vector2d vec) {
+inline double norm(vector2d vec) {
   return sqrt(pow(vec.x, 2) + pow(vec.y, 2));
 }
 

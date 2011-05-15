@@ -25,28 +25,35 @@ int main(int argc, char **argv) {
   vector< double > m;
   double tk;
   double h;
+  int P_count = 10;
 
   // Some example content.
   h = 0.1;
   tk = 0;
 
-  vector2d r1(0.0, 0.0);
-  vector2d r2(0.0, 10.0);
-  vector2d r3(0.0, -5.0);
+  vector2d r1;
+  r1.x = 0.0;
+  r1.y = 0.0;
+  vector2d r2;
+  r2.x = 0.0;
+  r2.y = 10.0;
+  vector2d r3;
+  r3.x = 0.0;
+  r3.y = -5.0;
   r.push_back(r1);
   r.push_back(r2);
 //   r.push_back(r3);
 
-  vector2d v1(0, 0);
-  vector2d v2(1, 0);
-  vector2d v3(-0.5, 0);
+  vector2d v1;
+  vector2d v2;
+  v2.x = 1;
+  vector2d v3;
+  v3.x = -0.5;
   v.push_back(v1);
   v.push_back(v2);
 //   v.push_back(v3);
 
-  vector2d a1(0.0, 0.0);
-  vector2d a2(0.0, 0.0);
-  vector2d a3(0.0, 0.0);
+  vector2d a1, a2, a3;
   a.push_back(a1);
   a.push_back(a2);
 //   a.push_back(a3);
@@ -58,9 +65,10 @@ int main(int argc, char **argv) {
 
   int iteration = ITERATION_HEUN;
   string filename = "output";
+  bool write_to_files = false;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -69,10 +77,13 @@ int main(int argc, char **argv) {
         break;
       case 'o':
         filename = optarg;
+        write_to_files = true;
         break;
       case 'h':
         h = atof(optarg);
         break;
+      case 'c':
+        P_count = atof(optarg);
     }
   }
 
@@ -132,27 +143,29 @@ int main(int argc, char **argv) {
 
   // Here comes the main loop
   int count = 0;
-  int t_max = calc_t_max(P, 10, 100) * 100;
+  int t_max = calc_t_max(P, P_count, 100) * 100;
   cout << t_max << endl;
 
   while (count < t_max) {
     iteration_next(r, v, a, m, h, method_r, method_v);
     count++;
+
+    if (write_to_files) {
     output_movement_data(r, v, a, m, output_file);
 
+      // Calc all needed variab10les and output them into files.
+      double great_half_axis1 = calc_great_half_axis(r[0], v[0], m);
+      double great_half_axis2 = calc_great_half_axis(r[1], v[2], m);
+      double excentric1 = calc_excentric(r[0], v[0], m, great_half_axis1);
+      double excentric2 = calc_excentric(r[1], v[1], m, great_half_axis2);
+      double energy1 = calc_energy(m, great_half_axis1);
+      double energy2 = calc_energy(m, great_half_axis2);
+      double angular_momentum1 = calc_angular_momentum(m, great_half_axis1, excentric1);
+      double angular_momentum2 = calc_angular_momentum(m, great_half_axis2, excentric2);
 
-    // Calc all needed variables and output them into files.
-    double great_half_axis1 = calc_great_half_axis(r[0], v[0], m);
-    double great_half_axis2 = calc_great_half_axis(r[1], v[2], m);
-    double excentric1 = calc_excentric(r[0], v[0], m, great_half_axis1);
-    double excentric2 = calc_excentric(r[1], v[1], m, great_half_axis2);
-    double energy1 = calc_energy(m, great_half_axis1);
-    double energy2 = calc_energy(m, great_half_axis2);
-    double angular_momentum1 = calc_angular_momentum(m, great_half_axis1, excentric1);
-    double angular_momentum2 = calc_angular_momentum(m, great_half_axis2, excentric2);
-
-    output_converseved_quantities(energy1, energy2, angular_momentum1, angular_momentum2, output_file_energy, output_file_angular_momentum);
-    output_orbital_parameters(great_half_axis1, great_half_axis2, excentric1, excentric2, output_file_a, output_file_e);
+      output_converseved_quantities(energy1, energy2, angular_momentum1, angular_momentum2, output_file_energy, output_file_angular_momentum);
+      output_orbital_parameters(great_half_axis1, great_half_axis2, excentric1, excentric2, output_file_a, output_file_e);
+    }
   }
 
   if (output_file.is_open()) {

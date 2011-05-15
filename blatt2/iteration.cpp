@@ -23,7 +23,7 @@ void iteration_runge_kutta_r(vector< vector2d >& r, vector< vector2d >& v, vecto
 void iteration_runge_kutta_v(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h);
 
 
-vector2d calc_accel(vector< vector2d >& r, std::vector< double >& m, unsigned int j);
+inline vector2d calc_accel(vector< vector2d >& r, std::vector< double >& m, unsigned int j);
 
 void iteration_next(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h,
   void (*method_r) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h),
@@ -44,15 +44,16 @@ void iteration_next(vector< vector2d >& r, vector< vector2d >& v, vector< vector
 }
 
 
-vector2d calc_accel(vector<vector2d>& r, vector<double>& m, unsigned j) {
+inline vector2d calc_accel(vector<vector2d>& r, vector<double>& m, unsigned j) {
   vector2d a;
+  vector2d connection;
   for (vector< vector<int> >::size_type i = 0; i < r.size(); i++) {
     if (i != j) {
-      a = a + ((r[j] - r[i]) / pow(norm(r[j] - r[i]), 3)) * G * m[i] * m[j];
+      connection = r[i] - r[j];
+      a += m[i] / pow(norm(connection), 3) * (connection);
     }
   }
-
-  a = - 1 * a / m[j];
+  a *= G;
   return a;
 }
 
@@ -107,34 +108,33 @@ void iteration_runge_kutta_r(vector< vector2d >& r, vector< vector2d >& v, vecto
 }
 
 void iteration_runge_kutta_v(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector<double>& m, double h) {
-  vector <vector2d> k1 = a;
-  vector <vector2d> k2 = a;
-  vector <vector2d> k3 = a;
-  vector <vector2d> k4 = a;
+  vector <vector2d> k1(a.size());
+  vector <vector2d> k2(a.size());
+  vector <vector2d> k3(a.size());
+  vector <vector2d> k4(a.size());
 
   k1 = a;
 
-
   // Calc all the temporary values.
-  vector <vector2d> rk1 = r;
+  vector <vector2d> rk1(r.size());
   for (vector< vector<int> >::size_type i = 0; i < a.size(); i++) {
     rk1[i] = r[i] + h * 1/2 * k1[i];
   }
   calc_accel_multiple(rk1, k2, m);
 
-  vector <vector2d> rk2 = r;
+  vector <vector2d> rk2(r.size());
   for (vector< vector<int> >::size_type i = 0; i < a.size(); i++) {
     rk2[i] = r[i] + h/2 * k2[i];
   }
   calc_accel_multiple(rk2, k3, m);
 
-  vector <vector2d> rk3 = r;
+  vector <vector2d> rk3(r.size());
   for (vector< vector<int> >::size_type i = 0; i < a.size(); i++) {
     rk3[i] = r[i] + h * k3[i];
   }
   calc_accel_multiple(rk2, k4, m);
 
   for (vector< vector<int> >::size_type i = 0; i < a.size(); i++) {
-    v[i] = v[i] + 1/6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
+    v[i] += 1/6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
   }
 }
