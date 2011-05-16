@@ -141,9 +141,11 @@ int main(int argc, char **argv) {
 
   double P = calc_periode(m);
 
+  iteration_start(r, v, a, m);
+
   // Here comes the main loop
   int count = 0;
-  int t_max = calc_t_max(P, P_count, 100) * 100;
+  int t_max = calc_t_max(P, P_count, 100);
   cout << t_max << endl;
 
   while (count < t_max) {
