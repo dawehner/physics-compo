@@ -11,8 +11,8 @@ using namespace std;
 ofstream emptystream;
 
 void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, ofstream& output_file);
-void output_converseved_quantities(double E1, double E2, double L1, double L2, ofstream& output_file_energy, ofstream& output_file_angular_momentum);
-void output_orbital_parameters(double a1, double a2, double e1, double e2, ofstream& output_file_a, ofstream& output_file_e);
+void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum);
+void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e);
 
 int main(int argc, char **argv) {
   int c;
@@ -153,20 +153,19 @@ int main(int argc, char **argv) {
     count++;
 
     if (write_to_files) {
-    output_movement_data(r, v, a, m, output_file);
+      output_movement_data(r, v, a, m, output_file);
 
       // Calc all needed variab10les and output them into files.
-      double great_half_axis1 = calc_great_half_axis(r[0], v[0], m);
-      double great_half_axis2 = calc_great_half_axis(r[1], v[2], m);
-      double excentric1 = calc_excentric(r[0], v[0], m, great_half_axis1);
-      double excentric2 = calc_excentric(r[1], v[1], m, great_half_axis2);
-      double energy1 = calc_energy(m, great_half_axis1);
-      double energy2 = calc_energy(m, great_half_axis2);
-      double angular_momentum1 = calc_angular_momentum(m, great_half_axis1, excentric1);
-      double angular_momentum2 = calc_angular_momentum(m, great_half_axis2, excentric2);
+      vector2d r_rel = r[1] - r[0];
+      vector2d v_rel = v[1] - v[0];
 
-      output_converseved_quantities(energy1, energy2, angular_momentum1, angular_momentum2, output_file_energy, output_file_angular_momentum);
-      output_orbital_parameters(great_half_axis1, great_half_axis2, excentric1, excentric2, output_file_a, output_file_e);
+      double great_half_axis = calc_great_half_axis(r_rel, v_rel, m);
+      double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis);
+      double energy = calc_energy(m, great_half_axis);
+      double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
+
+      output_converseved_quantities(energy, angular_momentum, output_file_energy, output_file_angular_momentum);
+      output_orbital_parameters(great_half_axis, excentric, output_file_a, output_file_e);
     }
   }
 
@@ -214,12 +213,12 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 /**
  * Output the energy/angular momentum.
  */
-void output_converseved_quantities(double E1, double E2, double L1, double L2, ofstream& output_file_energy, ofstream& output_file_angular_momentum) {
+void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum) {
   if (output_file_energy.is_open()) {
-    output_file_energy << E1 + E2 << endl;
+    output_file_energy << E1 << endl;
   }
   if (output_file_angular_momentum.is_open()) {
-    output_file_angular_momentum << L1 + L2 << endl;
+    output_file_angular_momentum << L1 << endl;
   }
 }
 
@@ -227,12 +226,12 @@ void output_converseved_quantities(double E1, double E2, double L1, double L2, o
 /**
  * Output the excentric/great half axis to a file.
  */
-void output_orbital_parameters(double a1, double a2, double e1, double e2, ofstream& output_file_a, ofstream& output_file_e) {
+void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e) {
   if (output_file_a.is_open()) {
-    output_file_a << a1 + a2 << endl;
+    output_file_a << a1 << endl;
   }
 
   if (output_file_e.is_open()) {
-    output_file_e << e1 + e2 << endl;
+    output_file_e << e1 << endl;
   }
 }
