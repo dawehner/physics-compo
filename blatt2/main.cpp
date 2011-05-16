@@ -19,10 +19,7 @@ int main(int argc, char **argv) {
   void (*method_r) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, double h);
   void (*method_v) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, double h);
 
-  vector< vector2d > r;
-  vector< vector2d > v;
   vector< vector2d > a;
-  vector< double > m;
   double tk;
   double h;
   int P_count = 10;
@@ -31,36 +28,43 @@ int main(int argc, char **argv) {
   h = 0.1;
   tk = 0;
 
-  vector2d r1;
-  r1.x = 0.0;
+  double e = 0.3;
+  double m2 = 1e-3;
+
+  vector2d r1, r2;
+  vector2d v1, v2;
+
   r1.y = 0.0;
-  vector2d r2;
-  r2.x = 0.0;
-  r2.y = 10.0;
-  vector2d r3;
-  r3.x = 0.0;
-  r3.y = -5.0;
+  r2.y = 0.0;
+
+  double dp = 1 - e;
+  r1.x = - 1 * dp * m2 / (1 + m2);
+  r2.x = dp / m2 * (1 + m2);
+
+  v1.x = 0.0;
+  v2.x = 0.0;
+
+  double L = m2/(1 + m2) * sqrt((1 - e*e) * 1 * (1 + m2));
+  v2.y = L / (dp * m2);
+  v1.y = - m2 * v2.y;
+
+  vector<double> m;
+  m.push_back(1);
+  m.push_back(m2);
+
+  vector <vector2d> r;
   r.push_back(r1);
   r.push_back(r2);
-//   r.push_back(r3);
-
-  vector2d v1;
-  vector2d v2;
-  v2.x = 1;
-  vector2d v3;
-  v3.x = -0.5;
+  vector <vector2d> v;
   v.push_back(v1);
   v.push_back(v2);
-//   v.push_back(v3);
 
-  vector2d a1, a2, a3;
+  vector2d a1;
+  a1.x = 0;
+  a1.y = 0;
   a.push_back(a1);
-  a.push_back(a2);
-//   a.push_back(a3);
-
-  m.push_back(1);
-  m.push_back(1e-3);
-//   m.push_back(1e-6);
+  vector2d a2 = a1;
+  a.push_back(v2);
 
 
   int iteration = ITERATION_HEUN;
