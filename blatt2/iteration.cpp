@@ -1,15 +1,5 @@
-#include <cmath>
-#include <vector>
-#include "vector.cpp"
-#include <iostream>
+#include "iteration.h"
 
-using namespace std;
-
-const int ITERATION_EULER = 0;
-const int ITERATION_HEUN = 1;
-const int ITERATION_RUNGE_KUTTA = 2;
-
-const double G = 1;
 unsigned int count_item = 0;
 
 void iteration_start(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m) {
@@ -18,47 +8,34 @@ void iteration_start(vector< vector2d >& r, vector< vector2d >& v, vector< vecto
 
 void iteration_next(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h,
   void (*method_r) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h),
-  void (*method_v) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h));
-
-void iteration_euler_r(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h);
-void iteration_euler_v(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h);
-void iteration_heun_r(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h);
-void iteration_heun_v(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h);
-void iteration_runge_kutta_r(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h);
-void iteration_runge_kutta_v(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h);
-
-
-inline vector2d calc_accel(vector< vector2d >& r, std::vector< double >& m, unsigned int j);
-
-void iteration_next(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h,
-  void (*method_r) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h),
   void (*method_v) (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h)) {
-  // First calc all new r's based on the given method.
-  // @todo is this really a copy?
-  vector< vector2d > rk = r;
-  // Therefore it's important not to use the new r's for the calculation of the new v's.
-  method_r(r, v, a, m, h);
 
-  // Then calc all new v's based on the given method.
+
+  method_r(r, v, a, m, h);
   method_v(r, v, a, m, h);
 
   // Recall all a's.
-   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
-      a[i] = calc_accel(r, m, i);
-   }
+  calc_accel_multiple(r, a, m);
+
 }
 
 
-inline vector2d calc_accel(vector<vector2d>& r, vector<double>& m, unsigned j) {
+inline vector2d calc_accel(const vector<vector2d>& r, const vector<double>& m, const unsigned j) {
   vector2d a;
+  a.x = 0.0;
+  a.y = 0.0;
   vector2d connection;
+  connection.x = 0.0;
+  connection.y = 0.0;
   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
     if (i != j) {
       connection = r[i] - r[j];
-      a += m[i] / pow(norm(connection), 3) * (connection);
+      a = a + (m[i] / pow(norm(connection), 3)) * (connection);
     }
   }
-  a *= G;
+
+//   a *= G;
+//   a *= -1;
   return a;
 }
 
@@ -66,41 +43,46 @@ inline vector2d calc_accel(vector<vector2d>& r, vector<double>& m, unsigned j) {
 void iteration_euler_r(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h) {
   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
     // Calculate the next value for r.
-    r[i] += h * v[i];
+    r[i] = r[i] + h * v[i];
   }
 }
 
 void iteration_euler_v (vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, double h) {
   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
     // Calculate the next value for v.
-    v[i] += h * a[i];
+    v[i] = v[i] + h * a[i];
   }
 }
 
 void iteration_heun_r(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector<double>& m, double h) {
-  vector <vector2d> r_tmp_next = r;
-  iteration_euler_r(r_tmp_next, v, a, m, h);
-  vector <vector2d> v_tmp_next = v;
-  iteration_heun_v(r_tmp_next, v_tmp_next, a, m, h);
-  for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
-    r[i] = r[i] + (h/2) * (v[i] + v_tmp_next[i]);
-  }
+//   vector <vector2d> r_tmp_next = r;
+  iteration_euler_r(r, v, a, m, h);
+
+//   vector <vector2d> v_tmp_next = v;
+//   iteration_euler_v(r_tmp_next, v_tmp_next, a, m, h);
+//   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
+//     cout << v_tmp_next << endl;
+//     r[i] = r[i] + (h/2) * (v[i] + v_tmp_next[i]);
+//   }
 }
 
 void iteration_heun_v(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector<double>& m, double h) {
   vector <vector2d> v_tmp_next = v;
   iteration_euler_v(r, v_tmp_next, a, m, h);
+
   vector <vector2d> r_tmp_next = v;
   iteration_euler_r(r_tmp_next, v_tmp_next, a, m, h);
 
   vector2d ai_tmp_next;
+  ai_tmp_next.x = 0.0;
+  ai_tmp_next.y = 0.0;
   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
     ai_tmp_next = calc_accel(r_tmp_next, m, i);
     v[i] = v[i] + (h/2) * (a[i] + ai_tmp_next);
   }
 }
 
-void calc_accel_multiple(vector< vector2d>& r, vector< vector2d>& a, vector<double>&m) {
+void calc_accel_multiple(const vector< vector2d>& r, vector< vector2d>& a, const vector<double>&m) {
   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
     a[i] = calc_accel(r, m, i);
   }
@@ -140,6 +122,6 @@ void iteration_runge_kutta_v(vector< vector2d >& r, vector< vector2d >& v, vecto
   calc_accel_multiple(rk2, k4, m);
 
   for (vector< vector<int> >::size_type i = 0; i < count_item; i++) {
-    v[i] += 1/6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
+    v[i] = v[i] + 1/6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
   }
 }

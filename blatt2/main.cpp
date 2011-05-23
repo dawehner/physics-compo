@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 
   // Some example content.
   h = 0.1;
-  tk = 0;
+  tk = 0.0;
 
   double e = 0.3;
   double m2 = 1e-3;
@@ -37,19 +37,21 @@ int main(int argc, char **argv) {
   r1.y = 0.0;
   r2.y = 0.0;
 
-  double dp = 1 - e;
-  r1.x = - 1 * dp * m2 / (1 + m2);
-  r2.x = dp / m2 * (1 + m2);
+  double dp = 1.0 - e;
+  r1.x = - 1.0 * dp * m2 / (1.0 + m2);
+  r2.x = dp * (1.0 + m2);
 
   v1.x = 0.0;
   v2.x = 0.0;
 
-  double L = m2/(1 + m2) * sqrt((1 - e*e) * 1 * (1 + m2));
-  v2.y = L / (dp * m2);
-  v1.y = - m2 * v2.y;
+  // L = \mu * sqrt((1-e^2) * G * M * a)
+  double mu = m2/(1.0 + m2);
+  double L = mu * sqrt((1.0 - e*e) * (1.0 + m2));
+  v2.y = (L / (dp * m2));
+  v1.y = - L / dp;
 
   vector<double> m;
-  m.push_back(1);
+  m.push_back(1.0);
   m.push_back(m2);
 
   vector <vector2d> r;
@@ -66,10 +68,12 @@ int main(int argc, char **argv) {
   vector2d a2 = a1;
   a.push_back(v2);
 
+  calc_accel_multiple(r, a, m);
+
 
   int iteration = ITERATION_HEUN;
   string filename = "output";
-  bool write_to_files = false;
+  bool write_to_files = true;
 
   // Load data from input
   while ((c = getopt(argc, argv, ":i:o:h:c:")) != -1) {
@@ -149,10 +153,13 @@ int main(int argc, char **argv) {
 
   // Here comes the main loop
   int count = 0;
-  int t_max = calc_t_max(P, P_count, 100);
+  int t_max = calc_t_max(P, P_count, 100) * 3;
+
+  h = P / 100;
+
   cout << t_max << endl;
 
-  while (count < t_max) {
+  while (count < 400) {
     iteration_next(r, v, a, m, h, method_r, method_v);
     count++;
 
@@ -171,6 +178,7 @@ int main(int argc, char **argv) {
       output_converseved_quantities(energy, angular_momentum, output_file_energy, output_file_angular_momentum);
       output_orbital_parameters(great_half_axis, excentric, output_file_a, output_file_e);
     }
+
   }
 
   if (output_file.is_open()) {
@@ -192,7 +200,6 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-// const double G = 6.6726e-11;
 
 /**
  * Output the movement of the bodies itself to a file.
@@ -202,13 +209,11 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 //   cout << "x \t y \t vx \t vy \t ax \t ay \t m" << endl;
   if (output_file.is_open()) {
     for (vector< vector<int> >::size_type i = 0; i < r.size(); i++) {
-      output_file << r[i].x << "\t";
-      output_file << r[i].y << "\t";
-      output_file << v[i].x << "\t";
-      output_file << v[i].y << "\t";
-      output_file << a[i].x << "\t";
-      output_file << a[i].y << "\t";
-      output_file << m[i];
+      // Just output the data of the second body, which is moving
+      output_file << r[i] << "\t";
+//       output_file << v[i] << "\t";
+      output_file << a[i] << "\t";
+//       output_file << m[i];
       output_file << endl;
     }
   }

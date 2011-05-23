@@ -97,4 +97,9 @@ double metrik(vector2d vec1, vector2d vec2) {
   return sqrt(pow(vec1.x - vec2.x, 2) + pow(vec1.y - vec2.y, 2));
 }
 
+ostream& operator<<(ostream& out, const vector2d& vec) {
+    out << vec.x << " " << vec.y;
+    return out;
+}
+
 #endif
