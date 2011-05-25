@@ -20,8 +20,6 @@ int main() {
   double value3 = integrate_trapez_precision(&func_c, 0, 5, pow(10, -8));
   cout << value3 << " " << static_cache(STATIC_TRAPEZ_PRECISION) << endl;
 
-  // @todo
-// Adaptive currently fails on calculation from 0, so calculate a bit less.
   cout << "integration func_si" << endl;
   value1 = integrate_trapez(&func_si, 0, 1, 0.02);
   cout << value1 << " " << static_cache(STATIC_TRAPEZ) << endl;
