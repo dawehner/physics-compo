@@ -48,13 +48,23 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   listv2d a3 = a;
   listv2d a4 = a;
 
-  integration_euler(r2, v2, a, m, h);
+  for (int i = 0; i < ITEMS; i++) {
+    r2[i] = r[i] + h * v1[i];
+    v2[i] = v[i] + h * a1[i];
+  }
+
   calc_accel_multiple(r2, a2, m);
 
-  integration_euler(r3, v3, a2, m, h);
+  for (int i = 0; i < ITEMS; i++) {
+    r3[i] = r[i] + h * v2[i];
+    v3[i] = v[i] + h * a2[i];
+  }
   calc_accel_multiple(r3, a3, m);
 
-  integration_euler(r4, v4, a3, m, h);
+  for (int i = 0; i < ITEMS; i++) {
+    r4[i] = r[i] + h * v3[i];
+    v4[i] = v[i] + h * a3[i];
+  }
   calc_accel_multiple(r4, a4, m);
 
   for (int i = 0; i < ITEMS; i++) {
@@ -68,13 +78,18 @@ inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned 
   vector2d a;
   a.x = 0.0;
   a.y = 0.0;
-
+  vector2d connection;
+  connection.x = 0.0;
+  connection.y = 0.0;
   for (int i = 0; i < ITEMS; i++) {
     if (i != j) {
-      a = a + m[i] * (r[i] - r[j]) / ((pow(norm(r[i] - r[j]), 3)) + pow(10, -9));
+      connection = r[i] - r[j];
+      a = a + (m[i] / pow(norm(connection), 3)) * (connection);
     }
   }
-//   std::cout << a << std::endl;
+
+//   a *= G;
+//   a *= -1;
   return a;
 }
 

@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
   int c;
   void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h);
 
-  int iteration = INTEGRATION_EULER;
+  int iteration = INTEGRATION_RUNGE_KUTTA;
   string filename = "output";
   bool write_to_files = true;
 
