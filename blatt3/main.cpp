@@ -1,74 +1,34 @@
 #include <iostream>
 #include <cmath>
 #include <map>
+#include "main.h"
 
 using namespace std;
 
+const int STATIC_TRAPEZ = 0;
+const int STATIC_TRAPEZ_PRECISION = 1;
+const int STATIC_ADAPTIVE = 2;
 
-double integrate_trapez(
-  double (*function) (double x),
-  double start, double end,
-  double step_size);
-
-
-double integrate_easy (
-  double (*function) (double x),
-  double start, double end,
-  double step_size);
-
-double integrate_adaptive (
-  double (*function) (double x),
-  double start, double end,
-  double step_size);
-
-double integrate_trapez_precision(
-  double (*function) (double x),
-  double start, double end,
-  double precision);
-
-double sinus(double x) {
-  return sin(x);
-}
-
-double parabel(double x) {
-  return x * x;
-}
-
-double gerade(double x) {
-  return 1.0;
-}
-
-double func_si(double x) {
-  // Lim x -> 0 = 1.
-  if (x == 0) {
-    return 1.0;
-  }
-  return sin(x) / x;
-}
-
-double func_c(double x) {
-  return cos(M_PI * x * x / 2);
-}
 
 int main() {
   //double value = integrate_easy(&si, 0, x, 0.02);
   cout << "integration func_c" << endl;
   double value1 = integrate_trapez(&func_c, 0, 5, 0.02);
+  cout << value1 << " " << static_cache(STATIC_TRAPEZ) << endl;
   double value2 = integrate_adaptive(&func_c, 0, 5, 0.02);
+  cout << value2 << " " << static_cache(STATIC_ADAPTIVE) << endl;
   double value3 = integrate_trapez_precision(&func_c, 0, 5, pow(10, -8));
-  cout << value1 << endl;
-  cout << value2 << endl;
-  cout << value3 << endl;
+  cout << value3 << " " << static_cache(STATIC_TRAPEZ_PRECISION) << endl;
 
   // @todo
 // Adaptive currently fails on calculation from 0, so calculate a bit less.
   cout << "integration func_si" << endl;
   value1 = integrate_trapez(&func_si, 0, 1, 0.02);
+  cout << value1 << " " << static_cache(STATIC_TRAPEZ) << endl;
   value2 = integrate_adaptive(&func_si, 0, 1, 0.02);
+  cout << value2 << " " << static_cache(STATIC_ADAPTIVE) << endl;
   value3 = integrate_trapez_precision(&func_si, 0, 1, pow(10, -8));
-  cout << value1 << endl;
-  cout << value2 << endl;
-  cout << value3 << endl;
+  cout << value3 << " " << static_cache(STATIC_TRAPEZ_PRECISION) << endl;
   return 0;
 }
 
@@ -105,16 +65,17 @@ double integrate_trapez(
 
   double sum = 0.0;
 
-  int count_function_call = 0;
+  int function_calls = 0;
   while (left_side < end) {
     // Use the last right_side. We use constant step size.
     left_side = right_side;
     right_side = left_side + step_size;
     value_left_side = value_right_side;
     value_right_side = function(right_side);
-    count_function_call ++;
+    function_calls ++;
     sum += (right_side - left_side) / 2 * (value_left_side + value_right_side);
   }
+  static_cache(STATIC_TRAPEZ, function_calls);
 //   cout << count_function_call << endl;
 
   return sum;
@@ -138,12 +99,20 @@ double integrate_trapez_precision (
 
   double int_1 = 0.0;
   double int_2 = 0.0;
+
+  int function_calls = 0;
+
   do {
     int_1 = int_2;
     step_size *= 0.5;
+
+    // Hier kommt die eigentliche Integration mithilfe der Trapezregel bei einer bestimmen step_size.
     int_2 = integrate_trapez(function, start, end, step_size);
+    function_calls += static_cache(STATIC_TRAPEZ);
   }
-  while (int_schatz + int_1 == int_schatz + int_2);
+  while ((int_schatz + int_1) != (int_schatz + int_2));
+
+  static_cache(STATIC_TRAPEZ_PRECISION, function_calls);
 
   return int_2;
 }
@@ -225,11 +194,19 @@ double integrate_adaptive (
     }
   }
   while (tiefe_l > 0);
-//   cout << function_calls << endl;
-//   for (int i = 0; i < func_pos_a.size(); i++) {
-    //cout << func_pos_a[i] << endl;
-//   }
+  static_cache(STATIC_ADAPTIVE, function_calls);
 
   return int_sum;
 }
 
+double static_cache(int key, int value) {
+  static map<int, int> cache;
+
+  if (value == 0) {
+    return cache[key];
+  }
+  else {
+    cache[key] = value;
+    return value;
+  }
+}
