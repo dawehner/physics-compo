@@ -21,6 +21,11 @@ double integrate_adaptive (
   double start, double end,
   double step_size);
 
+double integrate_trapez_precision(
+  double (*function) (double x),
+  double start, double end,
+  double precision);
+
 double sinus(double x) {
   return sin(x);
 }
@@ -50,16 +55,20 @@ int main() {
   cout << "integration func_c" << endl;
   double value1 = integrate_trapez(&func_c, 0, 5, 0.02);
   double value2 = integrate_adaptive(&func_c, 0, 5, 0.02);
+  double value3 = integrate_trapez_precision(&func_c, 0, 5, pow(10, -8));
   cout << value1 << endl;
   cout << value2 << endl;
+  cout << value3 << endl;
 
   // @todo
 // Adaptive currently fails on calculation from 0, so calculate a bit less.
   cout << "integration func_si" << endl;
   value1 = integrate_trapez(&func_si, 0, 1, 0.02);
   value2 = integrate_adaptive(&func_si, 0, 1, 0.02);
+  value3 = integrate_trapez_precision(&func_si, 0, 1, pow(10, -8));
   cout << value1 << endl;
   cout << value2 << endl;
+  cout << value3 << endl;
   return 0;
 }
 
@@ -106,10 +115,40 @@ double integrate_trapez(
     count_function_call ++;
     sum += (right_side - left_side) / 2 * (value_left_side + value_right_side);
   }
-  cout << count_function_call << endl;
+//   cout << count_function_call << endl;
 
   return sum;
 }
+
+/**
+ * Use the trapez integration method to get a certain precision.
+ */
+double integrate_trapez_precision (
+  double (*function) (double x),
+  double start, double end,
+  double precision) {
+
+  // Set a default step size which isn't too small.
+  double step_size = 0.02;
+  double int_schatz = integrate_trapez(function, start, end, 0.02);
+
+  double delta = pow(10, -17);
+  double epsilon = precision;
+  int_schatz *= epsilon / delta;
+
+  double int_1 = 0.0;
+  double int_2 = 0.0;
+  do {
+    int_1 = int_2;
+    step_size *= 0.5;
+    int_2 = integrate_trapez(function, start, end, step_size);
+  }
+  while (int_schatz + int_1 == int_schatz + int_2);
+
+  return int_2;
+}
+
+
 
 double integrate_adaptive (
   double (*function) (double x),
@@ -186,7 +225,7 @@ double integrate_adaptive (
     }
   }
   while (tiefe_l > 0);
-  cout << function_calls << endl;
+//   cout << function_calls << endl;
 //   for (int i = 0; i < func_pos_a.size(); i++) {
     //cout << func_pos_a[i] << endl;
 //   }
