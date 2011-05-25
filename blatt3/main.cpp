@@ -210,3 +210,29 @@ double static_cache(int key, int value) {
     return value;
   }
 }
+
+
+double sinus(double x) {
+  return sin(x);
+}
+
+double parabel(double x) {
+  return x * x;
+}
+
+double gerade(double x) {
+  return 1.0;
+}
+
+double func_si(double x) {
+  // Lim x -> 0 = 1.
+  if (x == 0) {
+    return 1.0;
+  }
+  return sin(x) / x;
+}
+
+double func_c(double x) {
+  return cos(M_PI * x * x / 2);
+}
+
