@@ -16,37 +16,43 @@ void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, 
 }
 
 void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h) {
-  listv2d& r2 = r;
-  listv2d& v2 = v;
-  listv2d& a1 = a;
+  listv2d r1(ITEMS);
+  listv2d v1(ITEMS);
+  listv2d a1(ITEMS);
 
   // Die Beschleunigung wurde schon für die aktuellen r berechnet
   // => Berechne schätzwerte
-  integration_euler(r2, v2, a, m, h);
+  for (int i = 0; i < ITEMS; i++) {
+    // Calculate the next positions for r and v.
+    r1[i] = r[i] + h * v[i];
+    v1[i] = v[i] + h * a[i];
+  }
+
+  calc_accel_multiple(r1, a1, m);
 
   // Mit den neuen positionen/geschwindigkeiten kann man neue beschleunigungen ausrechnen
   // und damit wieder den endwert von heun.
   for (int i = 0; i < ITEMS; i++) {
-    r[i] = r[i] + 0.5 * h * (v[i] + v2[i]);
+    r[i] = r[i] + 0.5 * h * (v[i] + v1[i]);
     v[i] = v[i] + 0.5 * h * (a[i] + a1[i]);
   }
 }
 
 void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h) {
-  listv2d r1 = r;
-  listv2d r2 = r;
-  listv2d r3 = r;
-  listv2d r4 = r;
+  listv2d r1(ITEMS);
+  listv2d r2(ITEMS);
+  listv2d r3(ITEMS);
+  listv2d r4(ITEMS);
 
-  listv2d v1 = v;
-  listv2d v2 = v;
-  listv2d v3 = v;
-  listv2d v4 = v;
+  listv2d v1(ITEMS);
+  listv2d v2(ITEMS);
+  listv2d v3(ITEMS);
+  listv2d v4(ITEMS);
 
-  listv2d a1 = a;
-  listv2d a2 = a;
-  listv2d a3 = a;
-  listv2d a4 = a;
+  listv2d a1(ITEMS);
+  listv2d a2(ITEMS);
+  listv2d a3(ITEMS);
+  listv2d a4(ITEMS);
 
   for (int i = 0; i < ITEMS; i++) {
     r2[i] = r[i] + h * v1[i];
@@ -68,8 +74,8 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   calc_accel_multiple(r4, a4, m);
 
   for (int i = 0; i < ITEMS; i++) {
-    r[i] = r[i] + h/6 * (v1[i] + 2 * v2[i] + 2 * v3[i] + v4[i]);
-    v[i] = v[i] + h/6 * (a1[i] + 2 * a2[i] + 2 * a3[i] + a4[i]);
+    r[i] = r[i] + h/6 * (v[i] + 2 * v2[i] + 2 * v3[i] + v4[i]);
+    v[i] = v[i] + h/6 * (a[i] + 2 * a2[i] + 2 * a3[i] + a4[i]);
   }
 }
 
