@@ -156,8 +156,8 @@ int main(int argc, char **argv) {
   h = P / 100;
 
   while (count < t_max) {
-    integration_method(r, v, a, m, h);
     calc_accel_multiple(r, a, m);
+    integration_method(r, v, a, m, h);
 
     count++;
 
