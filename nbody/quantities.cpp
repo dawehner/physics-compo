@@ -31,8 +31,8 @@ double calc_energy(listv2d r, listv2d v, listdouble m) {
   for (int i = 0; i < v.size(); i++) {
     energy_kinetic += 0.5 * m[i] * pow(norm(v[i]), 2);
   }
-  double energy_potential = - 2 * m[0] * m[1] / (norm(r[0] - r[1]));
-  return energy_potential + energy_kinetic;
+  double energy_potential = - m[0] * m[1] / (norm(r[0] - r[1]));
+  return - 1 * energy_potential + energy_kinetic;
 }
 
 double calc_angular_momentum(vector <double> & m, double& great_half_axis, double& excentric) {

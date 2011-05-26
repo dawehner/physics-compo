@@ -44,26 +44,24 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   listv2d r3(ITEMS);
   listv2d r4(ITEMS);
 
-  listv2d v1(ITEMS);
   listv2d v2(ITEMS);
   listv2d v3(ITEMS);
   listv2d v4(ITEMS);
 
-  listv2d a1(ITEMS);
   listv2d a2(ITEMS);
   listv2d a3(ITEMS);
   listv2d a4(ITEMS);
 
   for (int i = 0; i < ITEMS; i++) {
-    r2[i] = r[i] + h * v1[i];
-    v2[i] = v[i] + h * a1[i];
+    r2[i] = r[i] + 0.5 * h * v[i];
+    v2[i] = v[i] + 0.5 * h * a[i];
   }
 
   calc_accel_multiple(r2, a2, m);
 
   for (int i = 0; i < ITEMS; i++) {
-    r3[i] = r[i] + h * v2[i];
-    v3[i] = v[i] + h * a2[i];
+    r3[i] = r[i] + 0.5 * h * v2[i];
+    v3[i] = v[i] + 0.5 * h * a2[i];
   }
   calc_accel_multiple(r3, a3, m);
 
@@ -74,28 +72,46 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   calc_accel_multiple(r4, a4, m);
 
   for (int i = 0; i < ITEMS; i++) {
-    r[i] = r[i] + h/6 * (v[i] + 2 * v2[i] + 2 * v3[i] + v4[i]);
-    v[i] = v[i] + h/6 * (a[i] + 2 * a2[i] + 2 * a3[i] + a4[i]);
+    r[i] = r[i] + h/6.0 * (v[i] + 2.0 * v2[i] + 2.0 * v3[i] + v4[i]);
+    v[i] = v[i] + h/6.0 * (a[i] + 2.0 * a2[i] + 2.0 * a3[i] + a4[i]);
   }
 }
 
 
 inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned int j) {
+//   vector2d a;
+//   a.x = 0.0;
+//   a.y = 0.0;
+//   vector2d connection;
+//   connection.x = 0.0;
+//   connection.y = 0.0;
+//   for (int i = 0; i < ITEMS; i++) {
+//     if (i != j) {
+//       connection = r[i] - r[j];
+//       a = a + (m[i] / pow(norm(connection), 3)) * (connection);
+//     }
+//   }
+// 
+// //   a *= G;
+// //   a *= -1;
+//   return a;
   vector2d a;
   a.x = 0.0;
   a.y = 0.0;
-  vector2d connection;
-  connection.x = 0.0;
-  connection.y = 0.0;
-  for (int i = 0; i < ITEMS; i++) {
-    if (i != j) {
-      connection = r[i] - r[j];
-      a = a + (m[i] / pow(norm(connection), 3)) * (connection);
-    }
+
+  int i = 0;
+
+  if (j == 0) {
+    i = 1;
+    a.x = m[1] * (r[i].x - r[j].x) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
+    a.y = m[1] * (r[i].y - r[j].y) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
+  }
+  else if (j == 1) {
+    i = 0;
+    a.x = m[0] * (r[i].x - r[j].x) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
+    a.y = m[0] * (r[i].y - r[j].y) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
   }
 
-//   a *= G;
-//   a *= -1;
   return a;
 }
 
