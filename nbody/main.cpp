@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
 
       double great_half_axis = calc_great_half_axis(r_rel, v_rel, m);
       double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis);
-      double energy = calc_energy(m, great_half_axis);
+      double energy = calc_energy(r, v, m);
       double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
 
       output_converseved_quantities(energy, angular_momentum, output_file_energy, output_file_angular_momentum);
@@ -182,16 +182,16 @@ int main(int argc, char **argv) {
   if (output_file.is_open()) {
     output_file.close();
   }
-    if (output_file_energy.is_open()) {
+  if (output_file_energy.is_open()) {
     output_file_energy.close();
   }
-    if (output_file_angular_momentum.is_open()) {
+  if (output_file_angular_momentum.is_open()) {
     output_file_angular_momentum.close();
   }
-    if (output_file_a.is_open()) {
+  if (output_file_a.is_open()) {
     output_file_a.close();
   }
-    if (output_file_e.is_open()) {
+  if (output_file_e.is_open()) {
     output_file_e.close();
   }
 
@@ -206,7 +206,7 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
   // headers
 //   cout << "x \t y \t vx \t vy \t ax \t ay \t m" << endl;
   if (output_file.is_open()) {
-    for (vector< vector<int> >::size_type i = 1; i < r.size(); i++) {
+    for (vector< vector<int> >::size_type i = 0; i < r.size(); i++) {
       // Just output the data of the second body, which is moving
       output_file << r[i] << "\t";
       output_file << v[i] << "\t";
