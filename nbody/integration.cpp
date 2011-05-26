@@ -79,39 +79,21 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
 
 
 inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned int j) {
-//   vector2d a;
-//   a.x = 0.0;
-//   a.y = 0.0;
-//   vector2d connection;
-//   connection.x = 0.0;
-//   connection.y = 0.0;
-//   for (int i = 0; i < ITEMS; i++) {
-//     if (i != j) {
-//       connection = r[i] - r[j];
-//       a = a + (m[i] / pow(norm(connection), 3)) * (connection);
-//     }
-//   }
-// 
-// //   a *= G;
-// //   a *= -1;
-//   return a;
   vector2d a;
   a.x = 0.0;
   a.y = 0.0;
-
-  int i = 0;
-
-  if (j == 0) {
-    i = 1;
-    a.x = m[1] * (r[i].x - r[j].x) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
-    a.y = m[1] * (r[i].y - r[j].y) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
-  }
-  else if (j == 1) {
-    i = 0;
-    a.x = m[0] * (r[i].x - r[j].x) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
-    a.y = m[0] * (r[i].y - r[j].y) / ( pow(sqrt(pow(r[i].x - r[j].x, 2) + pow(r[i].y - r[j].y, 2)), 3));
+  vector2d connection;
+  connection.x = 0.0;
+  connection.y = 0.0;
+  for (int i = 0; i < ITEMS; i++) {
+    if (i != j) {
+      connection = r[i] - r[j];
+      a = a + (m[i] / pow(norm(connection), 3)) * (connection);
+    }
   }
 
+//   a *= G;
+//   a *= -1;
   return a;
 }
 
