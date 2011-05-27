@@ -2,7 +2,7 @@
 # Some abstraction might help here as well.
 output_helper() {
 
-  ../nbody -o output-$1 -i $2
+  ./nbody -o output-$1 -i $2
 
   if [ ! -d "$1" ]; then
     mkdir $1
