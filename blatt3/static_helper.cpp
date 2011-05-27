@@ -1,5 +1,7 @@
 #include <map>
 
+using namespace std;
+
 /**
  * Stores some things statically to be reused somewhere else.
  * This is basically some kind of global key value store.

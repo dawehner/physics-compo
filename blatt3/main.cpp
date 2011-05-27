@@ -1,14 +1,11 @@
 #include <iostream>
 #include <cmath>
 
+#include "static_helper.h"
+#include "integration.cpp"
 #include "main.h"
-#include "static_helper.cpp"
 
 using namespace std;
-
-const int STATIC_TRAPEZ = 0;
-const int STATIC_TRAPEZ_PRECISION = 1;
-const int STATIC_ADAPTIVE = 2;
 
 
 int main() {

@@ -19,8 +19,6 @@ double integrate_trapez_precision(
   double start, double end,
   double precision);
 
-double static_cache(int key, int value = 0);
-
 double sinus(double x);
 double parabel(double x);
 double gerade(double x);
