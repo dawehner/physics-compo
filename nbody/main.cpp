@@ -17,6 +17,8 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum);
 void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e);
 void init_values_from_file(listv2d& r, listv2d& v, listdouble& m, string input_filename);
+void init_values_default(listv2d& r, listv2d& v, listv2d& a, listdouble& m);
+
 
 int main(int argc, char **argv) {
   int c;
@@ -26,7 +28,7 @@ int main(int argc, char **argv) {
   string filename = "output";
   string input_filename = "input.dat";
   bool write_to_files = true;
-  bool read_from_file = true;
+  bool read_from_file = false;
 
   double h;
   int P_count = 10;
@@ -109,53 +111,14 @@ int main(int argc, char **argv) {
   }
 
 
-  vector< vector2d > a;
+  listv2d r, v, a;
+  listdouble m;
   double tk;
 
   // Some example content.
   h = 0.1;
   tk = 0.0;
-
-  double e = 0.3;
-  double m2 = 1e-3;
-
-  vector2d r1, r2;
-  vector2d v1, v2;
-
-  r1.y = 0.0;
-  r2.y = 0.0;
-
-  double dp = 1.0 - e;
-  r1.x = - 1.0 * dp * m2 / (1.0 + m2);
-  r2.x = dp * (1.0 + m2);
-
-  v1.x = 0.0;
-  v2.x = 0.0;
-
-  // L = \mu * sqrt((1-e^2) * G * M * a)
-  double mu = m2/(1.0 + m2);
-  double L = mu * sqrt((1.0 - e*e) * (1.0 + m2));
-  v2.y = (L / (dp * m2));
-  v1.y = - L / dp;
-
-  vector<double> m;
-  m.push_back(1.0);
-  m.push_back(m2);
-
-  vector <vector2d> r;
-  r.push_back(r1);
-  r.push_back(r2);
-  vector <vector2d> v;
-  v.push_back(v1);
-  v.push_back(v2);
-
-  vector2d a1;
-  a1.x = 0.0;
-  a1.y = 0.0;
-  a.push_back(a1);
-  vector2d a2 = a1;
-  a.push_back(v2);
-
+  init_values_default(r, v, a, m);
 
   // Allow to input the data with a file.
   if (read_from_file) {
@@ -263,13 +226,51 @@ void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, of
   }
 }
 
+void init_values_default(listv2d& r, listv2d& v, listv2d& a, listdouble& m) {
+  double e = 0.3;
+  double m2 = 1e-3;
+
+  vector2d r1, r2;
+  vector2d v1, v2;
+
+  r1.y = 0.0;
+  r2.y = 0.0;
+
+  double dp = 1.0 - e;
+  r1.x = - 1.0 * dp * m2 / (1.0 + m2);
+  r2.x = dp * (1.0 + m2);
+
+  v1.x = 0.0;
+  v2.x = 0.0;
+
+  // L = \mu * sqrt((1-e^2) * G * M * a)
+  double mu = m2/(1.0 + m2);
+  double L = mu * sqrt((1.0 - e*e) * (1.0 + m2));
+  v2.y = (L / (dp * m2));
+  v1.y = - L / dp;
+
+  m.push_back(1.0);
+  m.push_back(m2);
+
+  r.push_back(r1);
+  r.push_back(r2);
+  v.push_back(v1);
+  v.push_back(v2);
+
+  vector2d a1;
+  a1.x = 0.0;
+  a1.y = 0.0;
+  vector2d a2;
+  a2.x = 0.0;
+  a2.y = 0.0;
+  a.push_back(a1);
+  a.push_back(v2);
+}
+
 /**
  * Read the initial data from a textfile.
  */
 void init_values_from_file(listv2d& r, listv2d& v, listdouble& m, string input_filename) {
-  cout << "here we are" << endl;
-
-
   string line;
 
   char* input_filename_char = const_cast<char*>(input_filename.c_str());
@@ -294,9 +295,10 @@ void init_values_from_file(listv2d& r, listv2d& v, listdouble& m, string input_f
       r1.y = convertToDouble(tokens[1]);
       v1.x = convertToDouble(tokens[2]);
       v1.y = convertToDouble(tokens[3]);
+      m1 = convertToDouble(tokens[4]);
+
       r.push_back(r1);
       v.push_back(v1);
-      m1 = convertToDouble(tokens[4]);
       m.push_back(m1);
     }
     input.close();
