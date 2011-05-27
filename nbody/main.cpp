@@ -1,11 +1,12 @@
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
-#include "integration.cpp"
-#include <fstream>
-#include "quantities.cpp"
+#include <istream>
 #include <vector>
 #include <fstream>
+
+#include "integration.cpp"
+#include "quantities.cpp"
 #include "string_helper.cpp"
 
 using namespace std;
@@ -265,22 +266,38 @@ void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, of
 /**
  * Read the initial data from a textfile.
  */
-void void init_values_from_file(listv2d& r, listv2d& v, listdouble& m, string input_filename) {
-  r.clear();
-  v.clear();
-  m.clear();
+void init_values_from_file(listv2d& r, listv2d& v, listdouble& m, string input_filename) {
+  cout << "here we are" << endl;
+
 
   string line;
-  ifstream input(input_filename);
+
+  char* input_filename_char = const_cast<char*>(input_filename.c_str());
+  ifstream input(input_filename_char);
+
   vector<string> tokens;
 
   if (input.is_open()) {
+    r.clear();
+    v.clear();
+    m.clear();
+
     while (input.good()) {
       tokens.clear();
       getline(input, line);
       split(line, " ", tokens);
-      vector2d r;
-      r.x = 
+
+      vector2d r1, v1;
+      double m1 = 0.0;
+
+      r1.x = convertToDouble(tokens[0]);
+      r1.y = convertToDouble(tokens[1]);
+      v1.x = convertToDouble(tokens[2]);
+      v1.y = convertToDouble(tokens[3]);
+      r.push_back(r1);
+      v.push_back(v1);
+      m1 = convertToDouble(tokens[4]);
+      m.push_back(m1);
     }
     input.close();
   }
