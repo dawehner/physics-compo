@@ -5,6 +5,8 @@
 #include <fstream>
 #include "quantities.cpp"
 #include <vector>
+#include <fstream>
+#include "string_helper.cpp"
 
 using namespace std;
 
@@ -13,6 +15,7 @@ ofstream emptystream;
 void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, ofstream& output_file);
 void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum);
 void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e);
+void init_values_from_file(listv2d& r, listv2d& v, listdouble& m, string input_filename);
 
 int main(int argc, char **argv) {
   int c;
@@ -20,28 +23,38 @@ int main(int argc, char **argv) {
 
   int iteration = INTEGRATION_RUNGE_KUTTA;
   string filename = "output";
+  string input_filename = "input.dat";
   bool write_to_files = true;
+  bool read_from_file = true;
 
   double h;
   int P_count = 10;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:f:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
         iteration = atof(optarg);
       // set excent value
         break;
+      // Set the output filenames
       case 'o':
         filename = optarg;
         write_to_files = true;
         break;
+      // Set stepsize
       case 'h':
         h = atof(optarg);
         break;
+      // Set the amount of periods
       case 'c':
         P_count = atof(optarg);
+      // Set the input filenames.
+      case 'f':
+        read_from_file = true;
+        input_filename = optarg;
+        break;
     }
   }
 
@@ -142,6 +155,12 @@ int main(int argc, char **argv) {
   vector2d a2 = a1;
   a.push_back(v2);
 
+
+  // Allow to input the data with a file.
+  if (read_from_file) {
+    init_values_from_file(r, v, m, input_filename);
+  }
+
 //   calc_accel_multiple(r, a, m);
 
   double P = calc_periode(m);
@@ -240,5 +259,29 @@ void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, of
 
   if (output_file_e.is_open()) {
     output_file_e << e1 << endl;
+  }
+}
+
+/**
+ * Read the initial data from a textfile.
+ */
+void void init_values_from_file(listv2d& r, listv2d& v, listdouble& m, string input_filename) {
+  r.clear();
+  v.clear();
+  m.clear();
+
+  string line;
+  ifstream input(input_filename);
+  vector<string> tokens;
+
+  if (input.is_open()) {
+    while (input.good()) {
+      tokens.clear();
+      getline(input, line);
+      split(line, " ", tokens);
+      vector2d r;
+      r.x = 
+    }
+    input.close();
   }
 }
