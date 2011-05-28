@@ -105,35 +105,62 @@ int main(int argc, char **argv) {
   double e = 0.3;
   double m2 = 1e-3;
 
-  vector2d r1, r2;
-  vector2d v1, v2;
+  vector2d r1, r2, r3, r4;
+  vector2d v1, v2, v3, v4;
 
-  r1.y = 0.0;
-  r2.y = 0.0;
+  r1.x = 1;
+  r2.x = -1;
+  r3.x = 0;
+  r4.x = 0;
+  r1.y = 0;
+  r2.y = 0;
+  r3.y = 1;
+  r4.y = -1;
+  v1.x = 0;
+  v2.x = 0;
+  v3.x = -1.2;
+  v4.x = 1.2;
+  v1.y = 1.2;
+  v2.y = -1.2;
+  v3.y = 0;
+  v4.y = 0;
 
-  double dp = 1.0 - e;
-  r1.x = - 1.0 * dp * m2 / (1.0 + m2);
-  r2.x = dp * (1.0 + m2);
-
-  v1.x = 0.0;
-  v2.x = 0.0;
-
-  // L = \mu * sqrt((1-e^2) * G * M * a)
-  double mu = m2/(1.0 + m2);
-  double L = mu * sqrt((1.0 - e*e) * (1.0 + m2));
-  v2.y = (L / (dp * m2));
-  v1.y = - L / dp;
-
-  vector<double> m;
-  m.push_back(1.0);
-  m.push_back(m2);
+  listdouble m;
+  m.push_back(200);
+  m.push_back(200);
+  m.push_back(200);
+  m.push_back(200);
+//   r1.y = 0.0;
+//   r2.y = 0.0;
+// 
+//   double dp = 1.0 - e;
+//   r1.x = - 1.0 * dp * m2 / (1.0 + m2);
+//   r2.x = dp * (1.0 + m2);
+// 
+//   v1.x = 0.0;
+//   v2.x = 0.0;
+// 
+//   // L = \mu * sqrt((1-e^2) * G * M * a)
+//   double mu = m2/(1.0 + m2);
+//   double L = mu * sqrt((1.0 - e*e) * (1.0 + m2));
+//   v2.y = (L / (dp * m2));
+//   v1.y = - L / dp;
+// 
+//   vector<double> m;
+//   m.push_back(1.0);
+//   m.push_back(m2);
 
   vector <vector2d> r;
   r.push_back(r1);
   r.push_back(r2);
+  r.push_back(r3);
+  r.push_back(r4);
+
   vector <vector2d> v;
   v.push_back(v1);
   v.push_back(v2);
+  v.push_back(v3);
+  v.push_back(v4);
 
   vector2d a1;
   a1.x = 0.0;

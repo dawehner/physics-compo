@@ -1,8 +1,5 @@
 #include "static_helper.h"
-
-const int STATIC_TRAPEZ = 0;
-const int STATIC_TRAPEZ_PRECISION = 1;
-const int STATIC_ADAPTIVE = 2;
+#include "integration.h"
 
 /**
  * This function just takes the function values in the middle between two intervalls * step_size.
