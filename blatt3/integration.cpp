@@ -1,5 +1,7 @@
 #include "static_helper.h"
 #include "integration.h"
+#include <cmath>
+#include <iostream>
 
 /**
  * This function just takes the function values in the middle between two intervalls * step_size.
@@ -70,17 +72,49 @@ double integrate_trapez_precision (
   double int_2 = 0.0;
 
   int function_calls = 0;
+  // try to fix the compiler problem.
+  double t1;
+  double t2;
 
-  do {
+  while (true) {
     int_1 = int_2;
     step_size *= 0.5;
 
     // Hier kommt die eigentliche Integration mithilfe der Trapezregel bei einer bestimmen step_size.
     int_2 = integrate_trapez(function, start, end, step_size);
     function_calls += static_cache(STATIC_TRAPEZ);
-  }
-  while ((int_schatz + int_1) != (int_schatz + int_2));
 
+    /**
+     * Comment about compiler optimisation.
+     *
+     * Here it would be possible to do a do() while() loop
+     * with the following condition.
+     *
+     * @code
+     * while ((int_schatz + int_1 != int_schatz + int_2))
+     * @endcode
+     *
+     * But new versions of the gcc compiler convert them to
+     * @code
+     * while ((int_1 != int_2))
+     * @endcode
+     * which seems to be fine mathematical as long you don't want to use certain machine precision.
+     *
+     * So the Solution is to define new variables to be 100% sure that it adds the values.
+     *
+     * @todo
+     * Find out how to disable the compiler optimisation.
+     */
+    t1 = int_schatz + int_1;
+    t2 = int_schatz + int_2;
+    if (t1 != t2) {
+    }
+    else {
+      break;
+    }
+  }
+
+  // Speichert die Anzahl der Schritte.
   static_cache(STATIC_TRAPEZ_PRECISION, function_calls);
 
   return int_2;
@@ -131,11 +165,6 @@ double integrate_adaptive (
     h = func_pos_a[grenze_rechts_k] - func_pos_a[grenze_links_j];
     m = (func_pos_a[grenze_rechts_k] + func_pos_a[grenze_links_j]) / 2;
 
-    // @todo
-    // Find out whether this todo is valid.
-    // @todo
-    // This function is called too many times. There is no reason here to call the function itself all the time.
-    // It might be called already and stored in func_values.
     fm = function(m);
     function_calls++;
     int_1 = h * (func_values[grenze_links_j] + func_values[grenze_rechts_k]) / 2;
@@ -163,6 +192,8 @@ double integrate_adaptive (
     }
   }
   while (tiefe_l > 0);
+
+  // Speichert die anzahl der schritte.
   static_cache(STATIC_ADAPTIVE, function_calls);
 
   return int_sum;
