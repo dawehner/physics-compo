@@ -43,3 +43,4 @@ EOF
 output_helper "heun" 1
 output_helper "runge_kutta" 2
 output_helper "euler" 0
+output_helper "leap" 3

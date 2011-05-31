@@ -77,6 +77,16 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   }
 }
 
+void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h) {
+  listv2d v1(ITEMS);
+
+  for (int i = 0; i < ITEMS; i++) {
+    v1[i] = v[i] + 0.5 * h * calc_accel(r, m, i);
+    r[i] = r[i] + h * v1[i];
+    v[i] = v1[i] + 0.5 * h * calc_accel(r, m, i);
+  }
+}
+
 
 inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned int j) {
   vector2d a;
