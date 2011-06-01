@@ -1,0 +1,101 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage[sumlimits,intlimits,namelimits]{amsmath}
+\usepackage{amssymb,amscd}
+\usepackage{dsfont}
+\usepackage{mathpazo}
+\usepackage[scaled = 0.95]{helvet}
+\usepackage{courier}
+\usepackage{amsmath}
+
+\newcommand{\bra}[1]{\left\langle #1 \right|}
+\newcommand{\ket}[1]{\left| #1\right\rangle}
+\newcommand{\skal}[2]{\left\langle #1 | #2 \right\rangle}
+\newcommand{\mskal}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\dx}{\:\text{\normalfont{d}}}
+\newcommand{\e}[1]{\text{\normalfont{e}}^{#1}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\N}{\mathds N}
+\newcommand{\Z}{\mathds Z}
+\newcommand{\R}{\mathds R}
+\newcommand{\Q}{\mathds Q}
+\newcommand{\C}{\mathds C}
+\newcommand{\K}{\mathds K}
+\newcommand{\V}{\mathds V}
+\newcommand{\I}{\Im}
+\newcommand{\Loes}[1]{\mathds L &:=\left\{ #1 \right\}}
+\newcommand{\prt}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\diff}[2]{\frac{\text{d} #1}{\text{d} #2}}
+\newcommand{\Diff}[1]{\frac{\text{d}}{\text{d} #1}}
+\newcommand{\svec}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\newcommand{\detm}[1]{\begin{vmatrix} #1 \end{vmatrix}}
+\newcommand{\BegLGS}[1]{\left\{\begin{array}{#1}}
+\newcommand{\EndLGS}{\end{array}\right.}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+%----------Textkommandos-----------------
+\newcommand{\DEF}[1]{\subsection[Definition: #1]{Definition (#1):}}
+\newcommand{\KOR}[1]{\subsection[Korollar: #1]{Korollar (#1):}}
+\newcommand{\LEMMA}[1]{\subsection[Lemma: #1]{Lemma (#1):}}
+\newcommand{\BEM}{\paragraph{Bemerkung:}}
+\newcommand{\BSP}{\paragraph{\textcolor{HeadColor}{Beispiel.}}}
+\newcommand{\SATZ}[1]{\subsection[Satz: #1]{\textsc{Satz (#1):}}}
+%----------Alphabetische Sortierung------
+\newcounter{ale}
+\newcommand{\abc}{\item[\alph{ale})]\stepcounter{ale}}
+\newenvironment{liste}{\begin{itemize}}{\end{itemize}}
+\newcommand{\aliste}{\begin{liste} \setcounter{ale}{1}}
+\newcommand{\zliste}{\end{liste}}
+\newenvironment{abcliste}{\aliste}{\zliste}
+
+%opening
+
+\begin{document}
+
+\section{Aufgabe 7}
+
+Zu zeigen ist, dass die folgende Variante der partitionierten Euler-Methode symplektisch ist.
+
+\begin{align*}
+ q^{n+1} &= q^n + \Delta t \prt H p \left(q^{n + 1}, p^n \right) = q^n + h \prt H p \left(q^{n + 1}, p^n \right) =  \\
+ p^{n+1} &= p^n - \Delta t \prt H q \left(q^{n + 1}, p^n \right) = p^n - h \prt H q \left(q^{n + 1}, p^n \right)\\
+\end{align*}
+
+Wie im Skript unter 3.53 gezeigt wurde, reicht es wenn Poisson-Klammern 1 ergeben.
+Dazu müssen die partiellen Ableitungen berechnet werden:
+
+\begin{align*}
+q^{n+1}_q &= 1 + h H_{,pq} \cdot q^{n+1}_{,q} + h H_{,pp} p^n_{,q} =  1 + h H_{,pq} \cdot q^{n+1}_{,q} \\
+q^{n+1}_p &= 0 + h H_{,pq} \cdot q^{n+1}_{,p} + h H_{,pp} p^n_{,p} = h H_{,pq} \cdot q^{n+1}_{,p} + h H_{,pp} \\
+p^{n+1}_q &= 0 - h H_{,qq} \cdot q^{n+1}_{,q} - h H_{,qp}  \cdot p^{n}_{,q} = - h H_{,qq}  \cdot q^{n+1}_{,q} \\
+p^{n+1}_p &= 1 - h H_{,qq} \cdot q^{n+1}_{,p} - h H_{,qp} \\
+\end{align*}
+Die ersten beiden Gleichungen lassen sich direkt auf eine explizite Form bringen(d.h. nicht direkt von q und p abhängig sondern nur von Ableitungen von H).
+\begin{align*}
+q^{n+1}_q &= \frac{1}{1 - h H_{,pq}} \\
+q^{n+1}_p &= \frac{h H_{,pp}}{1 - h H_{,pq}} \\
+\Rightarrow
+p^{n+1}_q &= - h H_{,qq}  \cdot q^{n+1}_{,q} = - h H_{,qq}  \cdot \frac{1}{1 - h H_{,pq}} \\
+p^{n+1}_p &= 1 - h H_{,qq} \cdot q^{n+1}_{,p} - h H_{,qp} = 1 - h H_{,qp} - h H_{,qq} \cdot \frac{h H_{,pp}}{1 - h H_{,pq}}
+\end{align*}
+Damit ergibt sich für die Poisson-Klammer:
+\begin{align*}
+\left\{
+  q^{n+1}, p^{n+1}
+\right\} &= q^{n+1}_{,q} \cdot p^{n+1}_{,p} - q^{n+1}_{,p} \cdot p^{n+1}_{,q} \\
+&=
+\left(\frac{1}{1 - h H_{,pq}}\right) \cdot
+\left(1 - h H_{,qp} - h H_{,qq} \cdot \frac{h H_{,pp}}{1 - h H_{,pq}}\right)
+-
+\left(\frac{h H_{,pp}}{1 - h H_{,pq}}\right)
+\left(\frac{- h H_{,qq}}{1 - h H_{,pq}} \right) \\
+&= 1 - \frac{h^2 H_{,qq} H_{,pp}}{(1- h H{,pq})^2}
++ \frac{h^2 H_{,qq} H_{,pp}}{(1- h H{,pq})^2} = 1 \\
+\end{align*}
+
+Damit ist die obige Methode symplektisch.
+
+\end{document}
