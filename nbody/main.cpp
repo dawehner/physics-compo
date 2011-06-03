@@ -214,9 +214,9 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
   if (output_file.is_open()) {
     for (vector< vector<int> >::size_type i = 0; i < r.size(); i++) {
       // Just output the data of the second body, which is moving
-      output_file << r[i] << "\t";
-      output_file << v[i] << "\t";
-      output_file << a[i] << "\t";
+      output_file << scientific << r[i] << "\t";
+      output_file << scientific << v[i] << "\t";
+      output_file << scientific << a[i] << "\t";
 //       output_file << m[i];
       output_file << endl;
     }
@@ -228,10 +228,10 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
  */
 void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum) {
   if (output_file_energy.is_open()) {
-    output_file_energy << E1 << endl;
+    output_file_energy << scientific << E1 << endl;
   }
   if (output_file_angular_momentum.is_open()) {
-    output_file_angular_momentum << L1 << endl;
+    output_file_angular_momentum << scientific << L1 << endl;
   }
 }
 
@@ -241,10 +241,10 @@ void output_converseved_quantities(double E1, double L1, ofstream& output_file_e
  */
 void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e) {
   if (output_file_a.is_open()) {
-    output_file_a << a1 << endl;
+    output_file_a << scientific << a1 << endl;
   }
 
   if (output_file_e.is_open()) {
-    output_file_e << e1 << endl;
+    output_file_e << scientific << e1 << endl;
   }
 }

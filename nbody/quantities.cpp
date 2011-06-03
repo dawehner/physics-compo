@@ -15,14 +15,15 @@ double calc_t_max(double periode, double count_periods, double steps_per_orbit) 
 double calc_great_half_axis(vector2d& r, vector2d& v, vector< double>& m) {
   // @todo include G
   return pow(
-    2/norm(r) - (pow(v.x, 2) + pow(v.y, 2))/(m[0] + m[1])
+    2/norm(r) - pow(norm(v), 2)/(m[0] + m[1])
   , -1);
 }
 
 double calc_excentric(vector2d& r, vector2d& v, vector< double>& m, double& great_half_axis) {
   // @todo include G
+  double h = r.x * v.y - r.y * v.x;
   return sqrt(
-    1 - (r.x * v.y - r.y - v.x) / ((m[0] + m[1]) * great_half_axis)
+    1 - pow(h, 2) / ((m[0] + m[1]) * great_half_axis)
   );
 }
 

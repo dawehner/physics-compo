@@ -17,19 +17,29 @@ output_helper() {
 #   set xrange[-1:1]
 #   set yrange[-1:1]
   set output "output.eps"
-  set terminal postscript
+  set terminal png size 800, 800
   plot "output-$1.dat" using 1:2 with points
 EOF
   /usr/bin/gnuplot << EOF
   set output "energy.eps"
-  set terminal postscript
+  set terminal png size 800, 800
   plot "output-$1-energy.dat" with points
 EOF
-#   /usr/bin/gnuplot << EOF
-#   set output "momentum.eps"
-#   set terminal postscript
-#   plot "output-$1-momentum.dat" with points
-# EOF
+  /usr/bin/gnuplot << EOF
+  set output "momentum.eps"
+  set terminal png size 800, 800
+  plot "output-$1-momentum.dat" with points
+EOF
+  /usr/bin/gnuplot << EOF
+  set output "axis.eps"
+  set terminal png size 800, 800
+  plot "output-$1-axis.dat" with points
+EOF
+  /usr/bin/gnuplot << EOF
+  set output "excentric.eps"
+  set terminal png size 800, 800
+  plot "output-$1-excentric.dat" with points
+EOF
 
 # /usr/bin/gnuplot << EOF
 #   set output "momentum.eps"
