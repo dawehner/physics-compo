@@ -88,6 +88,9 @@ void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble&
 }
 
 
+/**
+ * Calculate the accelleration of one body.
+ */
 inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned int j) {
   vector2d a;
   a.x = 0.0;
@@ -107,6 +110,9 @@ inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned 
   return a;
 }
 
+/**
+ * Calculate the accelleration of all bodies.
+ */
 void calc_accel_multiple(const listv2d& r, listv2d& a, const vector<double>&m) {
   for (vector< vector<int> >::size_type i = 0; i < ITEMS; i++) {
     a[i] = calc_accel(r, m, i);
