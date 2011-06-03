@@ -16,7 +16,7 @@ void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, of
 
 int main(int argc, char **argv) {
   int c;
-  void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h);
+  void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, int ti);
 
   int iteration = INTEGRATION_RUNGE_KUTTA;
   string filename = "output";
@@ -156,14 +156,16 @@ int main(int argc, char **argv) {
   int count = 0;
   int steps_per_orbit = 100;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
+  int ti = 0;
 
   h = P / 100;
 
   while (count < t_max) {
     calc_accel_multiple(r, a, m);
-    integration_method(r, v, a, m, h);
+    integration_method(r, v, a, m, h, ti);
 
     count++;
+    ti ++;
 
     if (write_to_files) {
       output_movement_data(r, v, a, m, output_file);
