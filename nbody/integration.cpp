@@ -7,7 +7,7 @@ void integration_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m) {
   return;
 }
 
-void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, int ti) {
+void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
   for (int i = 0; i < ITEMS; i++) {
     // Calculate the next positions for r and v.
     r[i] = r[i] + h * v[i];
@@ -15,7 +15,7 @@ void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, 
   }
 }
 
-void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, int ti) {
+void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
   listv2d r1(ITEMS);
   listv2d v1(ITEMS);
   listv2d a1(ITEMS);
@@ -38,7 +38,7 @@ void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, d
   }
 }
 
-void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, int ti) {
+void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
   listv2d r1(ITEMS);
   listv2d r2(ITEMS);
   listv2d r3(ITEMS);
@@ -77,7 +77,7 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   }
 }
 
-void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, int ti) {
+void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
   listv2d v1(ITEMS);
 
   // Store the previous accellerations so they don't have to be calculcated again
