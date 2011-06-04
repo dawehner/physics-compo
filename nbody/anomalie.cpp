@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include "anomalie.h"
+#include <iostream>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ double generate_anomalie_excent(double excent, double anomalie_middle) {
 
   int i = 0;
   double min = 10e-9;
-  while ((abs(anomalie_excent - anomalie_excent_last) > min) && i < 10000) {
+  while ((fabs(anomalie_excent - anomalie_excent_last) > min) && i < 10000) {
     anomalie_excent_last = anomalie_excent;
     anomalie_excent = iteration_newton(anomalie_excent, excent, anomalie_middle);
     i++;
@@ -39,6 +40,24 @@ double iteration_newton(double anomalie_excent, double excent, double anomalie_m
   double result = anomalie_excent
     - (funcvalue / diffvalue);
   return result;
+}
+
+inline double anomalie_calc_phi(double anomalie_excent, double excent) {
+  return 2 * atan(
+     sqrt((1+excent)/(1-excent)) *
+    tan(anomalie_excent / 2));
+ }
+inline double anomalie_calc_r(double a, double e, double phi, double phi0) {
+  // phi0 is not used here.
+  return (a * (1 - e * e)) / (1 + e * cos(phi - 0));
+}
+
+inline double anomalie_calc_x(double r, double phi, double phi0) {
+  return r * cos(phi + phi0);
+}
+
+inline double anomalie_calc_y(double r, double phi, double phi0) {
+  return r * sin(phi + phi0);
 }
 
 #endif
