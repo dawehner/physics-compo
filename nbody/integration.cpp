@@ -7,7 +7,7 @@ void integration_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m) {
   return;
 }
 
-void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h) {
+void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
   for (int i = 0; i < ITEMS; i++) {
     // Calculate the next positions for r and v.
     r[i] = r[i] + h * v[i];
@@ -15,7 +15,7 @@ void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, 
   }
 }
 
-void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h) {
+void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
   listv2d r1(ITEMS);
   listv2d v1(ITEMS);
   listv2d a1(ITEMS);
@@ -38,7 +38,7 @@ void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, d
   }
 }
 
-void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h) {
+void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
   listv2d r1(ITEMS);
   listv2d r2(ITEMS);
   listv2d r3(ITEMS);
@@ -77,7 +77,32 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   }
 }
 
+void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
+  listv2d v1(ITEMS);
 
+  // Store the previous accellerations so they don't have to be calculcated again
+  static listv2d previous_accel;
+  if (previous_accel.size() == 0) {
+    for (int i = 0; i < ITEMS; i++) {
+      previous_accel.push_back(calc_accel(r, m, i));
+    }
+  }
+
+  for (int i = 0; i < ITEMS; i++) {
+    // Use previous calculated f(t) for the new speed.
+    v1[i] = v[i] + 0.5 * h * previous_accel[i];
+    r[i] = r[i] + h * v1[i];
+
+    //Calculate f(t+1) for the new speed.
+    previous_accel[i] = calc_accel(r, m, i);
+    v[i] = v1[i] + 0.5 * h * previous_accel[i];
+  }
+}
+
+
+/**
+ * Calculate the accelleration of one body.
+ */
 inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned int j) {
   vector2d a;
   a.x = 0.0;
@@ -97,6 +122,9 @@ inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned 
   return a;
 }
 
+/**
+ * Calculate the accelleration of all bodies.
+ */
 void calc_accel_multiple(const listv2d& r, listv2d& a, const vector<double>&m) {
   for (vector< vector<int> >::size_type i = 0; i < ITEMS; i++) {
     a[i] = calc_accel(r, m, i);
