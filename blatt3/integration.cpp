@@ -3,6 +3,15 @@
 #include <cmath>
 #include <iostream>
 
+
+double smallest_double() {
+  double val = 1.0;
+  while (1.0 + val != 1.0) {
+    val *= 0.5;
+  }
+  return val;
+}
+
 /**
  * This function just takes the function values in the middle between two intervalls * step_size.
  */
@@ -62,9 +71,9 @@ double integrate_trapez_precision (
 
   // Set a default step size which isn't too small.
   double step_size = 0.02;
-  double int_schatz = integrate_trapez(function, start, end, 0.02);
+  double int_schatz = integrate_trapez(function, start, end, 0.00001);
 
-  double delta = pow(10, -17);
+  double delta = smallest_double();
   double epsilon = precision;
   int_schatz *= epsilon / delta;
 
@@ -130,7 +139,7 @@ double integrate_adaptive (
   // Schaetzintegral berechnen.
   double int_schatz = integrate_trapez(function, start, end, step_size);
   // Maschinengenauigkeit beachten.
-  double delta = pow(10, -17);
+  double delta = smallest_double();
   double epsilon = pow(10, -8);
   int_schatz =  int_schatz * epsilon / delta;
 
