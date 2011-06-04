@@ -1,25 +1,22 @@
+#ifndef QUANTITIES_CPP
+#define QUANTITIES_CPP
+
 #include <cmath>
 #include "vector.cpp"
 #include <vector>
 
-
-double calc_great_half_axis(vector2d& r, vector2d& v, vector< double>& m);
-double calc_excentric(vector2d& r, vector2d& v, vector< double>& m, double& great_half_axis);
-double calc_energy(listv2d r, listv2d v, listdouble m);
-double calc_angular_momentum(std::vector< double >& m, double& great_half_axis, double& excentric);
-double calc_periode(vector<double>& m);
 double calc_t_max(double periode, double count_periods, double steps_per_orbit) {
   return count_periods * steps_per_orbit;
 }
 
-double calc_great_half_axis(vector2d& r, vector2d& v, vector< double>& m) {
+double calc_great_half_axis(vector2d& r, vector2d& v, const listdouble& m) {
   // @todo include G
   return pow(
     2/norm(r) - pow(norm(v), 2)/(m[0] + m[1])
   , -1);
 }
 
-double calc_excentric(vector2d& r, vector2d& v, vector< double>& m, double& great_half_axis) {
+double calc_excentric(vector2d& r, vector2d& v, const listdouble& m, double& great_half_axis) {
   // @todo include G
   double h = r.x * v.y - r.y * v.x;
   return sqrt(
@@ -42,6 +39,8 @@ double calc_angular_momentum(vector <double> & m, double& great_half_axis, doubl
   return mu * sqrt((1 - pow(excentric, 2)) * M * great_half_axis);
 }
 
-double calc_periode(vector<double>& m) {
+double calc_periode(const listdouble& m) {
   return 2 * M_PI / sqrt(m[0] + m[1]);
 }
+
+#endif

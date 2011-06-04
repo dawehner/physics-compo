@@ -61,6 +61,9 @@ int main(int argc, char **argv) {
     case INTEGRATION_LEAPFROG:
       integration_method = integration_leap_frog;
       break;
+    case INTEGRATION_ANALYTIC:
+      integration_method = integration_analytic;
+      break;
   }
 
   // Generate a lot of filestreams for the different kind of output.

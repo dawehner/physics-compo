@@ -1,4 +1,6 @@
 #include "integration.h"
+#include "quantities.cpp"
+#include "anomalie.cpp"
 
 unsigned int ITEMS = 0;
 
@@ -77,6 +79,10 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
   }
 }
 
+/**
+ * @todo:
+ *   Make the storage of the previous calculated acceleration working.
+ */
 void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
 
   // Store the previous accellerations so they don't have to be calculcated again
@@ -100,6 +106,25 @@ void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble&
     v[i] = v1[i] + 0.5 * h * previous_accel[i];
   }
 }
+
+/**
+ * The analytic method only works for the two body problem, and only for the gravitation WW.
+ */
+void integration_analytic(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
+  // Initialize some static stuff.
+  static double P = 0.0;
+  static double excent = 0.0;
+  if (P == 0.0) {
+    P = calc_periode(m);
+  }
+  if (excent == 0.0) {
+    double great_half_axis = calc_great_half_axis(r[1], v[1], m);
+    excent = calc_excentric(r[1], v[1], m, great_half_axis);
+  }
+
+  double anomalie_excent = generate_anomalie_excent_per_time(excent, ti, 0.0, P);
+}
+
 
 
 /**

@@ -32,9 +32,5 @@ inline double calc_norm(double r[]) {
   for (int i = 0; i < 3; i++) {
     sum += pow(r[i], 2);
   }
-  return sqrt(sum)
-}
-
-double [] multiple() {
-  
+  return sqrt(sum);
 }
