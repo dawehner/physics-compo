@@ -78,28 +78,26 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
 }
 
 void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
-  listv2d v1(ITEMS);
 
   // Store the previous accellerations so they don't have to be calculcated again
-//   static listv2d previous_accel;
-//   if (previous_accel.size() == 0) {
-//     for (int i = 0; i < ITEMS; i++) {
-//       previous_accel.push_back(calc_accel(r, m, i));
-//     }
-//   }
+  static listv2d previous_accel;
+  if (previous_accel.size() == 0) {
+    for (int i = 0; i < ITEMS; i++) {
+      previous_accel.push_back(calc_accel(r, m, i));
+    }
+  }
 
+  listv2d v1(ITEMS);
   for (int i = 0; i < ITEMS; i++) {
     // Use previous calculated f(t) for the new speed.
-//     v1[i] = v[i] + 0.5 * h * previous_accel[i];
-    v1[i] = v[i] + 0.5 * h * calc_accel(r, m, i);
-
+    v1[i] = v[i] + 0.5 * h * previous_accel[i];
     r[i] = r[i] + h * v1[i];
+  }
 
+  for (int i = 0; i < ITEMS; i++) {
     //Calculate f(t+1) for the new speed.
-//     previous_accel[i] = calc_accel(r, m, i);
-//     v[i] = v1[i] + 0.5 * h * previous_accel[i];
-    v[i] = v1[i] + 0.5 * h * calc_accel(r, m, i);
-
+    previous_accel[i] = calc_accel(r, m, i);
+    v[i] = v1[i] + 0.5 * h * previous_accel[i];
   }
 }
 
