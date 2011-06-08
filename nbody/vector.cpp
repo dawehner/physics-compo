@@ -101,7 +101,7 @@ double metrik(vector2d vec1, vector2d vec2) {
 }
 
 ostream& operator<<(ostream& out, const vector2d& vec) {
-    out << vec.x << " " << vec.y;
+    out << vec.x << "\t" << vec.y;
     return out;
 }
 

@@ -179,7 +179,7 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
       output_file << scientific << r[i] << "\t";
       output_file << scientific << v[i] << "\t";
       output_file << scientific << a[i] << "\t";
-//       output_file << m[i];
+      output_file << m[i];
       output_file << endl;
     }
   }
