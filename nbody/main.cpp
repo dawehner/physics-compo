@@ -26,9 +26,10 @@ int main(int argc, char **argv) {
   double h = 0.0;
   double tk = 0.0;
   int P_count = 10;
+  int steps_per_orbit = 100;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:s:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -43,7 +44,11 @@ int main(int argc, char **argv) {
         h = atof(optarg);
         break;
       case 'c':
-        P_count = atof(optarg);
+        P_count = (int) atof(optarg);
+        break;
+      case 's':
+        steps_per_orbit = atof(optarg);
+        break;
     }
   }
 
@@ -115,10 +120,10 @@ int main(int argc, char **argv) {
 
   // Here comes the main loop
   int count = 0;
-  int steps_per_orbit = 100;
   double time_per_step = P / (double) steps_per_orbit;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
   double ti = 0;
+  cout << steps_per_orbit << endl;
 
   h = P / 100;
 
