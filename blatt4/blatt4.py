@@ -28,7 +28,7 @@ def files_substract_values(filename1, filename2, start = 0):
     if (i % 2 == 0):
       line1 = ln.replace("e", "E").rsplit("\t")
       line2 = lines2[i].replace("e", "E").rsplit("\t")
-      string += (str(norm(float(line1[start]), float(line1[start+1])) - norm(float(line2[start]), float(line2[start+1]))))
+      string += str(norm(float(line1[start]) - float(line2[start]), float(line1[start+1]) - float(line2[start+1])))
       string += "\n"
     i = i + 1
 
@@ -39,7 +39,6 @@ path_to_nbody = "../nbody/build/nbody"
 
 list = [50, 100, 200, 500]
 for steps in list:
-  print steps
   call = path_to_nbody + " -o output-newton-" + str(steps) + " -i 4 -s " + str(steps)
   os.system(call)
   call = path_to_nbody + " -o output-leap-" + str(steps) + " -i 3 -s " + str(steps)

@@ -123,7 +123,6 @@ int main(int argc, char **argv) {
   double time_per_step = P / (double) steps_per_orbit;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
   double ti = 0;
-  cout << steps_per_orbit << endl;
 
   h = P / 100;
 
