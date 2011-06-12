@@ -9,7 +9,7 @@ void integration_rk4(listDouble& y, listDouble& dydx, const double x, const doub
   // @todo: Benchmark whether this operation is slow, probably not.
   int size = y.size();
 
-  listDouble K1(size), K2(size), K3(size), K4(size);
+  listDouble K1, K2, K3, K4;
   listDouble y_temp(size);
 
   K1 = dydx;
@@ -39,7 +39,8 @@ void integration_rk4(listDouble& y, listDouble& dydx, const double x, const doub
 void integration_euler(listDouble& y, listDouble& dydx, const double x, const double h, listDouble& y_out,
   void derivative(const double x, listDouble& y, listDouble& dyxy_out)) {
 
-  for (int i = 0; i < y.size(); i++) {
+  int size = y.size();
+  for (int i = 0; i < size; i++) {
     y_out[i] = y[i] + dydx[i];
   }
 }
