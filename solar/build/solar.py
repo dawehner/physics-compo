@@ -59,10 +59,6 @@ for line in lane_emden_lines:
   else:
     p = 0
 
-  r_list.append(r)
-  p_list.append(p)
-  ro_list.append(ro)
-
   if ro > 0:
     ro_file.write(str(r) + "\t" + str(ro) + "\n")
 
@@ -74,14 +70,23 @@ p_file.close()
 
 # @TODO: Use gnuplot here to draw the plots
 
-g_ro = Gnuplot.Gnuplot()
-ro_plot = Gnuplot.Data(r_list, ro_list)
-g_ro.plot(ro_plot)
-g_ro.hardcopy("solar-ro.png", terminal="png")
+plot = Gnuplot.Gnuplot()
+plot('set terminal png size 800,800')
+plot("set output 'solar-ro.png'")
+plot("set xlabel 'Radius in cm'")
+plot("plot '" + ro_name + "' title 'Dichte der Sonne n = 3'")
+plot('set output')
+plot('quit')
+#g_ro.hardcopy("solar-ro.png", terminal="png")
 #g_ro.reset()
 
-g_p = Gnuplot.Gnuplot()
-p_plot = Gnuplot.Data(r_list, p_list)
-g_p.plot(p_plot)
-g_p.hardcopy("solar-p.png", terminal="png")
+plot = Gnuplot.Gnuplot()
+plot('set terminal png size 800,800')
+plot("set output 'solar-p.png'")
+plot("set xlabel 'Radius in cm'")
+plot("plot '" + p_name + "' title 'Druck der Sonne n = 3'")
+plot('set output')
+plot('quit')
+#g_p.plot(p_plot)
+#g_p.hardcopy("solar-p.png", terminal="png")
 #g_p.reset()
