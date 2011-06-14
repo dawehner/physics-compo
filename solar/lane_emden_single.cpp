@@ -35,7 +35,6 @@ int main(int argc, char **argv) {
 
   output_filename.append(n);
   output_filename.append(".dat");
-  cout << output_filename << endl;
 
   output_file.open(output_filename.c_str());
 
