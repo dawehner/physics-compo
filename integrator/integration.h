@@ -23,4 +23,12 @@ void integration_rk4(listDouble& y, listDouble& dydx, const double x, const doub
 void integration_euler(listDouble& y, listDouble& dydx, const double x, const double h, listDouble& y_out,
   void derivative(const double x, listDouble& y, listDouble& dyxy_out));
 
+/**
+ * Calculate the next values via the heun method.
+ */
+void integration_heun(listDouble& y, listDouble& dydx, const double x, const double h, listDouble& y_out,
+  void derivative(const double x, listDouble& y, listDouble& dyxy_out));
+
+
+
 #endif
