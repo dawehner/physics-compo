@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     n += 5.0/n_steps;
 
     listDouble lane_emden_output;
-    lane_emden_output = lane_emden_solve(n);
+    lane_emden_output = lane_emden_solve_get_values(n);
     cout << n << " " << lane_emden_output[0] << " " << lane_emden_output[1] << endl;
   }
   while (n <= 5.0);

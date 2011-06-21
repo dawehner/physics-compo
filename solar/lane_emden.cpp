@@ -17,7 +17,7 @@ void lane_emden_start(listDouble& y);
  *   - z_n
  *   - z^2 ...
  */
-listDouble lane_emden_solve(double n, const double h = 0.01, const double hx = 0.01);
+listDouble lane_emden_solve_get_values(double n, const double h = 0.01, const double hx = 0.01);
 
 void derivative(const double x, listDouble& y, listDouble& dyxy_out) {
   dyxy_out.push_back(y[1]);
@@ -30,9 +30,14 @@ void lane_emden_start(listDouble& y) {
 }
 
 
-listDouble lane_emden_solve(double n, const double h, const double hx) {
+/**
+ * Calculate the important values of lane emden:
+ *   - the first root.
+ *   - zz_wz_n see script.
+ */
+listDouble lane_emden_solve_get_values(double n, const double h, const double hx) {
   /**
-   * @todo: Figure out a way to work around the global, it sucks!.
+   * @todo: Figure out a way to work around the global.
    */
   LANE_EMDEN_N = n;
   // Copy 
@@ -60,4 +65,10 @@ listDouble lane_emden_solve(double n, const double h, const double hx) {
   output.push_back(zz_wz_n);
 
   return output;
+}
+
+template<typename T>
+inline bool isnan(T value)
+{
+return value != value;
 }

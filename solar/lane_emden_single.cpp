@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     x += hx;
     listDouble dyxy;
     derivative(x, y, dyxy);
-    integration_rk4(y, dyxy, x, h, y_out, derivative);
+    integration_heun(y, dyxy, x, h, y_out, derivative);
     y = y_out;
     output_file << x << "\t" << y[0] << "\t" << y[1] << std::endl;
     count++;

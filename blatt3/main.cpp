@@ -21,6 +21,8 @@ int main() {
   cout << "Adaptive: " << value2 << " " << static_cache(STATIC_ADAPTIVE) << endl;
   value3 = integrate_trapez_precision(&func_si, 0, 1, pow(10, -8));
   cout << "Trapez: " << value3 << " " << static_cache(STATIC_TRAPEZ_PRECISION) << endl;
+  double value4 = integrate_adaptive(&foo, 0, 1, 0.0001);
+  cout << value4 << endl;
   return 0;
 }
 
@@ -42,6 +44,10 @@ double func_si(double x) {
     return 1.0;
   }
   return sin(x) / x;
+}
+
+double foo(double x) {
+  return sin(x) * cos( sin(x) );
 }
 
 double func_c(double x) {
