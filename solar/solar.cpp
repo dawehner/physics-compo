@@ -13,8 +13,8 @@ const double SOLAR_RADIUS = 6.96E10;
 const double GRAVITATION_CONST = 6.67384E-8;
 
 int main(int argc, char **argv) {  int c = 0;
-  double mass = 1.0;
-  double radius = 1.0;
+  double mass = SOLAR_MASS;
+  double radius = SOLAR_RADIUS;
   double GRAVITATION_CONST = 6.67384E-8;
 
   string n_output;
@@ -60,21 +60,22 @@ int main(int argc, char **argv) {  int c = 0;
   // Calculate the solutions for lane-emden.
   do {
     x += hx;
-    listDouble dyxy;
-    derivative(x, y, dyxy);
-    integration_rk4(y, dyxy, x, h, y_out, derivative);
+    listDouble dydx;
+    derivative(x, y, dydx);
+    integration_heun(y, dydx, x, h, y_out, derivative);
     y = y_out;
 
-    y_file[0] = isnan(y[0]) ? 0.0 : y[0];
-    y_file[1] = isnan(y[1]) ? 0.0 : y[1];
-    y_file[2] = isnan(x) ? 0.0 : x;
+    y_file[0] = y_out[0];
+    y_file[1] = y_out[1];
+    y_file[2] = x;
 
     // A single entry of y_list is a vector with 0:w 1:dw/dz 2: z
     y_list.push_back(y_file);
     if (y_out[0] <= 0.0) {
+      derivative(x, y_out, dydx);
       z_n = x;
       w_n = y_out[0];
-      dwdz_n = y_out[1];
+      dwdz_n = dydx[0];
     }
     // Write down other values like density etc.
     count++;
@@ -82,7 +83,6 @@ int main(int argc, char **argv) {  int c = 0;
   while (x < 20.0 && count < 1000000);
 
   // Calculate some needed values.
-  cout << w_n << " " << dwdz_n << " " << z_n << endl;
   double rho_crit = rho_middle / (-3 * dwdz_n / z_n);
   A = z_n / radius;
   K = 4 * M_PI * GRAVITATION_CONST * pow(rho_crit, (LANE_EMDEN_N - 1) * LANE_EMDEN_N) / ( (LANE_EMDEN_N + 1) * pow(A, 2));
@@ -131,7 +131,7 @@ int main(int argc, char **argv) {  int c = 0;
     p = K * pow(rho, (LANE_EMDEN_N + 1) / LANE_EMDEN_N);
 
     // Write down the values.
-    output_file << z << "\t" << w << "\t" << dwdz;
+    output_file << scientific << z << "\t" << w << "\t" << dwdz << "\t";
     output_file << r << "\t" << rho << "\t" << p << endl;
   }
   output_file.close();
@@ -150,7 +150,7 @@ int main(int argc, char **argv) {  int c = 0;
   output_solar_filename.append(".dat");
   ofstream output_solar_file;
   output_solar_file.open(output_solar_filename.c_str());
-  output_solar_file << rho_crit << "\t" << rho_middle << "\t" << K << "\t" << A << "\t" << mass << "\t" << radius << "\t" << mass_total << endl;
+  output_solar_file << rho_crit << "\t" << rho_middle << "\t" << K << "\t" << A << "\t" << mass << "\t" << radius << "\t" << z_n << "\t" << mass_total << endl;
 
   output_file.close();
 
