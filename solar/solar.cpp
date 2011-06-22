@@ -11,14 +11,16 @@ const double SOLAR_MASS = 1.989E33;
 const double SOLAR_RADIUS = 6.96E10;
 // gravitaiton const in erg/cm
 const double GRAVITATION_CONST = 6.67384E-8;
+const double GAS_CONST = 8.314472;
 
 int main(int argc, char **argv) {  int c = 0;
   double mass = SOLAR_MASS;
   double radius = SOLAR_RADIUS;
   double GRAVITATION_CONST = 6.67384E-8;
+  double mu = 0.0;
 
   string n_output;
-  while ((c = getopt(argc, argv, ":n:o:r:m:g:")) != -1) {
+  while ((c = getopt(argc, argv, ":n:o:r:m:g:u:")) != -1) {
     switch (c) {
       case 'n':
         LANE_EMDEN_N = atof(optarg);
@@ -35,11 +37,14 @@ int main(int argc, char **argv) {  int c = 0;
       case 'o':
         n_output = optarg;
         break;
+      case 'u':
+        mu = atof(optarg);
+        break;
     }
   }
 
   // Generate basic values for the star.
-  double rho_middle = mass / (4/3 * M_PI * pow(radius, 3));
+  double rho_middle = 3.0 * mass / (4.0 * M_PI * pow(radius, 3.0));
   double z_n = 0.0;
   double w_n = 0.0;
   double dwdz_n = 0.0;
@@ -64,7 +69,6 @@ int main(int argc, char **argv) {  int c = 0;
     listDouble dydx;
     derivative(x, y, dydx);
     integration_heun(y, dydx, x, h, y_out, derivative);
-    y = y_out;
 
     y_file[0] = y_out[0];
     y_file[1] = y_out[1];
@@ -76,21 +80,25 @@ int main(int argc, char **argv) {  int c = 0;
       derivative(x, y_out, dydx);
       z_n = x;
       w_n = y_out[0];
-      dwdz_n = dydx[0];
+      dwdz_n = y[1];
 
       // Don't set the values again.
       null_set = true;
     }
+
+    y = y_out;
 
     count++;
   }
   while (x < 20.0 && count < 1000000);
 
   // Calculate some needed values.
-  double rho_crit = rho_middle / (-3 * dwdz_n / z_n);
+  double rho_core = rho_middle / (-3 * dwdz_n / z_n);
   A = z_n / radius;
-  K = 4 * M_PI * GRAVITATION_CONST * pow(rho_crit, (LANE_EMDEN_N - 1) * LANE_EMDEN_N) / ( (LANE_EMDEN_N + 1) * pow(A, 2));
-  double mass_total = 4 * M_PI * rho_crit * pow(radius, 3) * (- dwdz_n/z_n );
+  K = 4 * M_PI * GRAVITATION_CONST * pow(rho_core, (LANE_EMDEN_N - 1.0) / LANE_EMDEN_N) / ( (LANE_EMDEN_N + 1.0) * pow(A, 2.0));
+  double mass_total = 4 * M_PI * rho_core * pow(radius, 3) * (- dwdz_n/z_n );
+  double mass_total_integrated = 0.0;
+  double temp_core = K * pow(rho_core, (LANE_EMDEN_N + 1) / LANE_EMDEN_N) / ( rho_core * GAS_CONST * mu);
 
   // Write down the values.
   ofstream output_file;
@@ -135,7 +143,7 @@ int main(int argc, char **argv) {  int c = 0;
     z = y_list[i][2];
 
     r = z / A;
-    rho = rho_crit * pow(w, LANE_EMDEN_N);
+    rho = rho_core * pow(w, LANE_EMDEN_N);
     p = K * pow(rho, (LANE_EMDEN_N + 1) / LANE_EMDEN_N);
 
     // Write down the values.
@@ -158,7 +166,8 @@ int main(int argc, char **argv) {  int c = 0;
   output_solar_filename.append(".dat");
   ofstream output_solar_file;
   output_solar_file.open(output_solar_filename.c_str());
-  output_solar_file << rho_crit << "\t" << rho_middle << "\t" << K << "\t" << A << "\t" << mass << "\t" << radius << "\t" << z_n << "\t" << mass_total << endl;
+  output_solar_file << rho_core << "\t" << rho_middle << "\t" << K << "\t" <<
+    A << "\t" << mass << "\t" << radius << "\t" << z_n << "\t" << mass_total << "\t" << temp_core << endl;
 
   output_file.close();
 
