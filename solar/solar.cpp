@@ -77,7 +77,7 @@ int main(int argc, char **argv) {  int c = 0;
       w_n = y_out[0];
       dwdz_n = dydx[0];
     }
-    // Write down other values like density etc.
+
     count++;
   }
   while (x < 20.0 && count < 1000000);
