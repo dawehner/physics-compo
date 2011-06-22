@@ -43,6 +43,7 @@ int main(int argc, char **argv) {  int c = 0;
   double z_n = 0.0;
   double w_n = 0.0;
   double dwdz_n = 0.0;
+  bool null_set = false;
   double A = 0.0;
   double K = 0.0;
 
@@ -71,11 +72,14 @@ int main(int argc, char **argv) {  int c = 0;
 
     // A single entry of y_list is a vector with 0:w 1:dw/dz 2: z
     y_list.push_back(y_file);
-    if (y_out[0] <= 0.0) {
+    if (!null_set && y_out[0] <= 0.0) {
       derivative(x, y_out, dydx);
       z_n = x;
       w_n = y_out[0];
       dwdz_n = dydx[0];
+
+      // Don't set the values again.
+      null_set = true;
     }
 
     count++;
@@ -122,6 +126,10 @@ int main(int argc, char **argv) {  int c = 0;
   // - p
 
   for (unsigned int i = 0; i < y_list.size(); i++) {
+    // Only calculate values until the edge of the star.
+    if (z > z_n) {
+      break;
+    }
     w = y_list[i][0];
     dwdz = y_list[i][1];
     z = y_list[i][2];
