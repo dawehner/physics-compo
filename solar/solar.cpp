@@ -9,9 +9,10 @@
 const double SOLAR_N = 3;
 const double SOLAR_MASS = 1.989E33;
 const double SOLAR_RADIUS = 6.96E10;
-// gravitaiton const in erg/cm
+// gravitaiton const [erg/cm]
 const double GRAVITATION_CONST = 6.67384E-8;
-const double GAS_CONST = 8.314472;
+// gas constant [erg K^-1 mol^-1]
+const double GAS_CONST = 8.314472E7;
 
 int main(int argc, char **argv) {  int c = 0;
   double mass = SOLAR_MASS;
@@ -95,10 +96,11 @@ int main(int argc, char **argv) {  int c = 0;
   // Calculate some needed values.
   double rho_core = rho_middle / (-3 * dwdz_n / z_n);
   A = z_n / radius;
-  K = 4 * M_PI * GRAVITATION_CONST * pow(rho_core, (LANE_EMDEN_N - 1.0) / LANE_EMDEN_N) / ( (LANE_EMDEN_N + 1.0) * pow(A, 2.0));
+  K = 4 * M_PI * GRAVITATION_CONST * pow(rho_core, (LANE_EMDEN_N - 1.0) / LANE_EMDEN_N) / ((LANE_EMDEN_N + 1.0) * pow(A, 2.0));
   double mass_total = 4 * M_PI * rho_core * pow(radius, 3) * (- dwdz_n/z_n );
   double mass_total_integrated = 0.0;
-  double temp_core = K * pow(rho_core, (LANE_EMDEN_N + 1) / LANE_EMDEN_N) / ( rho_core * GAS_CONST * mu);
+  double p_core = K * pow(rho_core, (LANE_EMDEN_N + 1) / LANE_EMDEN_N);
+  double temp_core =  p_core * mu / ( rho_core * GAS_CONST);
 
   // Write down the values.
   ofstream output_file;
@@ -166,8 +168,11 @@ int main(int argc, char **argv) {  int c = 0;
   output_solar_filename.append(".dat");
   ofstream output_solar_file;
   output_solar_file.open(output_solar_filename.c_str());
-  output_solar_file << rho_core << "\t" << rho_middle << "\t" << K << "\t" <<
-    A << "\t" << mass << "\t" << radius << "\t" << z_n << "\t" << mass_total << "\t" << temp_core << endl;
+  output_solar_file << rho_core << "\t" << rho_middle << "\t"
+  << K << "\t" << A << "\t" <<
+  mass << "\t" << radius << "\t" <<
+  z_n << "\t" << mass_total << "\t" <<
+  temp_core << "\t" << p_core << endl;
 
   output_file.close();
 
