@@ -17,7 +17,7 @@ plot("set output 'number9.png'")
 plot("set title 'Loesungen Lane-Emden'")
 plot("set xlabel 'z'")
 plot("set ylabel 'w'")
-plot('set xrange [0:6] ')
+plot('set xrange [0:10] ')
 plot('set yrange [0:1] ')
 
 # Plot the numeric solutions

@@ -32,10 +32,15 @@ for i in range(0, len(list_gamma)):
   data = file.readline().rsplit("\t")
 
   radius = data[5]
+  radius_dimless = data[6]
   mass_total = data[7]
-  #print "Total mass: %s" % mass_total
-  #print "Radius: %s" % radius
+  mass_total_dimless = float(data[10])
+  print "gamma: %s" % gamma_string
+  print "Total mass: %s" % mass_total_dimless
+  print "Radius: %s" % radius_dimless
+  print "--------------------------------------------------------"
 
+print "#######################################################"
 # Part b)
 # Calculate the temperature in the core.
 list_special = [3, 4]
@@ -52,3 +57,4 @@ for spec in list_special:
   print "K: %s" % data[2]
   print "rho_c: %s" % data[0]
   print "p_c: %s" % data[9]
+  print "--------------------------------------------------------"

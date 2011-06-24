@@ -98,7 +98,7 @@ int main(int argc, char **argv) {  int c = 0;
   A = z_n / radius;
   K = 4 * M_PI * GRAVITATION_CONST * pow(rho_core, (LANE_EMDEN_N - 1.0) / LANE_EMDEN_N) / ((LANE_EMDEN_N + 1.0) * pow(A, 2.0));
   double mass_total = 4 * M_PI * rho_core * pow(radius, 3) * (- dwdz_n/z_n );
-  double mass_total_integrated = 0.0;
+  double masss_total_dimless = 4 * M_PI * rho_core * pow(z_n, 3) * (- dwdz_n/z_n );
   double p_core = K * pow(rho_core, (LANE_EMDEN_N + 1) / LANE_EMDEN_N);
   double temp_core =  p_core * mu / ( rho_core * GAS_CONST);
 
@@ -172,7 +172,8 @@ int main(int argc, char **argv) {  int c = 0;
   << K << "\t" << A << "\t" <<
   mass << "\t" << radius << "\t" <<
   z_n << "\t" << mass_total << "\t" <<
-  temp_core << "\t" << p_core << endl;
+  temp_core << "\t" << p_core << "\t" <<
+  masss_total_dimless << endl;
 
   output_file.close();
 
