@@ -90,8 +90,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   }
 
   // Calculate the new speeds.
-
-
   listDouble w(u.size());
   listDouble u_next(u.size());
   for (int i = 1; i < size - 1; i++) {
