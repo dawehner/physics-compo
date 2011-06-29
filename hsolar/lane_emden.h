@@ -4,7 +4,7 @@
  *
  * Therefore it uses a vector with 0 = w and 1 = dwdz
  */
-vector<listDouble> lane_emden_solve(double n, double hz, double h);
+void lane_emden_solve(double n, double hz, double h, vector< vector<double> >& y_list);
 
 /**
  * derivative helper for lane_emden.

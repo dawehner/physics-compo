@@ -6,13 +6,19 @@
 #include "hsolar.h"
 
 #include <iostream>
+#include <vector>
+
 using namespace std;
+typedef vector<double> listDouble;
+
 
 void hsolar_solve(double t1, double dt, double n) {
 
   int cell_n = 10;
   // Step one.
-  vector< listDouble > y_list = lane_emden_solve(n, 0.0001, 0.0001);
+  vector< vector<double> > y_list;
+  lane_emden_solve(n, 0.0001, 0.0001, y_list);
+
 //   for (int i = 0; i < y_list.size(); i++) {
 //     for (int j = 0; j < y_list[i].size(); j++) {
 //       cout << y_list[i][j] << "\t";
@@ -24,12 +30,12 @@ void hsolar_solve(double t1, double dt, double n) {
 
   // +2 is there because of the ghost cells.
   listDouble rho(cell_n + 2);
-  listDouble u(cell_n + 2);
+  listDouble u(cell_n + 3);
 //   double rho_crit = 1.0;
 //   double z = 0.0;
   double K = 4.0 * M_PI / (n + 1.0);
   double z_max = y_list[y_list.size() - 1][0];
-  double z_size = z_max / y_list.size();
+  double z_size = z_max / cell_n;
 
   // Calculate the rho for the start values.
   hsolar_grid(cell_n, n, y_list, rho, u);
@@ -51,12 +57,13 @@ void hsolar_solve(double t1, double dt, double n) {
 }
 
 void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
-  const double z_max, const double z_size, const int N, const double gamma, const double K) {
-  int size = u.size();
+  const double z_max, const double z_size, const int cell_n, const double gamma, const double K) {
+  int u_size = u.size();
+  int rho_size = rho.size();
 
   // Calculate the new densities.
   listDouble rho_pre = rho;
-  for (int i = 1; i < size - 1; i++) {
+  for (int i = 1; i <= cell_n; i++) {
     double r_i_a = (i - 0.5) * z_size;
     double r_i1_a = (i + 0.5) * z_size;
     double vol_cell = (4.0 * M_PI / 3.0) * (pow(r_i1_a, 3.0) + pow(r_i_a, 3.0));
@@ -75,30 +82,33 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   // Set ghost cells
   hsolar_ghostcells_rho(rho);
 
-  // Calculate the druck for all positions.
-  listDouble p(rho.size());
-  for (int i = 0; i < size; i++) {
+  // Calculate the pressure for all positions.
+  listDouble p(rho_size);
+  for (int i = 0; i < rho_size; i++) {
     p[i] = K * pow(rho[i], gamma / (gamma - 1.0));
   }
 
   // Calculate the masses for all positions.
-  listDouble m(rho.size());
+
+  listDouble m(rho_size);
+
   double m_help = 0.0;
-  for (int i = 1; i < size - 1; i++) {
+  for (int i = 1; i < rho_size; i++) {
     m_help += z_size * rho[i];
     m[i] = m_help;
   }
 
   // Calculate the new speeds.
-  listDouble w(u.size());
-  listDouble u_next(u.size());
-  for (int i = 1; i < size - 1; i++) {
+
+  listDouble w = listDouble(u_size);
+  listDouble u_next = listDouble(u_size);
+  for (int i = 1; i < u_size - 1; i++) {
     double rho_pre_m = 0.5 * (rho_pre[i] + rho_pre[i - 1]);
     w[i] = u[i] * rho_pre_m;
   }
 
-  for (int i = 1; i < size - 1; i++) {
-    double rho_pre_m = 0.5 * (rho_pre[i] + rho_pre[i - 1]);
+  for (int i = 2; i <= cell_n; i++) {
+    double rho_m = 0.5 * (rho[i] + rho[i - 1]);
     double rho_next1_m = 0.5 * (rho_pre[i + 1] + rho_pre[i]);
 
     // @todo: Check the position of r_i_b and r_i1_b.
@@ -122,12 +132,16 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double r_i_a = (i + 0.5) * z_size;
     // Apply the forces.
     double fgrav = - m[i] / (pow(r_i_a, 2.0));
+
     u_next[i] = u_temp + dt * (fgrav -
-      (1.0/rho_pre_m) * (p[i] - p[i - 1]) / (r_i_b - r_i1_b));
+      (1.0/rho_m) * (p[i] - p[i - 1]) / (r_i_b - r_i1_b));
   }
 
   // Store the new speeds.
   u = u_next;
+  // Change for the ghostcells
+  u[0] = - u[1];
+  u[cell_n + 2] = - u[cell_n];
 }
 
 void hsolar_grid(const int N, const double n, const vector< listDouble >& y_list, listDouble& rho, listDouble u) {
@@ -161,12 +175,12 @@ void hsolar_grid(const int N, const double n, const vector< listDouble >& y_list
   // Set some start values.
   hsolar_ghostcells_rho(rho);
   u[0] = 0.0;
-  u[u.size()] = 0.0;
+  u[u.size() - 1] = 0.0;
 }
 
 void hsolar_ghostcells_rho(listDouble& rho) {
   rho[0] = rho[1];
-  rho[rho.size()] = rho[rho.size() - 1];
+  rho[rho.size() - 1] = rho[rho.size() - 2];
 }
 
 #endif

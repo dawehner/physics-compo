@@ -6,7 +6,7 @@
 
 using namespace std;
 
-typedef vector <double> listDouble;
+typedef vector<double> listDouble;
 
 /**
  * Calculate the next values via the runge kutta method.

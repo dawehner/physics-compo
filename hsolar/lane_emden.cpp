@@ -9,11 +9,10 @@ using namespace std;
 
 double LANE_EMDEN_N = 3.0;
 
-vector<listDouble> lane_emden_solve(double n, double hz, double h) {
+void lane_emden_solve(double n, double hz, double h, vector< vector<double> >& y_list) {
   LANE_EMDEN_N = n;
 
   // The 0 value is the z, the 1 is the w and the 2 is the dwdz
-  vector<vector<double> > y_list;
   listDouble y_list_single(3);
 
   // Starting values.
@@ -48,8 +47,6 @@ vector<listDouble> lane_emden_solve(double n, double hz, double h) {
   while (
     // Stop if the function is < 0 the first time.
     y_out[0] >= 0.0 && count < 100000000);
-
-  return y_list;
 }
 
 void lane_emden_derivative(const double x, listDouble& y, listDouble& dyxy_out) {
