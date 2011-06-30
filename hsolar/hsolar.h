@@ -1,4 +1,6 @@
+#include <vector>
 
+using namespace std;
 /**
  * Solves the hydronamic for the radial sun.
  *
@@ -23,6 +25,8 @@ void hsolar_solve(double t1, double dt, double n);
  */
 void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt, const double z_max, const double z_size, const int cell_n, const double gamma, const double K);
 
-void hsolar_grid(const int N, const double n, const vector< listDouble >& y_list, listDouble& rho, listDouble u);
+void hsolar_grid(const int N, const double n, vector< listDouble >& y_list, listDouble& rho, listDouble u, double& z_max);
 
 void hsolar_ghostcells_rho(listDouble& rho);
+
+void hsolar_write(ofstream& file, listDouble& data);

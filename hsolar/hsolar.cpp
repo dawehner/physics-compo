@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 typedef vector<double> listDouble;
@@ -18,13 +19,6 @@ void hsolar_solve(double t1, double dt, double n) {
   // Step one.
   vector< vector<double> > y_list;
   lane_emden_solve(n, 0.0001, 0.0001, y_list);
-
-//   for (int i = 0; i < y_list.size(); i++) {
-//     for (int j = 0; j < y_list[i].size(); j++) {
-//       cout << y_list[i][j] << "\t";
-//     }
-//     cout << endl;
-//   }
 
   double gamma = (1.0 + n) / n;
 
@@ -38,11 +32,16 @@ void hsolar_solve(double t1, double dt, double n) {
   double z_size = z_max / cell_n;
 
   // Calculate the rho for the start values.
-  hsolar_grid(cell_n, n, y_list, rho, u);
+  hsolar_grid(cell_n, n, y_list, rho, u, z_max);
 
   double t = 0.0;
+  ofstream file_rho("output-rho.dat");
+  ofstream file_u("output-u.dat");
   while (t < t1) {
     hsolar_single_timestamp(rho, u, dt, z_max, z_size, cell_n, gamma, K);
+
+    hsolar_write(file_rho, rho);
+    hsolar_write(file_u, u);
     cout << "#################################################" << endl;
 
     for (int i = 0; i < rho.size(); i++) {
@@ -51,6 +50,8 @@ void hsolar_solve(double t1, double dt, double n) {
 
     t += dt;
   }
+  file_rho.close();
+  file_u.close();
 
 
   return;
@@ -72,11 +73,14 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double s_i1_a = 4 * M_PI * pow(r_i1_a, 2.0);
 
     double rho_i_s = u[i] > 0.0 ? rho[i - 1] : rho[i];
-    double rho_i1_s = u[i + 1] > 0.0 ? rho[i ] : rho[i + 1];
+    double rho_i1_s = u[i + 1] > 0.0 ? rho[i] : rho[i + 1];
     double f_i_m = u[i] * rho_i_s;
     double f_i1_m = u[i + 1] * rho_i1_s;
 
+    double test = s_i1_a * f_i1_m - s_i_a * f_i_m;
     rho[i] = rho[i] - (dt / vol_cell) * (s_i1_a * f_i1_m - s_i_a * f_i_m);
+
+    double rho_current = rho[i];
   }
 
   // Set ghost cells
@@ -93,7 +97,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   listDouble m(rho_size);
 
   double m_help = 0.0;
-  for (int i = 1; i < rho_size; i++) {
+  for (int i = 0; i < rho_size; i++) {
     m_help += z_size * rho[i];
     m[i] = m_help;
   }
@@ -127,14 +131,22 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double f_1i = w_1i_s * u_1i_m;
 
     double w_temp = w[i] - (dt / vol_cell) * (s_i1_b * f_i - s_i_b * f_1i);
-    double u_temp = w_temp / rho_next1_m;
 
-    double r_i_a = (i + 0.5) * z_size;
-    // Apply the forces.
-    double fgrav = - m[i] / (pow(r_i_a, 2.0));
+    if (rho_next1_m != 0.0) {
+      double u_temp = w_temp / rho_next1_m;
 
-    u_next[i] = u_temp + dt * (fgrav -
-      (1.0/rho_m) * (p[i] - p[i - 1]) / (r_i_b - r_i1_b));
+      double r_i_a = (i + 0.5) * z_size;
+      // Apply the forces.
+      double fgrav = - m[i] / (pow(r_i_a, 2.0));
+
+      u_next[i] = u_temp + dt * (fgrav -
+        (1.0/rho_next1_m) * (p[i] - p[i - 1]) / (r_i_b - r_i1_b));
+
+      double foo = 123.0;
+    }
+    else {
+      u_next[i] = 0.0;
+    }
   }
 
   // Store the new speeds.
@@ -144,21 +156,34 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   u[cell_n + 2] = - u[cell_n];
 }
 
-void hsolar_grid(const int N, const double n, const vector< listDouble >& y_list, listDouble& rho, listDouble u) {
-  double z_max = y_list[y_list.size() - 1][0];
+void hsolar_grid(const int N, const double n, vector <listDouble>& y_list, listDouble& rho, listDouble u, double& z_max) {
+  // Resize the list of values by 3;
+
+  double z_size = z_max / y_list.size();
+
+  // Build a map from 0 to 1.4 size of star.
+  int y_list_size = y_list.size() - 1;
+  for (int i = y_list_size; i <= 1.4*y_list_size; i++) {
+    listDouble y(3);
+    y[0] = i * z_size;
+    y[1] = 0.0;
+    y[2] = 0.0;
+    y_list.push_back(y);
+  }
+  z_max *= 1.4;
+
   double rho_crit = 1.0;
 
   double z_wanted = 0.0;
   int z_low, z_high = 0;
   // The size of a step we calculated.
-  double z_size = z_max / y_list.size();
   // The size of a step we want.
   double z_wanted_size = z_max / N;
 
   double w_wanted = 0.0;
-  for (int i = 0; i < N; i++) {
+  for (int i = 1; i <= N; i++) {
     // The position on which we want the value.
-    z_wanted = i * z_wanted_size;
+    z_wanted = (i + 0.5 - 1.0) * z_wanted_size;
 
     // Calculate the wanted value of w based on a linear approx.
     z_low = floor(z_wanted / z_size);
@@ -166,10 +191,10 @@ void hsolar_grid(const int N, const double n, const vector< listDouble >& y_list
 
     w_wanted = ((y_list[z_high][1] - y_list[z_low][1]) / (z_size)) * (z_wanted - z_low * z_size) + y_list[z_low][1];
     // Calculate the rho on the position.
-    rho[i + 1] = rho_crit * pow(w_wanted, n);
+    rho[i] = rho_crit * pow(w_wanted, n);
 
     // Set the start values of the u's.
-    u[i + 1] = 0.0;
+    u[i] = 0.0;
   }
 
   // Set some start values.
@@ -181,6 +206,18 @@ void hsolar_grid(const int N, const double n, const vector< listDouble >& y_list
 void hsolar_ghostcells_rho(listDouble& rho) {
   rho[0] = rho[1];
   rho[rho.size() - 1] = rho[rho.size() - 2];
+}
+
+void hsolar_write(ofstream& file, listDouble& data) {
+  for (int i = 0; i < data.size(); i++) {
+    if (i == 0) {
+      file << data[i];
+    }
+    else {
+      file << "\t" << data[i];
+    }
+  }
+  file << endl;
 }
 
 #endif
