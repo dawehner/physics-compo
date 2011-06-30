@@ -67,7 +67,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   for (int i = 1; i <= cell_n; i++) {
     double r_i_a = (i - 0.5) * z_size;
     double r_i1_a = (i + 0.5) * z_size;
-    double vol_cell = (4.0 * M_PI / 3.0) * (pow(r_i1_a, 3.0) + pow(r_i_a, 3.0));
+    double vol_cell = (4.0 * M_PI / 3.0) * (pow(r_i1_a, 3.0) - pow(r_i_a, 3.0));
 
     double s_i_a = 4 * M_PI * pow(r_i_a, 2.0);
     double s_i1_a = 4 * M_PI * pow(r_i1_a, 2.0);
@@ -77,10 +77,19 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double f_i_m = u[i] * rho_i_s;
     double f_i1_m = u[i + 1] * rho_i1_s;
 
-    double test = s_i1_a * f_i1_m - s_i_a * f_i_m;
+
     rho[i] = rho[i] - (dt / vol_cell) * (s_i1_a * f_i1_m - s_i_a * f_i_m);
 
-    double rho_current = rho[i];
+    // FIXME: This seems to be just a temp fix.
+    rho[i] = rho[i] > 0.0 ? rho[i] : 0.0;
+
+    if (isnan(rho[i]) || rho[i] < 0.0) {
+      double rho_current = rho[i];
+      double test = s_i1_a * f_i1_m - s_i_a * f_i_m;
+      double test2 = - (dt / vol_cell) * test;
+      double rho_p1 = rho_pre[i];
+      double foo = 123.0;
+    }
   }
 
   // Set ghost cells
@@ -112,15 +121,15 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   }
 
   for (int i = 2; i <= cell_n; i++) {
-    double rho_m = 0.5 * (rho[i] + rho[i - 1]);
-    double rho_next1_m = 0.5 * (rho_pre[i + 1] + rho_pre[i]);
+    double rho_next1_m = 0.5 * (rho[i] + rho[i - 1]);
+    double rho_m = 0.5 * (rho_pre[i] + rho_pre[i - 1]);
 
     // @todo: Check the position of r_i_b and r_i1_b.
     double r_i_b = (i) * z_size;
-    double r_i1_b = (i + 1) * z_size;
-    double vol_cell = (4.0 * M_PI / 3.0) * (pow(r_i1_b, 3.0) + pow(r_i_b, 3.0));
+    double r_1i_b = (i - 1) * z_size;
+    double vol_cell = (4.0 * M_PI / 3.0) * (pow(r_1i_b, 3.0) - pow(r_i_b, 3.0));
     double s_i_b = 4 * M_PI * pow(r_i_b, 2.0);
-    double s_i1_b = 4 * M_PI * pow(r_i1_b, 2.0);
+    double s_1i_b = 4 * M_PI * pow(r_1i_b, 2.0);
 
     double u_i_m = 0.5 * (u[i] + u[i + 1]);
     double u_1i_m = 0.5 * (u[i] + u[i - 1]);
@@ -130,7 +139,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double f_i = w_i_s * u_i_m;
     double f_1i = w_1i_s * u_1i_m;
 
-    double w_temp = w[i] - (dt / vol_cell) * (s_i1_b * f_i - s_i_b * f_1i);
+    double w_temp = w[i] - (dt / vol_cell) * (s_i_b * f_i - s_1i_b * f_1i);
 
     if (rho_next1_m != 0.0) {
       double u_temp = w_temp / rho_next1_m;
@@ -140,13 +149,12 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
       double fgrav = - m[i] / (pow(r_i_a, 2.0));
 
       u_next[i] = u_temp + dt * (fgrav -
-        (1.0/rho_next1_m) * (p[i] - p[i - 1]) / (r_i_b - r_i1_b));
-
-      double foo = 123.0;
+        (1.0/rho_next1_m) * (p[i] - p[i - 1]) / (r_i_b - r_1i_b));
     }
     else {
       u_next[i] = 0.0;
     }
+
   }
 
   // Store the new speeds.
@@ -210,11 +218,15 @@ void hsolar_ghostcells_rho(listDouble& rho) {
 
 void hsolar_write(ofstream& file, listDouble& data) {
   for (int i = 0; i < data.size(); i++) {
+    double value = data[i];
+//     if (isnan(data[i])) {
+//       value = 0.0;
+//     }
     if (i == 0) {
-      file << data[i];
+      file << value;
     }
     else {
-      file << "\t" << data[i];
+      file << "\t" <<  value;
     }
   }
   file << endl;
