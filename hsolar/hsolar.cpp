@@ -15,7 +15,7 @@ typedef vector<double> listDouble;
 
 void hsolar_solve(double t1, double dt, double n) {
 
-  int cell_n = 10;
+  int cell_n = 200;
   // Step one.
   vector< vector<double> > y_list;
   lane_emden_solve(n, 0.0001, 0.0001, y_list);
