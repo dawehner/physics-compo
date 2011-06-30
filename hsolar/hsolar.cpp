@@ -42,11 +42,11 @@ void hsolar_solve(double t1, double dt, double n) {
 
     hsolar_write(file_rho, rho);
     hsolar_write(file_u, u);
-    cout << "#################################################" << endl;
+//     cout << "#################################################" << endl;
 
-    for (int i = 0; i < rho.size(); i++) {
-      cout << rho[i] << endl;
-    }
+//     for (int i = 0; i < rho.size(); i++) {
+//       cout << rho[i] << endl;
+//     }
 
     t += dt;
   }
@@ -197,7 +197,7 @@ void hsolar_grid(const int N, const double n, vector <listDouble>& y_list, listD
 
     w_wanted = ((y_list[z_high][1] - y_list[z_low][1]) / (z_size)) * (z_wanted - z_low * z_size) + y_list[z_low][1];
     // Calculate the rho on the position.
-    rho[i] = rho_crit * pow(w_wanted, n);
+    rho[i] = 2.0 * rho_crit * pow(w_wanted, n);
 
     // Set the start values of the u's.
     u[i] = 0.0;
