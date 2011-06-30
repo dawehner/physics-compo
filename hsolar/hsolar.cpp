@@ -80,16 +80,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
     rho[i] = rho[i] - (dt / vol_cell) * (s_i1_a * f_i1_m - s_i_a * f_i_m);
 
-    // FIXME: This seems to be just a temp fix.
-    rho[i] = rho[i] > 0.0 ? rho[i] : 0.0;
-
-    if (isnan(rho[i]) || rho[i] < 0.0) {
-      double rho_current = rho[i];
-      double test = s_i1_a * f_i1_m - s_i_a * f_i_m;
-      double test2 = - (dt / vol_cell) * test;
-      double rho_p1 = rho_pre[i];
-      double foo = 123.0;
-    }
   }
 
   // Set ghost cells
@@ -115,14 +105,13 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
   listDouble w = listDouble(u_size);
   listDouble u_next = listDouble(u_size);
-  for (int i = 1; i < u_size - 1; i++) {
+  for (int i = 1; i <= cell_n + 1; i++) {
     double rho_pre_m = 0.5 * (rho_pre[i] + rho_pre[i - 1]);
     w[i] = u[i] * rho_pre_m;
   }
 
   for (int i = 2; i <= cell_n; i++) {
-    double rho_next1_m = 0.5 * (rho[i] + rho[i - 1]);
-    double rho_m = 0.5 * (rho_pre[i] + rho_pre[i - 1]);
+    double rho_next_m = 0.5 * (rho[i] + rho[i - 1]);
 
     // @todo: Check the position of r_i_b and r_i1_b.
     double r_i_b = (i) * z_size;
@@ -141,19 +130,28 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
     double w_temp = w[i] - (dt / vol_cell) * (s_i_b * f_i - s_1i_b * f_1i);
 
-    if (rho_next1_m != 0.0) {
-      double u_temp = w_temp / rho_next1_m;
-
-      double r_i_a = (i + 0.5) * z_size;
-      // Apply the forces.
-      double fgrav = - m[i] / (pow(r_i_a, 2.0));
-
-      u_next[i] = u_temp + dt * (fgrav -
-        (1.0/rho_next1_m) * (p[i] - p[i - 1]) / (r_i_b - r_1i_b));
+    // Take sure that rho_next_m is 0, which can be often the case if there is nothing.
+    double u_temp;
+    if (rho_next_m != 0.0) {
+      double u_temp = w_temp / rho_next_m;
     }
     else {
-      u_next[i] = 0.0;
+      double u_temp = 0.0;
     }
+
+    double r_i_a = (i + 0.5) * z_size;
+    // Apply the forces.
+    double fgrav = - m[i] / (pow(r_i_a, 2.0));
+
+    double f_pressure;
+    if (rho_next_m != 0.0) {
+      f_pressure = (1.0/rho_next_m) * (p[i] - p[i - 1]) / (r_i_b - r_1i_b);
+    }
+    else {
+      f_pressure = 0.0;
+    }
+
+    u_next[i] = u_temp + dt * (fgrav - f_pressure);
 
   }
 
