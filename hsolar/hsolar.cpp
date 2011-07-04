@@ -82,6 +82,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
   }
 
+  hsolar_rho_floor(rho);
   // Set ghost cells
   hsolar_ghostcells_rho(rho);
 
@@ -228,6 +229,14 @@ void hsolar_write(ofstream& file, listDouble& data) {
     }
   }
   file << endl;
+}
+
+void hsolar_rho_floor(listDouble& rho) {
+  for (int i = 0; i < rho.size(); i++) {
+    if (rho[i] < 1e-6) {
+      rho[i] = 1e-6;
+    }
+  }
 }
 
 #endif

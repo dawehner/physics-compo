@@ -30,3 +30,5 @@ void hsolar_grid(const int N, const double n, vector< listDouble >& y_list, list
 void hsolar_ghostcells_rho(listDouble& rho);
 
 void hsolar_write(ofstream& file, listDouble& data);
+
+void hsolar_rho_floor(listDouble& rho);
