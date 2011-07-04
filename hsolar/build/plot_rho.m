@@ -16,7 +16,7 @@ end
 for i=[1:dim(1)]
 	if (rem(i, 250) == 0)
 		plot(x,output_rho(i,:), "@1")
-		axis([0,70,0,4])
+		axis([0,70,0,20])
 		filename=sprintf('%06d.png', i)
 		print(filename)
 	end

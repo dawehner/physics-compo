@@ -89,17 +89,18 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   // Calculate the pressure for all positions.
   listDouble p(rho_size);
   for (int i = 0; i < rho_size; i++) {
-    p[i] = K * pow(rho[i], gamma / (gamma - 1.0));
+    p[i] = K * pow(rho[i], gamma);
   }
 
-  // Calculate the masses for all positions.
 
   listDouble m(rho_size);
 
+  // Calculate the masses for all positions.
   double m_help = 0.0;
-  for (int i = 0; i < rho_size; i++) {
-    m_help += z_size * rho[i];
+  m[0] = 0.0;
+  for (int i = 1; i < rho_size; i++) {
     m[i] = m_help;
+    m_help += z_size * rho[i];
   }
 
   // Calculate the new speeds.
