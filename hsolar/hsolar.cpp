@@ -59,11 +59,6 @@ void hsolar_solve(double t1, double dt, double n) {
 
     hsolar_write(file_rho, rho);
     hsolar_write(file_u, u);
-//     cout << "#################################################" << endl;
-
-//     for (int i = 0; i < rho.size(); i++) {
-//       cout << rho[i] << endl;
-//     }
 
     t += dt;
   }
