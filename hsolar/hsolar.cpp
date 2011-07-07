@@ -42,6 +42,11 @@ void hsolar_solve(double t1, double dt, double n) {
 
     hsolar_write(file_rho, rho);
     hsolar_write(file_u, u);
+//     cout << "#################################################" << endl;
+
+//     for (int i = 0; i < rho.size(); i++) {
+//       cout << rho[i] << endl;
+//     }
 
     t += dt;
   }
@@ -84,17 +89,18 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   // Calculate the pressure for all positions.
   listDouble p(rho_size);
   for (int i = 0; i < rho_size; i++) {
-    p[i] = K * pow(rho[i], gamma / (gamma - 1.0));
+    p[i] = K * pow(rho[i], gamma);
   }
 
-  // Calculate the masses for all positions.
 
   listDouble m(rho_size);
 
+  // Calculate the masses for all positions.
   double m_help = 0.0;
-  for (int i = 0; i < rho_size; i++) {
-    m_help += z_size * rho[i];
+  m[0] = 0.0;
+  for (int i = 1; i < rho_size; i++) {
     m[i] = m_help;
+    m_help += z_size * rho[i];
   }
 
   // Calculate the new speeds.
