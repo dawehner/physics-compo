@@ -12,8 +12,6 @@
 using namespace std;
 typedef vector<double> listDouble;
 
-int HSOLAR_OSZILLATION = 0;
-
 
 void hsolar_solve(double t1, double dt, double n) {
 
@@ -36,19 +34,7 @@ void hsolar_solve(double t1, double dt, double n) {
   // Calculate the rho for the start values.
   hsolar_grid(cell_n, n, y_list, rho, u, z_max);
 
-  double cs = 0.0;
-  double p = 0.0;
-  double r = 0;
-  if (HSOLAR_OSZILLATION == 1) {
-    for (int i = 1; i < cell_n; i++) {
-      if (r < z_max) {
-        r = z_size * i;
-        p = K * pow(rho[i], gamma);
-        cs = sqrt(gamma * p / rho[i]);
-        u[i] = (1.0/100.0) * cs * sin(M_PI * r / z_max);
-      }
-    }
-  }
+  
 
   double t = 0.0;
   ofstream file_rho("output-rho.dat");
