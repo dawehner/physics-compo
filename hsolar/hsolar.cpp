@@ -81,10 +81,8 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     rho[i] = rho[i] - (dt / vol_cell) * (s_i1_a * f_i1_m - s_i_a * f_i_m);
 
   }
-
   hsolar_rho_floor(rho);
-  // Set ghost cells
-  hsolar_ghostcells_rho(rho);
+  hsolar_edge_rho(rho, cell_n);
 
   // Calculate the pressure for all positions.
   listDouble p(rho_size);
@@ -159,12 +157,10 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
   // Store the new speeds.
   u = u_next;
-  // Change for the ghostcells
-  u[0] = - u[1];
-  u[cell_n + 2] = - u[cell_n];
+  hsolar_edge_u(u, cell_n);
 }
 
-void hsolar_grid(const int N, const double n, vector <listDouble>& y_list, listDouble& rho, listDouble u, double& z_max) {
+void hsolar_grid(const int N, const double cell_n, vector <listDouble>& y_list, listDouble& rho, listDouble u, double& z_max) {
   // Resize the list of values by 3;
 
   double z_size = z_max / y_list.size();
@@ -206,14 +202,8 @@ void hsolar_grid(const int N, const double n, vector <listDouble>& y_list, listD
   }
 
   // Set some start values.
-  hsolar_ghostcells_rho(rho);
   u[0] = 0.0;
   u[u.size() - 1] = 0.0;
-}
-
-void hsolar_ghostcells_rho(listDouble& rho) {
-  rho[0] = rho[1];
-  rho[rho.size() - 1] = rho[rho.size() - 2];
 }
 
 void hsolar_write(ofstream& file, listDouble& data) {
