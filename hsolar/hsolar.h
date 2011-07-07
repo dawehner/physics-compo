@@ -32,5 +32,3 @@ void hsolar_ghostcells_rho(listDouble& rho);
 void hsolar_write(ofstream& file, listDouble& data);
 
 void hsolar_rho_floor(listDouble& rho);
-
-void hsolar_adapt_timestep(listDouble& rho, listDouble& u, const double K, const double n);
