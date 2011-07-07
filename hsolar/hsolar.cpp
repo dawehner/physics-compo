@@ -160,6 +160,23 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   hsolar_edge_u(u, cell_n);
 }
 
+void hsolar_edge_rho(listDouble& rho, const int& cell_n) {
+  rho[0] = rho[1];
+  rho[cell_n + 1] = rho[cell_n];
+}
+
+void hsolar_edge_u(listDouble& u, const int& cell_n) { }
+
+
+
+void hsolar_rho_floor(listDouble& rho) {
+  for (int i = 0; i < rho.size(); i++) {
+    if (rho[i] < 1e-6) {
+      rho[i] = 1e-6;
+    }
+  }
+}
+
 void hsolar_grid(const int N, const double cell_n, vector <listDouble>& y_list, listDouble& rho, listDouble u, double& z_max) {
   // Resize the list of values by 3;
 
@@ -195,7 +212,7 @@ void hsolar_grid(const int N, const double cell_n, vector <listDouble>& y_list, 
 
     w_wanted = ((y_list[z_high][1] - y_list[z_low][1]) / (z_size)) * (z_wanted - z_low * z_size) + y_list[z_low][1];
     // Calculate the rho on the position.
-    rho[i] = 2.0 * rho_crit * pow(w_wanted, n);
+    rho[i] = 2.0 * rho_crit * pow(w_wanted, cell_n);
 
     // Set the start values of the u's.
     u[i] = 0.0;
@@ -222,12 +239,5 @@ void hsolar_write(ofstream& file, listDouble& data) {
   file << endl;
 }
 
-void hsolar_rho_floor(listDouble& rho) {
-  for (int i = 0; i < rho.size(); i++) {
-    if (rho[i] < 1e-6) {
-      rho[i] = 1e-6;
-    }
-  }
-}
 
 #endif

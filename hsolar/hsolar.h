@@ -27,6 +27,9 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt, co
 
 void hsolar_grid(const int N, const double cell_n, vector< listDouble >& y_list, listDouble& rho, listDouble u, double& z_max);
 
+void hsolar_edge_u(listDouble& u, const int& cell_n);
+void hsolar_edge_rho(listDouble& rho, const int& cell_n);
+
 void hsolar_write(ofstream& file, listDouble& data);
 
 void hsolar_rho_floor(listDouble& rho);
