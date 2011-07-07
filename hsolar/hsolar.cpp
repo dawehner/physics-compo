@@ -34,13 +34,10 @@ void hsolar_solve(double t1, double dt, double n) {
   // Calculate the rho for the start values.
   hsolar_grid(cell_n, n, y_list, rho, u, z_max);
 
-  
-
   double t = 0.0;
   ofstream file_rho("output-rho.dat");
   ofstream file_u("output-u.dat");
   while (t < t1) {
-    hsolar_adapt_timestep(rho, u, K, n, z_size, dt);
     hsolar_single_timestamp(rho, u, dt, z_max, z_size, cell_n, gamma, K);
 
     hsolar_write(file_rho, rho);
@@ -235,26 +232,6 @@ void hsolar_rho_floor(listDouble& rho) {
     if (rho[i] < 1e-6) {
       rho[i] = 1e-6;
     }
-  }
-}
-
-void hsolar_adapt_timestep(listDouble& rho, listDouble& u, const double K, const double n, const double r, double& timestep) {
-  double csi = 0.0;
-  double max = 0.0;
-  double gamma = (1.0 + n) / n;
-  double pi = 0.0;
-  double value = 0.0;
-  for (int i = 1; i < u.size() - 2; i++) {
-    pi = K * pow(rho[i], gamma);
-    csi = sqrt(gamma * pi / rho[i]);
-    value = 1 / (csi + abs(u[i]));
-    if (value > max) {
-      max = value;
-    }
-  }
-  double max_timestep = 0.75 * r * value;
-  if (max_timestep < timestep) {
-    timestep = max_timestep;
   }
 }
 

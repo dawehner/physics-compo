@@ -33,4 +33,4 @@ void hsolar_write(ofstream& file, listDouble& data);
 
 void hsolar_rho_floor(listDouble& rho);
 
-void hsolar_adapt_timestep(listDouble& rho, listDouble& u, const double K, const double n, const double r, double& timestep);
+void hsolar_adapt_timestep(listDouble& rho, listDouble& u, const double K, const double n);
