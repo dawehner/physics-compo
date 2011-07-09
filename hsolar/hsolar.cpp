@@ -152,7 +152,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     }
 
     u_next[i] = u_temp + dt * (fgrav - f_pressure);
-
   }
 
   // Store the new speeds.
