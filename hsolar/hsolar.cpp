@@ -165,7 +165,11 @@ void hsolar_edge_rho(listDouble& rho, const int& cell_n) {
   rho[cell_n + 1] = rho[cell_n];
 }
 
-void hsolar_edge_u(listDouble& u, const int& cell_n) { }
+void hsolar_edge_u(listDouble& u, const int& cell_n) {
+  u[cell_n + 1] = u[1] = 0;
+  u[0] = - u[2];
+  u[cell_n + 2] = - u[cell_n];
+}
 
 
 
@@ -177,7 +181,7 @@ void hsolar_rho_floor(listDouble& rho) {
   }
 }
 
-void hsolar_grid(const int N, const double cell_n, vector <listDouble>& y_list, listDouble& rho, listDouble u, double& z_max) {
+void hsolar_grid(const int cell_n, const double n, vector <listDouble>& y_list, listDouble& rho, listDouble u, double& z_max) {
   // Resize the list of values by 3;
 
   double z_size = z_max / y_list.size();
@@ -199,10 +203,10 @@ void hsolar_grid(const int N, const double cell_n, vector <listDouble>& y_list, 
   int z_low, z_high = 0;
   // The size of a step we calculated.
   // The size of a step we want.
-  double z_wanted_size = z_max / N;
+  double z_wanted_size = z_max / cell_n;
 
   double w_wanted = 0.0;
-  for (int i = 1; i <= N; i++) {
+  for (int i = 1; i <= cell_n; i++) {
     // The position on which we want the value.
     z_wanted = (i + 0.5 - 1.0) * z_wanted_size;
 
@@ -212,7 +216,7 @@ void hsolar_grid(const int N, const double cell_n, vector <listDouble>& y_list, 
 
     w_wanted = ((y_list[z_high][1] - y_list[z_low][1]) / (z_size)) * (z_wanted - z_low * z_size) + y_list[z_low][1];
     // Calculate the rho on the position.
-    rho[i] = 2.0 * rho_crit * pow(w_wanted, cell_n);
+    rho[i] = 2.0 * rho_crit * pow(w_wanted, n);
 
     // Set the start values of the u's.
     u[i] = 0.0;
@@ -220,7 +224,8 @@ void hsolar_grid(const int N, const double cell_n, vector <listDouble>& y_list, 
 
   // Set some start values.
   u[0] = 0.0;
-  u[u.size() - 1] = 0.0;
+  u[cell_n + 1] = 0.0;
+  u[cell_n + 2] = 0.0;
 }
 
 void hsolar_write(ofstream& file, listDouble& data) {
