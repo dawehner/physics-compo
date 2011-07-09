@@ -9,6 +9,11 @@
 #include <vector>
 #include <fstream>
 
+const int HSOLAR_START_STATIC = 0;
+const int HSOLAR_START_OSCILLATION = 1;
+
+extern int HSOLAR_START = HSOLAR_START_STATIC;
+
 using namespace std;
 typedef vector<double> listDouble;
 
@@ -33,6 +38,12 @@ void hsolar_solve(double t1, double dt, double n) {
 
   // Calculate the rho for the start values.
   hsolar_grid(cell_n, n, y_list, rho, u, z_max);
+
+  switch (HSOLAR_START) {
+    case HSOLAR_START_OSCILLATION:
+//       hsolar_grid_oscillation(rho, u, z_max, gamma, cell_n, K, z_size);
+      break;
+  }
 
   double t = 0.0;
   ofstream file_rho("output-rho.dat");
@@ -85,10 +96,8 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     p[i] = K * pow(rho[i], gamma);
   }
 
-
-  listDouble m(rho_size);
-
   // Calculate the masses for all positions.
+  listDouble m(rho_size);
   double m_help = 0.0;
   m[0] = 0.0;
   for (int i = 1; i < rho_size; i++) {
@@ -97,7 +106,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   }
 
   // Calculate the new speeds.
-
   listDouble w = listDouble(u_size);
   listDouble u_next = listDouble(u_size);
   for (int i = 1; i <= cell_n + 1; i++) {
@@ -165,8 +173,6 @@ void hsolar_edge_u(listDouble& u, const int& cell_n) {
   u[cell_n + 2] = - u[cell_n];
 }
 
-
-
 void hsolar_rho_floor(listDouble& rho) {
   for (int i = 0; i < rho.size(); i++) {
     if (rho[i] < 1e-6) {
@@ -220,6 +226,16 @@ void hsolar_grid(const int cell_n, const double n, vector <listDouble>& y_list, 
   u[0] = 0.0;
   u[cell_n + 1] = 0.0;
   u[cell_n + 2] = 0.0;
+}
+
+void hsolar_grid_oscillation(const listDouble& rho, listDouble& u, const double& z_max, const double& gamma, const int& cell_n, const double& K,  const double& cell_size) {
+  double cs = 0.0;
+  double pi = 0.0;
+  for (int i = 1; i < cell_n; i++) {
+    pi = K * pow(rho[i], gamma);
+    cs = sqrt(gamma * rho[i] / pi);
+    u[i] = 0.1 * cs * sin(M_PI * cell_size * i / z_max);
+  }
 }
 
 void hsolar_write(ofstream& file, listDouble& data) {

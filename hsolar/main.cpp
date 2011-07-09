@@ -1,12 +1,13 @@
 #include "hsolar.cpp"
 
+
 int main(int argc, char **argv) {
   double time_end = 100.0;
   double time_step = 0.001;
   double poly_n = 1.5;
 
   int c;
-  while ((c = getopt(argc, argv, ":n:e:t:")) != -1) {
+  while ((c = getopt(argc, argv, ":n:e:t:o:")) != -1) {
     switch (c) {
       case 'e':
         time_end = atof(optarg);
@@ -16,6 +17,9 @@ int main(int argc, char **argv) {
         break;
       case 'n':
         poly_n = atof(optarg);
+        break;
+      case 'o':
+        HSOLAR_START = HSOLAR_START_OSCILLATION;
         break;
     }
   }

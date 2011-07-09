@@ -27,6 +27,8 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt, co
 
 void hsolar_grid(const int cell_n, const double n, vector< listDouble >& y_list, listDouble& rho, listDouble u, double& z_max);
 
+void hsolar_grid_oscillation(const listDouble& rho, listDouble& u, const double& z_max, const double& gamma, const int& cell_n, const double& K, const double& cell_size);
+
 void hsolar_edge_u(listDouble& u, const int& cell_n);
 void hsolar_edge_rho(listDouble& rho, const int& cell_n);
 
