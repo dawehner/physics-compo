@@ -11,6 +11,7 @@
 
 const int HSOLAR_START_STATIC = 0;
 const int HSOLAR_START_OSCILLATION = 1;
+const int HSOLAR_RHO_FLOOR = 1e-8;
 
 extern int HSOLAR_START = HSOLAR_START_STATIC;
 
@@ -175,8 +176,8 @@ void hsolar_edge_u(listDouble& u, const int& cell_n) {
 
 void hsolar_rho_floor(listDouble& rho) {
   for (int i = 0; i < rho.size(); i++) {
-    if (rho[i] < 1e-6) {
-      rho[i] = 1e-6;
+    if (rho[i] < HSOLAR_RHO_FLOOR) {
+      rho[i] = HSOLAR_RHO_FLOOR;
     }
   }
 }
@@ -231,7 +232,10 @@ void hsolar_grid(const int cell_n, const double n, vector <listDouble>& y_list, 
 void hsolar_grid_oscillation(const listDouble& rho, listDouble& u, const double& z_max, const double& gamma, const int& cell_n, const double& K,  const double& cell_size) {
   double cs = 0.0;
   double pi = 0.0;
-  for (int i = 1; i < cell_n; i++) {
+  for (int i = 2; i <= cell_n ; i++) {
+    if (rho[i] <= HSOLAR_RHO_FLOOR) {
+      continue;
+    }
     pi = K * pow(rho[i], gamma);
     cs = sqrt(gamma * rho[i] / pi);
     u[i] = 0.1 * cs * sin(M_PI * cell_size * i / z_max);
