@@ -42,7 +42,7 @@ void hsolar_solve(double t1, double dt, double n) {
   switch (HSOLAR_START) {
     case HSOLAR_START_OSCILLATION:
 //       hsolar_grid_oscillation(rho, u, z_max, gamma, cell_n, K, z_size);
-      break;
+        break;
   }
 
   double t = 0.0;
