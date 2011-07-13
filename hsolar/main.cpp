@@ -2,7 +2,7 @@
 
 
 int main(int argc, char **argv) {
-  double time_end = 100.0;
+  double time_end = 50.0;
   double time_step = 0.001;
   double poly_n = 1.5;
 

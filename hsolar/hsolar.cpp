@@ -49,16 +49,20 @@ void hsolar_solve(double t1, double dt, double n) {
   double t = 0.0;
   ofstream file_rho("output-rho.dat");
   ofstream file_u("output-u.dat");
+  ofstream file_m("output-m.dat");
   while (t < t1) {
     hsolar_single_timestamp(rho, u, dt, z_max, z_size, cell_n, gamma, K);
 
+    hsolar_adapt_timestep(rho, u, dt, K, n, cell_n, z_size);
     hsolar_write(file_rho, rho);
     hsolar_write(file_u, u);
+    hsolar_write(file_m, hsolar_total_mass(rho, z_size, cell_n));
 
     t += dt;
   }
   file_rho.close();
   file_u.close();
+  file_m.close();
 
 
   return;
@@ -258,5 +262,34 @@ void hsolar_write(ofstream& file, listDouble& data) {
   file << endl;
 }
 
+void hsolar_write(ofstream& file, double data) {
+  file << data << endl;
+}
+
+double hsolar_total_mass(listDouble& rho, const double z_size, const int cell_n) {
+  double total_mass = 0.0;
+  for (int i = 1; i <= cell_n; i++) {
+    total_mass += i * pow(z_size, 2.0) * rho[i];
+  }
+  return 4 * M_PI * total_mass;
+}
+
+void hsolar_adapt_timestep(listDouble& rho, listDouble& u, double& t_step, const double K, const double n, const int cell_n, const double z_size) {
+  double cs = 0.0;
+  double pi = 0.0;
+  double gamma = (1 + n) / n;
+  double minimal_t_step = t_step / (0.75 * z_size);
+  double val = 0.0;
+  for (int i = 1; i <= cell_n; i++) {
+    pi = K * pow(rho[i], gamma);
+    cs = sqrt(gamma * pi / gamma);
+    val = 1.0 / (cs + abs(u[i]));
+    if (val < minimal_t_step) {
+      minimal_t_step = val;
+    }
+  }
+  t_step = 0.75 * z_size * minimal_t_step;
+  cout << t_step << endl;
+}
 
 #endif

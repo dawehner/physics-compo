@@ -33,7 +33,11 @@ void hsolar_edge_u(listDouble& u, const int& cell_n);
 void hsolar_edge_rho(listDouble& rho, const int& cell_n);
 
 void hsolar_write(ofstream& file, listDouble& data);
+void hsolar_write(ofstream& file, double data);
 
 void hsolar_rho_floor(listDouble& rho);
 
-void hsolar_adapt_timestep(listDouble& rho, listDouble& u, const double K, const double n);
+void hsolar_adapt_timestep(listDouble& rho, listDouble& u, double& t_step, const double K, const double n, const int cell_n, const double z_size);
+
+double hsolar_total_mass(listDouble& rho, const double z_size, const int cell_n);
+
