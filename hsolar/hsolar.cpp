@@ -53,7 +53,7 @@ void hsolar_solve(double t1, double dt, double n) {
   while (t < t1) {
     hsolar_single_timestamp(rho, u, dt, z_max, z_size, cell_n, gamma, K);
 
-    hsolar_adapt_timestep(rho, u, dt, K, n, cell_n, z_size);
+//     hsolar_adapt_timestep(rho, u, dt, K, n, cell_n, z_size);
     hsolar_write(file_rho, rho);
     hsolar_write(file_u, u);
     hsolar_write(file_m, hsolar_total_mass(rho, z_size, cell_n));
@@ -141,10 +141,10 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     // Take sure that rho_next_m is 0, which can be often the case if there is nothing.
     double u_temp;
     if (rho_next_m != 0.0) {
-      double u_temp = w_temp / rho_next_m;
+      u_temp = w_temp / rho_next_m;
     }
     else {
-      double u_temp = 0.0;
+      u_temp = 0.0;
     }
 
     double r_i_a = (i + 0.5) * z_size;
