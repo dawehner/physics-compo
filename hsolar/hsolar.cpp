@@ -11,7 +11,7 @@
 
 const int HSOLAR_START_STATIC = 0;
 const int HSOLAR_START_OSCILLATION = 1;
-const int HSOLAR_RHO_FLOOR = 1e-8;
+const int HSOLAR_RHO_FLOOR = 1e-6;
 
 extern int HSOLAR_START = HSOLAR_START_STATIC;
 
