@@ -165,6 +165,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     else {
       f_pressure = 0.0;
     }
+//     cout << fgrav << "\t" << f_pressure << "\t" << fgrav - f_pressure << endl;
 
     u_next[i] = u_temp + dt * (fgrav - f_pressure);
   }
