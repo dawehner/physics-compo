@@ -11,7 +11,7 @@
 
 const int HSOLAR_START_STATIC = 0;
 const int HSOLAR_START_OSCILLATION = 1;
-const int HSOLAR_RHO_FLOOR = 1e-6;
+const double HSOLAR_RHO_FLOOR = 1e-6;
 
 int HSOLAR_START = HSOLAR_START_STATIC;
 
@@ -120,9 +120,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
   for (int i = 2; i <= cell_n; i++) {
     double rho_next_m = 0.5 * (rho[i] + rho[i - 1]);
-    if (rho_next_m <= HSOLAR_RHO_FLOOR) {
-      rho_next_m = HSOLAR_RHO_FLOOR;
-    }
 
     // @todo: Check the position of r_i_b and r_i1_b.
     double r_i_b = (i) * z_size;
@@ -141,14 +138,21 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
     double w_temp = w[i] - (dt / vol_cell) * (s_i_b * f_i - s_1i_b * f_1i);
 
+
+    if (rho_next_m < HSOLAR_RHO_FLOOR) {
+      rho_next_m = HSOLAR_RHO_FLOOR;
+    }
+
     // Take sure that rho_next_m is 0, which can be often the case if there is nothing.
     double u_temp = 0.0;
-    if (rho_next_m != 0.0) {
+    if (rho_next_m >= 0.0) {
       u_temp = w_temp / rho_next_m;
     }
     else {
       u_temp = 0.0;
     }
+
+
 
     double r_i_a = (i + 0.5) * z_size;
     // Apply the forces.
