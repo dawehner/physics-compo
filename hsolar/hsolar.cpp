@@ -13,7 +13,7 @@ const int HSOLAR_START_STATIC = 0;
 const int HSOLAR_START_OSCILLATION = 1;
 const int HSOLAR_RHO_FLOOR = 1e-6;
 
-extern int HSOLAR_START = HSOLAR_START_STATIC;
+int HSOLAR_START = HSOLAR_START_STATIC;
 
 using namespace std;
 typedef vector<double> listDouble;
@@ -179,7 +179,8 @@ void hsolar_edge_u(listDouble& u, const int& cell_n) {
 }
 
 void hsolar_rho_floor(listDouble& rho) {
-  for (int i = 0; i < rho.size(); i++) {
+  const int size = rho.size();
+  for (int i = 0; i < size; i++) {
     if (rho[i] < HSOLAR_RHO_FLOOR) {
       rho[i] = HSOLAR_RHO_FLOOR;
     }
@@ -247,7 +248,8 @@ void hsolar_grid_oscillation(const listDouble& rho, listDouble& u, const double&
 }
 
 void hsolar_write(ofstream& file, listDouble& data) {
-  for (int i = 0; i < data.size(); i++) {
+  const int size = data.size();
+  for (int i = 0; i < size; i++) {
     double value = data[i];
 //     if (isnan(data[i])) {
 //       value = 0.0;
