@@ -13,6 +13,13 @@ const int HSOLAR_START_STATIC = 0;
 const int HSOLAR_START_OSCILLATION = 1;
 const double HSOLAR_RHO_FLOOR = 1e-6;
 
+listDouble static_r_i_b;
+listDouble static_v_i_b;
+listDouble static_s_i_b;
+listDouble static_r_i_a;
+listDouble static_v_i_a;
+listDouble static_s_i_a;
+
 int HSOLAR_START = HSOLAR_START_STATIC;
 
 using namespace std;
@@ -46,7 +53,10 @@ void hsolar_solve(double t1, double dt, double n) {
         break;
   }
 
+  hsolar_precalc_v_r(cell_n; z_size);
+
   double t = 0.0;
+
   ofstream file_rho("output-rho.dat");
   ofstream file_u("output-u.dat");
   ofstream file_m("output-m.dat");
@@ -66,6 +76,36 @@ void hsolar_solve(double t1, double dt, double n) {
 
 
   return;
+}
+
+void hsolar_precalc_v_r(const int cell_n; const double z_size) {
+  static_r_i_b.resize(cell_n + 2);
+  static_v_i_b.resize(cell_n + 2);
+  static_s_i_b.resize(cell_n + 2);
+  static_r_i_a.resize(cell_n + 3);
+  static_v_i_a.resize(cell_n + 3);
+  static_s_i_a.resize(cell_n + 3);
+
+  for (int i = 0; i <= cell_n + 1; i++) {
+    double j = i;
+    r_i_b[i] = z_size * (j - 0.5);
+    s_i_b[i] = 4 * M_PI * pow(r_i_b[i], 2.0);
+  }
+
+  for (int i = 0; i <= cell_n + 2; i++) {
+    double j = i;
+    r_i_a[i] = z_size * (i - 1);
+    s_i_a[i] = 4 * M_PI * pow(r_i_a[i], 2.0);
+  }
+
+  // Calculate volumes
+  for (int i = 1; i <= cell_n; i++) {
+    v_i_b[i] = (4.0 / 3.0) * M_PI * (pow(r_i_a[i + 1], 3.0) - pow(r_i_a[i]));
+  }
+
+  for (int i = 2; i <= cell_n; i++) {
+    v_i_a[i] = (4.0 / 3.0) * M_PI * (pow(r_i_b[i], 3.0) - pow(r_i_b[i - 1], 3.0));
+  }
 }
 
 void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
