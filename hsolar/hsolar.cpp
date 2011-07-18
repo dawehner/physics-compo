@@ -25,6 +25,13 @@ int HSOLAR_START = HSOLAR_START_STATIC;
 using namespace std;
 typedef vector<double> listDouble;
 
+void output_listdouble(listDouble& list) {
+  int size = list.size();
+  for (int i = 0; i < size; i++) {
+    cout << list[i] << "\t";
+  }
+  cout << endl;
+}
 
 void hsolar_solve(double t1, double dt, double n) {
 
@@ -41,6 +48,7 @@ void hsolar_solve(double t1, double dt, double n) {
 //   double rho_crit = 1.0;
 //   double z = 0.0;
   double K = 4.0 * M_PI / (n + 1.0);
+
   double z_max = y_list[y_list.size() - 1][0];
   double z_size = z_max / cell_n;
 
@@ -99,11 +107,11 @@ void hsolar_precalc_v_r(const int cell_n, const double z_size) {
   }
 
   // Calculate volumes
-  for (int i = 1; i <= cell_n; i++) {
+  for (int i = 0; i <= cell_n; i++) {
     static_v_i_b[i] = (4.0 / 3.0) * M_PI * (pow(static_r_i_a[i + 1], 3.0) - pow(static_r_i_a[i], 3.0));
   }
 
-  for (int i = 2; i <= cell_n; i++) {
+  for (int i = 1; i <= cell_n; i++) {
     static_v_i_a[i] = (4.0 / 3.0) * M_PI * (pow(static_r_i_b[i], 3.0) - pow(static_r_i_b[i - 1], 3.0));
   }
 }
@@ -122,12 +130,12 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double f_i_m = u[i] * rho_i_s;
     double f_i1_m = u[i + 1] * rho_i1_s;
 
-
     rho[i] = rho[i] - (dt / static_v_i_a[i]) * (static_s_i_a[i + 1] * f_i1_m - static_s_i_a[i] * f_i_m);
 
   }
   hsolar_rho_floor(rho);
   hsolar_edge_rho(rho, cell_n);
+  output_listdouble(rho);
 
   // Calculate the pressure for all positions.
   listDouble p(rho_size);
@@ -178,7 +186,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     else {
       u_temp = 0.0;
     }
-
 
 
     double r_i_a = (i + 0.5) * z_size;
