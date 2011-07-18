@@ -53,7 +53,7 @@ void hsolar_solve(double t1, double dt, double n) {
         break;
   }
 
-  hsolar_precalc_v_r(cell_n; z_size);
+  hsolar_precalc_v_r(cell_n, z_size);
 
   double t = 0.0;
 
@@ -78,7 +78,7 @@ void hsolar_solve(double t1, double dt, double n) {
   return;
 }
 
-void hsolar_precalc_v_r(const int cell_n; const double z_size) {
+void hsolar_precalc_v_r(const int cell_n, const double z_size) {
   static_r_i_b.resize(cell_n + 2);
   static_v_i_b.resize(cell_n + 2);
   static_s_i_b.resize(cell_n + 2);
@@ -88,23 +88,23 @@ void hsolar_precalc_v_r(const int cell_n; const double z_size) {
 
   for (int i = 0; i <= cell_n + 1; i++) {
     double j = i;
-    r_i_b[i] = z_size * (j - 0.5);
-    s_i_b[i] = 4 * M_PI * pow(r_i_b[i], 2.0);
+    static_r_i_b[i] = z_size * (j - 0.5);
+    static_s_i_b[i] = 4 * M_PI * pow(static_r_i_b[i], 2.0);
   }
 
   for (int i = 0; i <= cell_n + 2; i++) {
     double j = i;
-    r_i_a[i] = z_size * (i - 1);
-    s_i_a[i] = 4 * M_PI * pow(r_i_a[i], 2.0);
+    static_r_i_a[i] = z_size * (j - 1);
+    static_s_i_a[i] = 4 * M_PI * pow(static_r_i_a[i], 2.0);
   }
 
   // Calculate volumes
   for (int i = 1; i <= cell_n; i++) {
-    v_i_b[i] = (4.0 / 3.0) * M_PI * (pow(r_i_a[i + 1], 3.0) - pow(r_i_a[i]));
+    static_v_i_b[i] = (4.0 / 3.0) * M_PI * (pow(static_r_i_a[i + 1], 3.0) - pow(static_r_i_a[i], 3.0));
   }
 
   for (int i = 2; i <= cell_n; i++) {
-    v_i_a[i] = (4.0 / 3.0) * M_PI * (pow(r_i_b[i], 3.0) - pow(r_i_b[i - 1], 3.0));
+    static_v_i_a[i] = (4.0 / 3.0) * M_PI * (pow(static_r_i_b[i], 3.0) - pow(static_r_i_b[i - 1], 3.0));
   }
 }
 
@@ -116,12 +116,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   // Calculate the new densities.
   listDouble rho_pre = rho;
   for (int i = 1; i <= cell_n; i++) {
-    double r_i_a = (i - 0.5) * z_size;
-    double r_i1_a = (i + 0.5) * z_size;
-    double vol_cell = (4.0 * M_PI / 3.0) * (pow(r_i1_a, 3.0) - pow(r_i_a, 3.0));
-
-    double s_i_a = 4 * M_PI * pow(r_i_a, 2.0);
-    double s_i1_a = 4 * M_PI * pow(r_i1_a, 2.0);
 
     double rho_i_s = u[i] > 0.0 ? rho[i - 1] : rho[i];
     double rho_i1_s = u[i + 1] > 0.0 ? rho[i] : rho[i + 1];
@@ -129,7 +123,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double f_i1_m = u[i + 1] * rho_i1_s;
 
 
-    rho[i] = rho[i] - (dt / vol_cell) * (s_i1_a * f_i1_m - s_i_a * f_i_m);
+    rho[i] = rho[i] - (dt / static_v_i_a[i]) * (static_s_i_a[i + 1] * f_i1_m - static_s_i_a[i] * f_i_m);
 
   }
   hsolar_rho_floor(rho);
@@ -161,13 +155,6 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
   for (int i = 2; i <= cell_n; i++) {
     double rho_next_m = 0.5 * (rho[i] + rho[i - 1]);
 
-    // @todo: Check the position of r_i_b and r_i1_b.
-    double r_i_b = (i) * z_size;
-    double r_1i_b = (i - 1) * z_size;
-    double vol_cell = (4.0 * M_PI / 3.0) * (pow(r_1i_b, 3.0) - pow(r_i_b, 3.0));
-    double s_i_b = 4 * M_PI * pow(r_i_b, 2.0);
-    double s_1i_b = 4 * M_PI * pow(r_1i_b, 2.0);
-
     double u_i_m = 0.5 * (u[i] + u[i + 1]);
     double u_1i_m = 0.5 * (u[i] + u[i - 1]);
     double w_i_s = u_i_m > 0.0 ? w[i] : w[i + 1];
@@ -176,7 +163,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
     double f_i = w_i_s * u_i_m;
     double f_1i = w_1i_s * u_1i_m;
 
-    double w_temp = w[i] - (dt / vol_cell) * (s_i_b * f_i - s_1i_b * f_1i);
+    double w_temp = w[i] - (dt / static_v_i_b[i]) * (static_v_i_b[i] * f_i - static_v_i_b[i - 1] * f_1i);
 
 
     if (rho_next_m < HSOLAR_RHO_FLOOR) {
@@ -200,7 +187,7 @@ void hsolar_single_timestamp(listDouble& rho, listDouble& u, const double dt,
 
     double f_pressure;
     if (rho_next_m != 0.0) {
-      f_pressure = (1.0/rho_next_m) * (p[i] - p[i - 1]) / (r_i_b - r_1i_b);
+      f_pressure = (1.0/rho_next_m) * (p[i] - p[i - 1]) / (static_r_i_b[i] - static_r_i_b[i - 1]);
     }
     else {
       f_pressure = 0.0;

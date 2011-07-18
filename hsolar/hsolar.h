@@ -41,3 +41,4 @@ void hsolar_adapt_timestep(listDouble& rho, listDouble& u, double& t_step, const
 
 double hsolar_total_mass(listDouble& rho, const double z_size, const int cell_n);
 
+void hsolar_precalc_v_r(const int cell_n, const double z_size);
