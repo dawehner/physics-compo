@@ -165,7 +165,8 @@ int main(int argc, char **argv) {
       double R_amount = norm(R);
       double runge_lenz_e_amount = norm(runge_lenz_e);
 
-      output_converseved_quantities(energy, angular_momentum, output_file_energy, output_file_angular_momentum);
+      output_converseved_quantities(energy, angular_momentum, output_file_energy, output_file_angular_momentum, j_amount, runge_lenz_e_amount, R_amount);
+
       output_orbital_parameters(great_half_axis, excentric, output_file_a, output_file_e);
     }
 
