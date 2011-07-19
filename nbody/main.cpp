@@ -28,8 +28,11 @@ int main(int argc, char **argv) {
   int P_count = 10;
   int steps_per_orbit = 100;
 
+  // Should the timestamp be changed based on the values.
+  bool adapt_timestamp = false;
+
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:s:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -48,6 +51,9 @@ int main(int argc, char **argv) {
         break;
       case 's':
         steps_per_orbit = atof(optarg);
+        break;
+      case 't':
+        adapt_timestamp = true;
         break;
     }
   }
@@ -108,9 +114,10 @@ int main(int argc, char **argv) {
   }
 
 
-  listv2d r;
-  listv2d v;
-  listv2d a;
+  listv2d r; // Place of the bodies
+  listv2d v; // Speed of the bodies
+  listv2d a; // Accel. of the bodies
+  listv2d da; // Change of the accel. of the bodies
   listdouble m;
   main_two_body_start(r, v, a, m, h, tk);
 
@@ -130,6 +137,10 @@ int main(int argc, char **argv) {
     calc_accel_multiple(r, a, m);
     integration_method(r, v, a, m, h, ti);
 
+    if (adapt_timestamp) {
+      nbody_adapt_timestamp(a, da);
+    }
+
     count++;
     ti += time_per_step;
 
@@ -144,6 +155,12 @@ int main(int argc, char **argv) {
       double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis);
       double energy = calc_energy(r, v, m);
       double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
+      vector2d j = calc_specific_angular_momentum();
+      vector2d R = calc_mass_center();
+      vector2d runge_lenz_e = calc_runge_lenz();
+      double j_amount = norm(j);
+      double R_amount = norm(R);
+      double runge_lenz_e_amount = norm(runge_lenz_e);
 
       output_converseved_quantities(energy, angular_momentum, output_file_energy, output_file_angular_momentum);
       output_orbital_parameters(great_half_axis, excentric, output_file_a, output_file_e);
