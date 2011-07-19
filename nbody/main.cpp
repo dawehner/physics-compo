@@ -243,8 +243,8 @@ void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, doub
   double e = 0.3;
   double m2 = 1e-3;
 
-  vector2d r1, r2, r3, r4;
-  vector2d v1, v2, v3, v4;
+  vector2d r1, r2;
+  vector2d v1, v2;
 
   r1.y = 0.0;
   r2.y = 0.0;
