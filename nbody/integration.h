@@ -17,4 +17,4 @@ void integration_analytic(listv2d& r, listv2d& v, listv2d& a, const listdouble& 
 void integration_verlet(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti);
 
 void calc_accel_multiple(const listv2d& r, listv2d& a, const vector<double>&m);
-inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned int j);
+inline vector2d calc_accel(const listv2d& r, const listdouble m, const int j);
