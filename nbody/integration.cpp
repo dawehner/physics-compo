@@ -107,6 +107,9 @@ void integration_verlet(listv2d& r, listv2d& v, listv2d& a, const listdouble& m,
   }
 }
 
+void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
+}
+
 /**
  * The analytic method only works for the two body problem, and only for the gravitation WW.
  */

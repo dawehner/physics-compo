@@ -44,22 +44,45 @@ double calc_periode(const listdouble& m) {
   return 2 * M_PI / sqrt(m[0] + m[1]);
 }
 
-vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
-  vector3d j;
+vector2d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
+  vector2d j;
   j.x = 0.0;
   j.y = 0.0;
-  j.z = r.x * v.y - r.y * v.x;
+//   j.z = r.x * v.y - r.y * v.x;
 
   return j;
 }
 
-vector3d calc_runge_lenz(const vector3d& j, const vector2d& r, const vector2d& v, const listdouble& m) {
-  vector3d R;
+vector2d calc_runge_lenz(const vector2d& j, const vector2d& r, const vector2d& v, const listdouble& m) {
+  vector2d R;
   R.x = 0.0;
   R.y = 0.0;
-  R.z = 0.0;
+//   R.z = 0.0;
 
   return R;
 }
+
+vector2d calc_mass_center(listv2d& r, listdouble& m, const double& total_mass) {
+  int size = r.size();
+  vector2d mass_center;
+  mass_center.x = 0.0;
+  mass_center.y = 0.0;
+
+  for (int i = 0; i < size; i++) {
+    mass_center = mass_center + r[i] * m[i];
+  }
+  return mass_center / total_mass;
+}
+
+double calc_total_mass(listdouble& m) {
+  double total_mass = 0.0;
+  int size = m.size();
+  for (int i = 0; i < size; i++) {
+    total_mass += m[i];
+  }
+
+  return total_mass;
+}
+
 
 #endif
