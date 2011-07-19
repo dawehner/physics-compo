@@ -69,11 +69,14 @@ int main(int argc, char **argv) {
     case INTEGRATION_RUNGE_KUTTA:
       integration_method = integration_rk4;
       break;
-    case INTEGRATION_LEAPFROG:
-      integration_method = integration_leap_frog;
+    case INTEGRATION_VERLET:
+      integration_method = integration_verlet;
       break;
     case INTEGRATION_ANALYTIC:
       integration_method = integration_analytic;
+      break;
+    case INTEGRATION_LEAPFROG:
+      integration_method = integration_leap_frog;
       break;
   }
 

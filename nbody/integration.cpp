@@ -83,7 +83,7 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
  * @todo:
  *   Make the storage of the previous calculated acceleration working.
  */
-void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
+void integration_verlet(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
 
   // Store the previous accellerations so they don't have to be calculcated again
   static listv2d previous_accel;
