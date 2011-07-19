@@ -5,6 +5,7 @@
 #include <fstream>
 #include "quantities.cpp"
 #include <vector>
+#include <limits>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum, const double j, const double e, const double R);
 void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e);
 void main_two_body_start( listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk);
+void nbody_adapt_timestamp(const double& dt_begin, double& dt, const listv2d& a, const listv2d& da);
 
 int main(int argc, char **argv) {
   int c;
@@ -130,7 +132,9 @@ int main(int argc, char **argv) {
 
   // Here comes the main loop
   int count = 0;
-  double time_per_step = P / (double) steps_per_orbit;
+  const double time_per_step = P / (double) steps_per_orbit;
+  // dt is the actual used time per step, but maybe changed during runtime.
+  double dt = time_per_step;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
   double ti = 0;
 
@@ -141,11 +145,11 @@ int main(int argc, char **argv) {
     integration_method(r, v, a, m, h, ti);
 
     if (adapt_timestamp) {
-      nbody_adapt_timestamp(a, da);
+      nbody_adapt_timestamp(time_per_step, dt, a, da);
     }
 
     count++;
-    ti += time_per_step;
+    ti += dt;
 
     if (write_to_files) {
       output_movement_data(r, v, a, m, output_file);
@@ -234,6 +238,17 @@ void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, of
   if (output_file_e.is_open()) {
     output_file_e << scientific << e1 << endl;
   }
+}
+
+void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv2d& da) {
+  double min = numeric_limits<double>::max();
+  double val = 0.0;
+  int size = a.size();
+  for (int i = 0; i < size; i++) {
+    val = norm(a[i]) / norm(da[i]);
+    min = min >= val ? min : val;
+  }
+  dt = dt_begin * min;
 }
 
 void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk) {

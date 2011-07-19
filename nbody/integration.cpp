@@ -2,7 +2,7 @@
 #include "quantities.cpp"
 #include "anomalie.cpp"
 
-unsigned int ITEMS = 0;
+int ITEMS = 0;
 
 void integration_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m) {
   ITEMS = r.size();
