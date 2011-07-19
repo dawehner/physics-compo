@@ -43,4 +43,16 @@ double calc_periode(const listdouble& m) {
   return 2 * M_PI / sqrt(m[0] + m[1]);
 }
 
+vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
+  vector3d j;
+  j.x = 0.0;
+  j.y = 0.0;
+  j.z = r.x * v.y - r.y * v.x;
+
+  return j;
+}
+
+vector3d calc_runge_lenz(const vector3d& j, const vector2d& r, const vector2d& v, const listdouble& m) {
+}
+
 #endif

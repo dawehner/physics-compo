@@ -11,7 +11,7 @@ using namespace std;
 ofstream emptystream;
 
 void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, vector< double >& m, ofstream& output_file);
-void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum);
+void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum, const double j, const double e, const double R);
 void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e);
 void main_two_body_start( listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk);
 
@@ -155,9 +155,9 @@ int main(int argc, char **argv) {
       double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis);
       double energy = calc_energy(r, v, m);
       double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
-      vector2d j = calc_specific_angular_momentum();
-      vector2d R = calc_mass_center();
-      vector2d runge_lenz_e = calc_runge_lenz();
+      vector3d j = calc_specific_angular_momentum(r[0], v[0]);
+      vector3d R = calc_mass_center();
+      vector3d runge_lenz_e = calc_runge_lenz(j, v[0], r[0], m);
       double j_amount = norm(j);
       double R_amount = norm(R);
       double runge_lenz_e_amount = norm(runge_lenz_e);
@@ -209,7 +209,7 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 /**
  * Output the energy/angular momentum.
  */
-void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum) {
+void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum, const double j, const double e, const double R) {
   if (output_file_energy.is_open()) {
     output_file_energy << scientific << E1 << endl;
   }
