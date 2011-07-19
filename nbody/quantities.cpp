@@ -54,6 +54,12 @@ vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
 }
 
 vector3d calc_runge_lenz(const vector3d& j, const vector2d& r, const vector2d& v, const listdouble& m) {
+  vector3d R;
+  R.x = 0.0;
+  R.y = 0.0;
+  R.z = 0.0;
+
+  return R;
 }
 
 #endif
