@@ -108,6 +108,10 @@ void integration_verlet(listv2d& r, listv2d& v, listv2d& a, const listdouble& m,
 }
 
 void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
+  if (ti == 0.0) {
+    r[0] = r[0] + v[0] * h / 2.0;
+  }
+
   for (int i = 0; i < ITEMS; i++) {
     v[i] = v[i] + a[i] * h;
     r[i] = r[i] + v[i] * h;

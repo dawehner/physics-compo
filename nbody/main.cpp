@@ -133,7 +133,7 @@ int main(int argc, char **argv) {
   // dt is the actual used time per step, but maybe changed during runtime.
   double dt = time_per_step;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
-  double ti = 0;
+  double ti = 0.0;
 
   h = P / 100;
 
