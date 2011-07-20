@@ -86,27 +86,10 @@ int main(int argc, char **argv) {
 //   files.push_back(output_file);
 
 
-  ofstream output_file_energy;
-  output_filename = filename + "-energy.dat";
-  output_file_energy.open(output_filename.c_str());
+  ofstream output_file_conserved;
+  output_filename = filename + "-conserved.dat";
+  output_file_conserved.open(output_filename.c_str());
 //   files.push_back(output_file_energy);
-
-
-  ofstream output_file_angular_momentum;
-  output_filename = filename + "-momentum.dat";
-  output_file_angular_momentum.open(output_filename.c_str());
-//   files.push_back(output_file_angular_momentum);
-
-
-  ofstream output_file_a;
-  output_filename = filename + "-axis.dat";
-  output_file_a.open(output_filename.c_str());
-//   files.push_back(output_file_a);
-
-  ofstream output_file_e;
-  output_filename = filename + "-excentric.dat";
-  output_file_e.open(output_filename.c_str());
-//   files.push_back(output_file_e);
 
   if (!output_file.is_open()) {
     cout << "Couldn't open file to write." << endl;
@@ -166,9 +149,7 @@ int main(int argc, char **argv) {
       double R_amount = norm(R);
       double runge_lenz_e_amount = norm(runge_lenz_e);
 
-      output_converseved_quantities(energy, angular_momentum, output_file_energy, output_file_angular_momentum, j_amount, runge_lenz_e_amount, R_amount);
-
-      output_orbital_parameters(great_half_axis, excentric, output_file_a, output_file_e);
+      output_converseved_quantities(output_file_conserved, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R_amount);
     }
 
   }
@@ -176,17 +157,8 @@ int main(int argc, char **argv) {
   if (output_file.is_open()) {
     output_file.close();
   }
-  if (output_file_energy.is_open()) {
-    output_file_energy.close();
-  }
-  if (output_file_angular_momentum.is_open()) {
-    output_file_angular_momentum.close();
-  }
-  if (output_file_a.is_open()) {
-    output_file_a.close();
-  }
-  if (output_file_e.is_open()) {
-    output_file_e.close();
+  if (output_file_conserved.is_open()) {
+    output_file_conserved.close();
   }
 
 
@@ -212,28 +184,11 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 }
 
 /**
- * Output the energy/angular momentum.
+ * Output the energy/angular momentum and many more.
  */
-void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum, const double j, const double e, const double R) {
-  if (output_file_energy.is_open()) {
-    output_file_energy << scientific << E1 << endl;
-  }
-  if (output_file_angular_momentum.is_open()) {
-    output_file_angular_momentum << scientific << L1 << endl;
-  }
-}
-
-
-/**
- * Output the excentric/great half axis to a file.
- */
-void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e) {
-  if (output_file_a.is_open()) {
-    output_file_a << scientific << a1 << endl;
-  }
-
-  if (output_file_e.is_open()) {
-    output_file_e << scientific << e1 << endl;
+void output_converseved_quantities(ofstream& output_file_conserved, double E1, double L1, double great_half_axis, double excentric, const double j, const double e, const double R) {
+  if (output_file_conserved.is_open()) {
+    output_file_conserved << scientific << E1 << "\t" << L1 << "\t" << great_half_axis << "\t" << excentric << "\t"<< j << "\t" << e << "\t" << R << endl;
   }
 }
 
@@ -255,6 +210,7 @@ void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, doub
 
   double e = 0.3;
   double m2 = 1e-3;
+
 
   vector2d r1, r2;
   vector2d v1, v2;

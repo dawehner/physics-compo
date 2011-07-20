@@ -23,22 +23,40 @@ EOF
   /usr/bin/gnuplot << EOF
   set output "energy.eps"
   set terminal png size 800, 800
-  plot "output-$1-energy.dat" with points
+  plot "output-$1-conserved.dat" using 1 with points
 EOF
   /usr/bin/gnuplot << EOF
   set output "momentum.eps"
   set terminal png size 800, 800
-  plot "output-$1-momentum.dat" with points
+  plot "output-$1-conserved.dat" using 2 with points
 EOF
   /usr/bin/gnuplot << EOF
   set output "axis.eps"
   set terminal png size 800, 800
-  plot "output-$1-axis.dat" with points
+  plot "output-$1-conserved.dat" using 3 with points
 EOF
   /usr/bin/gnuplot << EOF
   set output "excentric.eps"
   set terminal png size 800, 800
-  plot "output-$1-excentric.dat" with points
+  plot "output-$1-conserved.dat" using 4 with points
+EOF
+
+/usr/bin/gnuplot << EOF
+  set output "specific_j"
+  set terminal png size 800, 800
+  plot "output-$1-conserved.dat" using 5 with points
+EOF
+
+/usr/bin/gnuplot << EOF
+  set output "runge_lenz.eps"
+  set terminal png size 800, 800
+  plot "output-$1-conserved.dat" using 6 with points
+EOF
+
+/usr/bin/gnuplot << EOF
+  set output "mass_center.eps"
+  set terminal png size 800, 800
+  plot "output-$1-conserved.dat" using 7 with points
 EOF
 
 # /usr/bin/gnuplot << EOF
