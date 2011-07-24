@@ -6,7 +6,11 @@
 #include "quantities.cpp"
 #include <vector>
 
+#include <boost/tokenizer.hpp>
+#include <boost/lexical_cast.hpp>
+
 using namespace std;
+using namespace boost;
 
 ofstream emptystream;
 
@@ -14,6 +18,7 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 void output_converseved_quantities(double E1, double L1, ofstream& output_file_energy, ofstream& output_file_angular_momentum);
 void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e);
 void main_two_body_start( listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk);
+void main_body_load_from_file( listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk, string& filename);
 
 int main(int argc, char **argv) {
   int c;
@@ -23,13 +28,15 @@ int main(int argc, char **argv) {
   string filename = "output";
   bool write_to_files = true;
 
+  string input_filename = "";
+
   double h = 0.0;
   double tk = 0.0;
   int P_count = 10;
   int steps_per_orbit = 100;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:s:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:s:v:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -48,6 +55,9 @@ int main(int argc, char **argv) {
         break;
       case 's':
         steps_per_orbit = atof(optarg);
+        break;
+      case 'v':
+        input_filename = optarg;
         break;
     }
   }
@@ -112,7 +122,14 @@ int main(int argc, char **argv) {
   listv2d v;
   listv2d a;
   listdouble m;
-  main_two_body_start(r, v, a, m, h, tk);
+
+  // Load the startup config, or use some default configuration.
+  if (input_filename.length() == 0) {
+    main_two_body_start(r, v, a, m, h, tk);
+  }
+  else {
+    main_body_load_from_file(r, v, a, m, h, tk, input_filename);
+  }
 
   double P = calc_periode(m);
 
@@ -257,4 +274,59 @@ void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, doub
   a.push_back(a1);
   vector2d a2 = a1;
   a.push_back(v2);
+
+  cout << scientific << r[0].x << endl;
+  cout << scientific << r[1].x << endl;
+  cout << scientific << v[0].x << endl;
+  cout << scientific << v[0].y << endl;
+  cout << scientific << v[1].x << endl;
+  cout << scientific << v[1].y << endl;
+
+}
+
+void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk, string& filename) {
+  // @TODO
+  //   - Allow to load this values.
+  h = 0.1;
+  tk = 0.0;
+
+  ifstream file(filename.c_str());
+  string input_str;
+
+  while (getline(file, input_str)) {
+    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+    char_separator<char> sep(" ", "", boost::keep_empty_tokens);
+    tokenizer tokens(input_str, sep);
+
+    vector2d ri, vi, ai;
+    double mi = 0.0;
+
+    int count = 0;
+    for (tokenizer::iterator beg = tokens.begin(); beg != tokens.end(); ++beg) {
+      double value = lexical_cast<double>(*beg);
+      switch (count++) {
+        case 0:
+          ri.x = value;
+          break;
+        case 1:
+          ri.y = value;
+          break;
+        case 2:
+          vi.x = value;
+          break;
+        case 3:
+          vi.y = value;
+          break;
+        case 4:
+          mi = value;
+          break;
+      }
+    }
+    ai.y = ai.x = 0.0;
+
+    r.push_back(ri);
+    v.push_back(vi);
+    a.push_back(ai);
+    m.push_back(mi);
+  }
 }
