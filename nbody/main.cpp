@@ -240,8 +240,8 @@ void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, doub
   double e = 0.3;
   double m2 = 1e-3;
 
-  vector2d r1, r2, r3, r4;
-  vector2d v1, v2, v3, v4;
+  vector2d r1, r2;
+  vector2d v1, v2;
 
   r1.y = 0.0;
   r2.y = 0.0;
@@ -274,14 +274,6 @@ void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, doub
   a.push_back(a1);
   vector2d a2 = a1;
   a.push_back(v2);
-
-  cout << scientific << r[0].x << endl;
-  cout << scientific << r[1].x << endl;
-  cout << scientific << v[0].x << endl;
-  cout << scientific << v[0].y << endl;
-  cout << scientific << v[1].x << endl;
-  cout << scientific << v[1].y << endl;
-
 }
 
 void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk, string& filename) {
