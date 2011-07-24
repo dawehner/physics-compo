@@ -2,7 +2,7 @@
 #include "quantities.cpp"
 #include "anomalie.cpp"
 
-unsigned int ITEMS = 0;
+int ITEMS = 0;
 
 void integration_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m) {
   ITEMS = r.size();
@@ -136,7 +136,7 @@ void integration_analytic(listv2d& r, listv2d& v, listv2d& a, const listdouble& 
 /**
  * Calculate the accelleration of one body.
  */
-inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned int j) {
+inline vector2d calc_accel(const listv2d& r, const listdouble m, const int j) {
   vector2d a;
   a.x = 0.0;
   a.y = 0.0;
@@ -159,7 +159,7 @@ inline vector2d calc_accel(const listv2d& r, const listdouble m, const unsigned 
  * Calculate the accelleration of all bodies.
  */
 void calc_accel_multiple(const listv2d& r, listv2d& a, const vector<double>&m) {
-  for (vector< vector<int> >::size_type i = 0; i < ITEMS; i++) {
+  for (int i = 0; i < ITEMS; i++) {
     a[i] = calc_accel(r, m, i);
   }
 }

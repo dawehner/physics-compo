@@ -26,7 +26,8 @@ double calc_excentric(vector2d& r, vector2d& v, const listdouble& m, double& gre
 
 double calc_energy(listv2d r, listv2d v, listdouble m) {
   double energy_kinetic = 0.0;
-  for (int i = 0; i < v.size(); i++) {
+  int size = v.size();
+  for (int i = 0; i < size; i++) {
     energy_kinetic += 0.5 * m[i] * pow(norm(v[i]), 2);
   }
   double energy_potential = - m[0] * m[1] / (norm(r[0] - r[1]));
