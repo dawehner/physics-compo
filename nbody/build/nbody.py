@@ -9,4 +9,4 @@ def nbody_output_helper(name, method):
   os.chdir(str(name) + "-result")
 
 
-nbody_output_helper("test-3b", 3)
+nbody_output_helper("test-3b", 2)

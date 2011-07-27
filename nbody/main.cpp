@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
   double tk = 0.0;
   int P_count = 10;
   int steps_per_orbit = 100;
+  int count_encounter = 0;
 
   // Should the timestamp be changed based on the values.
   bool adapt_timestamp = false;
@@ -165,6 +166,7 @@ int main(int argc, char **argv) {
       double runge_lenz_e_amount = norm(runge_lenz_e);
 
       output_converseved_quantities(output_file_conserved, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R_amount);
+      main_detect_closed_encounter(count_encounter, m, r);
     }
 
   }
@@ -307,10 +309,31 @@ void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m,
     v.push_back(vi);
     a.push_back(ai);
     m.push_back(mi);
-    cout << ri.x << endl;
-    cout << ri.y << endl;
-    cout << vi.x << endl;
-    cout << vi.y << endl;
-    cout << "-------------------";
+  }
+}
+
+void main_detect_closed_encounter(int& count_encounter, listdouble& m, listv2d& r) {
+  int size = m.size();
+  listdouble mu(size);
+  listdouble r_in(size);
+  listdouble rr(size);
+
+  // Calculate mu's
+  for (int i = 1; i < size; i++) {
+    mu[i] = m[i] / m[0];
+    r_in[i] = pow(mu[i], 2.0/5.0);
+  }
+
+  // Calculate the dinstance from the star.
+  for (int i = 0; i < size; i++) {
+    rr[i] = metrik(r[i], r[0]);
+  }
+
+  // Detect for an encounter.
+  for (int i = 1; i < size; i++) {
+    if (rr[i] < r_in[i]) {
+      count_encounter++;
+      cout << "hallo" << endl;
+    }
   }
 }
