@@ -187,7 +187,8 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
   // headers
 //   cout << "x \t y \t vx \t vy \t ax \t ay \t m" << endl;
   if (output_file.is_open()) {
-    for (vector< vector<int> >::size_type i = 0; i < r.size(); i++) {
+    int size = r.size();
+    for (int i = 0; i < size; i++) {
       // Just output the data of the second body, which is moving
       output_file << scientific << r[i] << "\t";
       output_file << scientific << v[i] << "\t";
@@ -306,5 +307,10 @@ void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m,
     v.push_back(vi);
     a.push_back(ai);
     m.push_back(mi);
+    cout << ri.x << endl;
+    cout << ri.y << endl;
+    cout << vi.x << endl;
+    cout << vi.y << endl;
+    cout << "-------------------";
   }
 }

@@ -1,11 +1,12 @@
+# -*- coding: utf-8 -*-
 import os;
 
 def nbody_output_helper(name, method):
   # Generate the output, create a directory for it and move all files into it.
-  os.system("./nbody -o output-%s -i %d" % (name, method))
-  os.mkdir(str(name))
-  os.system("mv output-%s* %s/" % (name, name))
-  os.chdir(str(name))
+  os.system("./nbody -o output-%s -i %d -v %s" % (name, method, name))
+  os.mkdir(str(name) + "-result")
+  os.system("mv output-%s* %s-result/" % (name, name))
+  os.chdir(str(name) + "-result")
 
 
-nbody_output_helper("test", 3)
+nbody_output_helper("test-3b", 3)
