@@ -8,7 +8,11 @@
 #include <limits>
 #include "main.h"
 
+#include <boost/tokenizer.hpp>
+#include <boost/lexical_cast.hpp>
+
 using namespace std;
+using namespace boost;
 
 ofstream emptystream;
 
@@ -20,6 +24,8 @@ int main(int argc, char **argv) {
   string filename = "output";
   bool write_to_files = true;
 
+  string input_filename = "";
+
   double h = 0.0;
   double tk = 0.0;
   int P_count = 10;
@@ -29,7 +35,7 @@ int main(int argc, char **argv) {
   bool adapt_timestamp = false;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:v:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -51,6 +57,8 @@ int main(int argc, char **argv) {
         break;
       case 't':
         adapt_timestamp = true;
+      case 'v':
+        input_filename = optarg;
         break;
     }
   }
@@ -102,7 +110,14 @@ int main(int argc, char **argv) {
   listv2d a; // Accel. of the bodies
   listv2d da; // Change of the accel. of the bodies
   listdouble m;
-  main_two_body_start(r, v, a, m, h, tk);
+
+  // Load the startup config, or use some default configuration.
+  if (input_filename.length() == 0) {
+    main_two_body_start(r, v, a, m, h, tk);
+  }
+  else {
+    main_body_load_from_file(r, v, a, m, h, tk, input_filename);
+  }
 
   double P = calc_periode(m);
 
@@ -211,7 +226,6 @@ void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, doub
   double e = 0.3;
   double m2 = 1e-3;
 
-
   vector2d r1, r2;
   vector2d v1, v2;
 
@@ -246,4 +260,51 @@ void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, doub
   a.push_back(a1);
   vector2d a2 = a1;
   a.push_back(v2);
+}
+
+void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk, string& filename) {
+  // @TODO
+  //   - Allow to load this values.
+  h = 0.1;
+  tk = 0.0;
+
+  ifstream file(filename.c_str());
+  string input_str;
+
+  while (getline(file, input_str)) {
+    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+    char_separator<char> sep(" ", "", boost::keep_empty_tokens);
+    tokenizer tokens(input_str, sep);
+
+    vector2d ri, vi, ai;
+    double mi = 0.0;
+
+    int count = 0;
+    for (tokenizer::iterator beg = tokens.begin(); beg != tokens.end(); ++beg) {
+      double value = lexical_cast<double>(*beg);
+      switch (count++) {
+        case 0:
+          ri.x = value;
+          break;
+        case 1:
+          ri.y = value;
+          break;
+        case 2:
+          vi.x = value;
+          break;
+        case 3:
+          vi.y = value;
+          break;
+        case 4:
+          mi = value;
+          break;
+      }
+    }
+    ai.y = ai.x = 0.0;
+
+    r.push_back(ri);
+    v.push_back(vi);
+    a.push_back(ai);
+    m.push_back(mi);
+  }
 }
