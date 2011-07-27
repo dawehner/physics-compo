@@ -327,6 +327,9 @@ void main_detect_closed_encounter(int& count_encounter, listdouble& m, listv2d& 
   // Calculate the dinstance from the star.
   for (int i = 0; i < size; i++) {
     rr[i] = metrik(r[i], r[0]);
+    // R_in is normalized to rr = 1 so adapt it.
+    cout << mu[i] << "\t" << r_in[i] << "\t" << rr[i] << endl;
+    r_in[i] *= rr[i];
   }
 
   // Detect for an encounter.
