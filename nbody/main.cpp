@@ -114,7 +114,8 @@ int main(int argc, char **argv) {
 
   // Load the startup config, or use some default configuration.
   if (input_filename.length() == 0) {
-    main_two_body_start(r, v, a, m, h, tk);
+    cout << "Missing input filename" << endl;
+    return EXIT_FAILURE;
   }
   else {
     main_body_load_from_file(r, v, a, m, h, tk, input_filename);
@@ -219,50 +220,6 @@ void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv
     min = min >= val ? min : val;
   }
   dt = dt_begin * min;
-}
-
-void main_two_body_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk) {
-  // Some example content.
-  h = 0.1;
-  tk = 0.0;
-
-  double e = 0.3;
-  double m2 = 1e-3;
-
-  vector2d r1, r2;
-  vector2d v1, v2;
-
-  r1.y = 0.0;
-  r2.y = 0.0;
-
-  double dp = 1.0 - e;
-  r1.x = - 1.0 * dp * m2 / (1.0 + m2);
-  r2.x = dp * (1.0 + m2);
-
-  v1.x = 0.0;
-  v2.x = 0.0;
-
-  // L = \mu * sqrt((1-e^2) * G * M * a)
-  double mu = m2/(1.0 + m2);
-  double L = mu * sqrt((1.0 - e*e) * (1.0 + m2));
-  v2.y = (L / (dp * m2));
-  v1.y = - L / dp;
-
-  m.push_back(1.0);
-  m.push_back(m2);
-
-  r.push_back(r1);
-  r.push_back(r2);
-
-  v.push_back(v1);
-  v.push_back(v2);
-
-  vector2d a1;
-  a1.x = 0.0;
-  a1.y = 0.0;
-  a.push_back(a1);
-  vector2d a2 = a1;
-  a.push_back(v2);
 }
 
 void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk, string& filename) {
