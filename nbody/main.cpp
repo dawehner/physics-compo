@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
   bool adapt_timestamp = false;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:v:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:f:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
         break;
       case 't':
         adapt_timestamp = true;
-      case 'v':
+      case 'f':
         input_filename = optarg;
         break;
     }
