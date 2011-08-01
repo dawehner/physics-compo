@@ -167,10 +167,42 @@ inline vector2d calc_accel(const listv2d& r, const listdouble m, const int j) {
 }
 
 /**
+ * Calculate the change of the acceleration of one body.
+ */
+inline vector2d calc_accel_change(const listv2d&r, const listv2d& v, listdouble m, const int j) {
+  vector2d a_dot;
+  a_dot.x = 0.0;
+  a_dot.y = 0.0;
+  vector2d connection;
+  vector2d connection_speed;
+  connection.x = connection.y = connection_speed.x = connection_speed.y = 0.0;
+
+  for (int i = 0; i < ITEMS; i++) {
+    if (i != j) {
+      connection = r[i] - r[j];
+      double connection_norm = norm(connection);
+      connection_speed = v[i] - v[j];
+      a_dot = a_dot + m[i] * (connection_speed/(pow(connection_norm, 3.0)) - 3 * (connection_speed * connection)/(pow(connection_norm, 5.0)) * connection);
+    }
+  }
+
+  return a_dot;
+}
+
+/**
  * Calculate the accelleration of all bodies.
  */
 void calc_accel_multiple(const listv2d& r, listv2d& a, const vector<double>&m) {
   for (int i = 0; i < ITEMS; i++) {
     a[i] = calc_accel(r, m, i);
+  }
+}
+
+/**
+ * Calculate the change of acceleration of all bodies.
+ */
+void calc_accel_change_multiple(const listv2d& r, const listv2d& v, listv2d& a_dot, const vector<double>&m) {
+    for (int i = 0; i < ITEMS; i++) {
+    a_dot[i] = calc_accel_change(r, v, m, i);
   }
 }

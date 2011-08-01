@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import os;
 from math import *;
+import Gnuplot, Gnuplot.funcutils
+
 
 def nbody_output_helper(name, method):
   # Generate the output, create a directory for it and move all files into it.
   folder_name = str(name) + "-result";
-  os.system("./nbody -o output-%s -i %d -f %s" % (name, method, name))
+  os.system("./nbody -o output-%s -i %d -f %s -c %d" % (name, method, name, 1000))
   os.system("rm %s -Rf" %(folder_name))
   os.mkdir(folder_name)
   os.system("mv output-%s* %s/" % (name, folder_name))
@@ -38,7 +40,17 @@ def nbody_provide_data(name, values):
   input_file.write(output)
   input_file.close()
 
+def nbody_output_gnuplot(name):
+  plot = Gnuplot.Gnuplot()
+  plot("set terminal png size 1024x1024")
+  plot("set output '{0}.png'".format(name))
+  plot_line = "plot '{0}'".format("output-"+ name + ".dat")
+  plot(plot_line)
+  plot("quit")
+
+
 delta = 0.001
 values = [[1.0, 0.0, 0.0], [0.00001, 0.0, 1.0, 1.0], [0.00001, 0.0, 1.0 + delta, -1.0]]
 nbody_provide_data("test-3b", values)
 nbody_output_helper("test-3b", 2)
+nbody_output_gnuplot("test-3b")

@@ -60,6 +60,11 @@ vector2d operator*(double number, vector2d vec1) {
   return vec;
 }
 
+double operator*(vector2d vec1, vector2d vec2) {
+  double res;
+  res = vec1.x * vec2.x + vec1.y * vec1.y;
+  return res;
+}
 
 vector2d operator/(vector2d vec1, double number) {
   vector2d vec;

@@ -11,6 +11,11 @@
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 
+/**
+ * @TODO
+ * Big major todo: throw away the vector2d code and just use an array!!!!
+ */
+
 using namespace std;
 using namespace boost;
 
@@ -113,7 +118,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
   else {
-    main_body_load_from_file(r, v, a, m, h, tk, input_filename);
+    main_body_load_from_file(r, v, a, da, m, h, tk, input_filename);
   }
 
   double P = calc_periode(m);
@@ -141,6 +146,7 @@ int main(int argc, char **argv) {
     integration_method(r, v, a, m, h, ti);
 
     if (adapt_timestamp) {
+      calc_accel_change_multiple(r, v, da, m);
       nbody_adapt_timestamp(time_per_step, dt, a, da);
     }
 
@@ -223,7 +229,7 @@ void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv
   dt = dt_begin * min;
 }
 
-void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk, string& filename) {
+void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listdouble& m, double& h, double& tk, string& filename) {
   // @TODO
   //   - Allow to load this values.
   h = 0.1;
@@ -231,6 +237,10 @@ void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m,
 
   ifstream file(filename.c_str());
   string input_str;
+
+  vector2d a_dot_i;
+  a_dot_i.x = 0.0;
+  a_dot_i.y = 0.0;
 
   while (getline(file, input_str)) {
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
@@ -267,6 +277,7 @@ void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m,
     v.push_back(vi);
     a.push_back(ai);
     m.push_back(mi);
+    da.push_back(a_dot_i);
   }
 }
 
