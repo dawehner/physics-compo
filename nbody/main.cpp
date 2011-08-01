@@ -86,19 +86,14 @@ int main(int argc, char **argv) {
       break;
   }
 
-  // Generate a lot of filestreams for the different kind of output.
-//   vector< ofstream* > files;
-
   ofstream output_file;
   string output_filename = filename + ".dat";
   output_file.open(output_filename.c_str());
-//   files.push_back(output_file);
 
 
   ofstream output_file_conserved;
   output_filename = filename + "-conserved.dat";
   output_file_conserved.open(output_filename.c_str());
-//   files.push_back(output_file_energy);
 
   if (!output_file.is_open()) {
     cout << "Couldn't open file to write." << endl;
@@ -124,6 +119,10 @@ int main(int argc, char **argv) {
   double P = calc_periode(m);
 
   integration_start(r, v, a, m);
+
+  // The hill-radius
+  listdouble R_in(r.size());
+  main_calc_influence_radius(R_in, m, r);
 
   double total_mass = calc_total_mass(m);
 
@@ -155,6 +154,8 @@ int main(int argc, char **argv) {
       vector2d r_rel = r[1] - r[0];
       vector2d v_rel = v[1] - v[0];
 
+      // @todo
+      // Move this all to a new funciton.
       double great_half_axis = calc_great_half_axis(r_rel, v_rel, m);
       double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis);
       double energy = calc_energy(r, v, m);
@@ -167,7 +168,7 @@ int main(int argc, char **argv) {
       double runge_lenz_e_amount = norm(runge_lenz_e);
 
       output_converseved_quantities(output_file_conserved, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R_amount);
-      main_detect_closed_encounter(count_encounter, m, r);
+      main_detect_closed_encounter(count_encounter, m, R_in, r);
     }
 
   }
@@ -269,31 +270,37 @@ void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listdouble& m,
   }
 }
 
-void main_detect_closed_encounter(int& count_encounter, listdouble& m, listv2d& r) {
+void main_calc_influence_radius(listdouble& R_in, const listdouble& m, const listv2d& r) {
+  int central_body = 0;
+
   int size = m.size();
-  listdouble mu(size);
-  listdouble r_in(size);
-  listdouble rr(size);
-
-  // Calculate mu's
-  for (int i = 1; i < size; i++) {
-    mu[i] = m[i] / m[0];
-    r_in[i] = pow(mu[i], 2.0/5.0);
-  }
-
-  // Calculate the dinstance from the star.
   for (int i = 0; i < size; i++) {
-    rr[i] = metrik(r[i], r[0]);
-    // R_in is normalized to rr = 1 so adapt it.
-    cout << mu[i] << "\t" << r_in[i] << "\t" << rr[i] << endl;
-    r_in[i] *= rr[i];
+    double mu = m[i] / m[central_body];
+    R_in[i] = pow(mu, 2.0/5.0) * norm(r[i]);
+//     cout << R_in[i] << endl;
   }
+}
 
-  // Detect for an encounter.
-  for (int i = 1; i < size; i++) {
-    if (rr[i] < r_in[i]) {
-      count_encounter++;
-      cout << "hallo" << endl;
+
+bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble & R_in, listv2d& r) {
+  bool ret = false;
+  int size = R_in.size();
+
+  // Check the encounter foreach particle to each particle.
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      if (i != j) {
+        double distance = metrik(r[i], r[j]);
+        double R_in_heavier = m[i] < m[j] ? R_in[i] : R_in[j];
+//         cout << i << " " << j << " " << distance << " " << R_in_heavier << endl;
+        if (distance < R_in_heavier) {
+          cout << i << " " << j << " " << distance << " " << R_in[i] << endl;
+          count_encounter++;
+          ret = true;
+        }
+      }
     }
   }
+
+  return ret;
 }

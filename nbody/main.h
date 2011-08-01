@@ -4,4 +4,5 @@ void output_converseved_quantities(ofstream& output_file_conserved, double E1, d
 void output_orbital_parameters(double a1, double e1, ofstream& output_file_a, ofstream& output_file_e);
 void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv2d& da);
 void main_body_load_from_file( listv2d& r, listv2d& v, listv2d& a, listdouble& m, double& h, double& tk, string& filename);
-void main_detect_closed_encounter(int& count_encounter, listdouble& m, listv2d& r);
+bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble& R_in, listv2d& r);
+void main_calc_influence_radius(listdouble& R_in, const listdouble& m, const listv2d& r);
