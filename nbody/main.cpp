@@ -185,8 +185,10 @@ int main(int argc, char **argv) {
       double R_amount = norm(R);
       double runge_lenz_e_amount = norm(runge_lenz_e);
 
-      output_converseved_quantities(output_file_conserved, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R);
-      main_detect_closed_encounter(count_encounter, m, R_in, r);
+      output_converseved_quantities(output_file_conserved, ti, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R);
+      if (!main_detect_closed_encounter(count_encounter, m, R_in, r, ti) && break_closed_encounter) {
+        return EXIT_FAILURE;
+      }
     }
 
   }
@@ -198,6 +200,9 @@ int main(int argc, char **argv) {
     output_file_conserved.close();
   }
 
+  if (!break_closed_encounter) {
+    cout << "encounters: " << count_encounter;
+  }
 
   return 0;
 }
@@ -224,9 +229,10 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 /**
  * Output the energy/angular momentum and many more.
  */
-void output_converseved_quantities(std::ofstream& output_file_conserved, double E1, double L1, double great_half_axis, double excentric, const double j, const double e, const vector2d& R) {
+void output_converseved_quantities(std::ofstream& output_file_conserved, double ti, double E1, double L1, double great_half_axis, double excentric, const double j, const double e, const vector2d& R) {
   if (output_file_conserved.is_open()) {
     output_file_conserved << scientific
+    << ti << "\t"
     << E1 << "\t"
     << L1 << "\t"
     << great_half_axis << "\t"
@@ -351,7 +357,7 @@ void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
 }
 
 
-bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble & R_in, listv2d& r) {
+bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble& R_in, listv2d& r, const double ti) {
   bool ret = false;
   int size = R_in.size();
 
@@ -361,9 +367,8 @@ bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdoubl
       if (i != j) {
         double distance = metrik(r[i], r[j]);
         double R_in_heavier = m[i] < m[j] ? R_in[i] : R_in[j];
-//         cout << i << " " << j << " " << distance << " " << R_in_heavier << endl;
         if (distance < R_in_heavier) {
-          cout << i << " " << j << " " << distance << " " << R_in[i] << endl;
+          cout << ti << " " << i << " " << j << " " << distance << " " << R_in[i] << endl;
           count_encounter++;
           ret = true;
         }
