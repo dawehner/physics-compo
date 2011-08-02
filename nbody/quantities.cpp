@@ -44,22 +44,29 @@ double calc_periode(const listdouble& m) {
   return 2 * M_PI / sqrt(m[0] + m[1]);
 }
 
-vector2d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
-  vector2d j;
+vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
+  vector3d j;
   j.x = 0.0;
   j.y = 0.0;
-//   j.z = r.x * v.y - r.y * v.x;
+//   j.x = r.y * v.z - r.z * v.y;
+//   j.y = r.z * v.x - r.x * v.z;
+  j.z = r.x * v.y - r.y * v.x;
 
   return j;
 }
 
-vector2d calc_runge_lenz(const vector2d& j, const vector2d& r, const vector2d& v, const listdouble& m) {
-  vector2d R;
-  R.x = 0.0;
-  R.y = 0.0;
+vector3d calc_runge_lenz(const vector3d& j, const vector2d& r, const vector2d& v, const double total_mass) {
+  vector3d e;
+
+  vector3d r1 = vector2d_3d(r);
+  vector3d v1 = vector2d_3d(v);
+
+  e = cross(v1, j) / (1.0 * total_mass) - r1 / norm(r1);
+  e.x = 0.0;
+  e.y = 0.0;
 //   R.z = 0.0;
 
-  return R;
+  return e;
 }
 
 vector2d calc_mass_center(listv2d& r, listdouble& m, const double& total_mass) {

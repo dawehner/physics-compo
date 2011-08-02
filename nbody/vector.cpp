@@ -73,6 +73,17 @@ vector2d operator/(vector2d vec1, double number) {
   return vec;
 }
 
+vector3d operator/(vector3d vec1, double number) {
+  vector3d vec;
+  vec.x = vec1.x / number;
+  vec.y = vec1.y / number;
+
+  // @fixme
+  vec.z = 0.0;
+
+  return vec;
+}
+
 
 vector3d operator-(vector3d vec1, vector3d vec2) {
   vector3d vec;
@@ -108,6 +119,24 @@ double metrik(vector2d vec1, vector2d vec2) {
 ostream& operator<<(ostream& out, const vector2d& vec) {
     out << vec.x << "\t" << vec.y;
     return out;
+}
+
+vector3d cross(vector3d vec1, vector3d vec2) {
+  vector3d vec;
+  vec.x = vec1.y * vec2.z - vec1.z * vec2.y;
+  vec.y = vec1.z * vec2.x - vec1.x * vec2.z;
+  vec.z = vec1.x * vec2.y - vec1.y * vec2.x;
+
+  return vec;
+}
+
+vector3d vector2d_3d(vector2d vec1) {
+  vector3d vec;
+  vec.x = vec1.x;
+  vec.y = vec1.y;
+  vec.z = 0.0;
+
+  return vec;
 }
 
 #endif

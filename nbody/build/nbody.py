@@ -4,13 +4,18 @@ from math import *;
 import Gnuplot, Gnuplot.funcutils
 
 
-def nbody_output_helper(name, method, filename = "", periods = 10):
+def nbody_output_helper(name, method, filename = "", periods = 10, break_encounter = 0):
   # Generate the output, create a directory for it and move all files into it.
   if (filename == ""):
     filename = name
 
   folder_name = str(name) + "-result";
-  os.system("./nbody -o output-%s -i %d -f %s -c %d -t" % (name, method, filename, periods))
+
+  encounter = ""
+  if (break_encounter):
+    encounter = "-e"
+
+  os.system("./nbody -o output-%s -i %d -f %s -c %d -t %s" % (name, method, filename, periods, encounter))
   os.system("rm %s -Rf" %(folder_name))
   os.mkdir(folder_name)
   os.system("mv output-%s* %s/" % (name, folder_name))

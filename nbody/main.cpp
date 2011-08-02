@@ -135,7 +135,13 @@ int main(int argc, char **argv) {
   listdouble R_in(r.size());
   main_calc_influence_radius(R_in, m, r);
 
+  // Calc initial values.
+  vector2d r_rel = r[1] - r[0];
+  vector2d v_rel = v[1] - v[0];
   double total_mass = calc_total_mass(m);
+  double start_energy = calc_energy(r, v, m);
+  double start_great_half_axis = calc_great_half_axis(r_rel, v_rel, m);
+  double start_excentric = calc_excentric(r_rel, v_rel, m, start_great_half_axis);
 
   // Here comes the main loop
   int count = 0;
@@ -168,18 +174,18 @@ int main(int argc, char **argv) {
 
       // @todo
       // Move this all to a new funciton.
-      double great_half_axis = calc_great_half_axis(r_rel, v_rel, m);
-      double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis);
-      double energy = calc_energy(r, v, m);
+      double great_half_axis = calc_great_half_axis(r_rel, v_rel, m) - start_great_half_axis;
+      double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis) - start_excentric;
+      double energy = calc_energy(r, v, m) - start_energy;
       double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
-      vector2d j = calc_specific_angular_momentum(r[0], v[0]);
+      vector3d j = calc_specific_angular_momentum(r[0], v[0]);
       vector2d R = calc_mass_center(r, m, total_mass);
-      vector2d runge_lenz_e = calc_runge_lenz(j, v[0], r[0], m);
+      vector3d runge_lenz_e = calc_runge_lenz(j, v[0], r[0], total_mass);
       double j_amount = norm(j);
       double R_amount = norm(R);
       double runge_lenz_e_amount = norm(runge_lenz_e);
 
-      output_converseved_quantities(output_file_conserved, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R_amount);
+      output_converseved_quantities(output_file_conserved, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R);
       main_detect_closed_encounter(count_encounter, m, R_in, r);
     }
 
@@ -218,9 +224,16 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 /**
  * Output the energy/angular momentum and many more.
  */
-void output_converseved_quantities(ofstream& output_file_conserved, double E1, double L1, double great_half_axis, double excentric, const double j, const double e, const double R) {
+void output_converseved_quantities(std::ofstream& output_file_conserved, double E1, double L1, double great_half_axis, double excentric, const double j, const double e, const vector2d& R) {
   if (output_file_conserved.is_open()) {
-    output_file_conserved << scientific << E1 << "\t" << L1 << "\t" << great_half_axis << "\t" << excentric << "\t"<< j << "\t" << e << "\t" << R << endl;
+    output_file_conserved << scientific
+    << E1 << "\t"
+    << L1 << "\t"
+    << great_half_axis << "\t"
+    << excentric << "\t"
+    << j << "\t" 
+    << e << "\t" 
+    << R.x << "\t"  << R.y << endl;
   }
 }
 
@@ -331,6 +344,10 @@ void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
   for (int i = 0; i < size; i++) {
     v[i] = v[i] - vcm;
   }
+
+  cout << r[0] << endl;
+  cout << r[1] << endl;
+  cout << r[2] << endl;
 }
 
 
