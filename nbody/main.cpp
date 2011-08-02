@@ -297,6 +297,28 @@ void main_calc_influence_radius(listdouble& R_in, const listdouble& m, const lis
   }
 }
 
+void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
+  listv2d r_ = r;
+  listv2d v_ = v;
+
+  // First find the center of mass.
+  vector2d rcm;
+  rcm.x = rcm.y = 0.0;
+  double total_mass = 0.0;
+
+  int size = r.size();
+  for (int i = 0; i < size; i++) {
+    rcm = rcm + m[i] * r[i;
+    total_mass += m[i];
+  }
+  rcm = rcm / total_mass;
+
+  // Replace the previous positions with the relative positions.
+  for (int i = 0; i < size; i++) {
+    r[i] = r[i] - rcm;
+  }
+}
+
 
 bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble & R_in, listv2d& r) {
   bool ret = false;
