@@ -308,7 +308,7 @@ void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
 
   int size = r.size();
   for (int i = 0; i < size; i++) {
-    rcm = rcm + m[i] * r[i;
+    rcm = rcm + m[i] * r[i];
     total_mass += m[i];
   }
   rcm = rcm / total_mass;
