@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   int c;
   void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti);
 
-  int iteration = INTEGRATION_RUNGE_KUTTA;
+  int _integration_method = INTEGRATION_RUNGE_KUTTA;
   string filename = "output";
   bool write_to_files = true;
 
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     switch (c) {
       // Set interation method
       case 'i':
-        iteration = atof(optarg);
+        _integration_method = atof(optarg);
       // set excent value
         break;
       case 'o':
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
   }
 
 
-  switch (iteration) {
+  switch (_integration_method) {
     case INTEGRATION_EULER:
       integration_method = integration_euler;
       break;
@@ -128,6 +128,7 @@ int main(int argc, char **argv) {
 
   double P = calc_periode(m);
 
+  main_prepare_mass_center_system(r, v, m);
   integration_start(r, v, a, m);
 
   // The hill-radius

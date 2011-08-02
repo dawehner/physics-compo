@@ -10,7 +10,7 @@ def nbody_output_helper(name, method, filename = "", periods = 10):
     filename = name
 
   folder_name = str(name) + "-result";
-  os.system("./nbody -o output-%s -i %d -f %s -c %d" % (name, method, filename, periods))
+  os.system("./nbody -o output-%s -i %d -f %s -c %d -t" % (name, method, filename, periods))
   os.system("rm %s -Rf" %(folder_name))
   os.mkdir(folder_name)
   os.system("mv output-%s* %s/" % (name, folder_name))
