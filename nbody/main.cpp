@@ -318,8 +318,7 @@ void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
     r[i] = r[i] - rcm;
   }
 
-  // Now do the same for the velocities.
-  // @todo: Check this spelling.
+  // Now do the same for the speeds.
   vector2d vcm;
   vcm.x = vcm.y = 0.0;
 
