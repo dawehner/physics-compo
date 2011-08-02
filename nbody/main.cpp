@@ -317,6 +317,20 @@ void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
   for (int i = 0; i < size; i++) {
     r[i] = r[i] - rcm;
   }
+
+  // Now do the same for the velocities.
+  // @todo: Check this spelling.
+  vector2d vcm;
+  vcm.x = vcm.y = 0.0;
+
+  for (int i = 0; i < size; i++) {
+    vcm = vcm + m[i] * v[i];
+  }
+  vcm = vcm / total_mass;
+
+  for (int i = 0; i < size; i++) {
+    v[i] = v[i] - vcm;
+  }
 }
 
 
