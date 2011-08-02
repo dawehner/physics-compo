@@ -4,10 +4,13 @@ from math import *;
 import Gnuplot, Gnuplot.funcutils
 
 
-def nbody_output_helper(name, method):
+def nbody_output_helper(name, method, filename = "", periods = 10):
   # Generate the output, create a directory for it and move all files into it.
+  if (filename == ""):
+    filename = name
+
   folder_name = str(name) + "-result";
-  os.system("./nbody -o output-%s -i %d -f %s -c %d" % (name, method, name, 1000))
+  os.system("./nbody -o output-%s -i %d -f %s -c %d" % (name, method, filename, periods))
   os.system("rm %s -Rf" %(folder_name))
   os.mkdir(folder_name)
   os.system("mv output-%s* %s/" % (name, folder_name))
@@ -49,8 +52,3 @@ def nbody_output_gnuplot(name):
   plot("quit")
 
 
-delta = 0.001
-values = [[1.0, 0.0, 0.0], [0.00001, 0.0, 1.0, 1.0], [0.00001, 0.0, 1.0 + delta, -1.0]]
-nbody_provide_data("test-3b", values)
-nbody_output_helper("test-3b", 2)
-nbody_output_gnuplot("test-3b")

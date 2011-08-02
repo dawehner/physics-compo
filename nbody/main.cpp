@@ -39,9 +39,11 @@ int main(int argc, char **argv) {
 
   // Should the timestamp be changed based on the values.
   bool adapt_timestamp = false;
+  // Should the programm stop, once a closed encounter got detected
+  bool break_closed_encounter = false;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:f:")) != -1) {
+  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:f:e:")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -65,6 +67,9 @@ int main(int argc, char **argv) {
         adapt_timestamp = true;
       case 'f':
         input_filename = optarg;
+        break;
+      case 'e':
+        break_closed_encounter = true;
         break;
     }
   }
