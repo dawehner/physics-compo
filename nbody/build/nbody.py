@@ -4,6 +4,12 @@ from math import *;
 import Gnuplot, Gnuplot.funcutils
 
 
+# Runs the nbody code and prepare the output
+# @todo
+# The reperation should be moved into another function
+#
+# @return boolean
+# Did the nbody code finished without problems. 0 for successs
 def nbody_output_helper(name, method, filename = "", periods = 10, break_encounter = 0):
   # Generate the output, create a directory for it and move all files into it.
   if (filename == ""):
@@ -15,11 +21,15 @@ def nbody_output_helper(name, method, filename = "", periods = 10, break_encount
   if (break_encounter):
     encounter = "-e"
 
-  os.system("./nbody -o output-%s -i %d -f %s -c %d -t %s" % (name, method, filename, periods, encounter))
+  call = "./nbody -o output-%s -i %d -f %s -c %d -t %s" % (name, method, filename, periods, encounter)
+  print call
+  result = os.system(call)
   os.system("rm %s -Rf" %(folder_name))
   os.mkdir(folder_name)
   os.system("mv output-%s* %s/" % (name, folder_name))
   os.chdir(folder_name)
+
+  return result
 
 def nbody_provide_data(name, values):
   output = ""
