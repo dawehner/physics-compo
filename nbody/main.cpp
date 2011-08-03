@@ -201,7 +201,7 @@ int main(int argc, char **argv) {
   }
 
   if (!break_closed_encounter) {
-    cout << "encounters: " << count_encounter;
+    cout << "encounters: " << count_encounter << endl;
   }
 
   return 0;
@@ -350,10 +350,6 @@ void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
   for (int i = 0; i < size; i++) {
     v[i] = v[i] - vcm;
   }
-
-  cout << r[0] << endl;
-  cout << r[1] << endl;
-  cout << r[2] << endl;
 }
 
 

@@ -55,5 +55,6 @@ def nbody_output_gnuplot(name):
   plot_line = "plot '{0}'".format("output-"+ name + ".dat")
   plot(plot_line)
   plot("quit")
+  os.chdir("..")
 
 
