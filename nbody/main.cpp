@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
   bool break_closed_encounter = false;
 
   // Load data from input
-  while ((c = getopt(argc, argv, ":i:o:h:c:s:t:f:e:")) != -1) {
+  while ((c = getopt(argc, argv, "i:o:h:c:s:t::f:e::")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
@@ -66,7 +66,9 @@ int main(int argc, char **argv) {
       case 't':
         adapt_timestamp = true;
       case 'f':
-        input_filename = optarg;
+        if (input_filename == "") {
+          input_filename = optarg;
+        }
         break;
       case 'e':
         break_closed_encounter = true;

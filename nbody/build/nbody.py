@@ -10,24 +10,23 @@ import Gnuplot, Gnuplot.funcutils
 #
 # @return boolean
 # Did the nbody code finished without problems. 0 for successs
-def nbody_output_helper(name, method, filename = "", periods = 10, break_encounter = 0):
+def nbody_output_helper(name, method, input_filename = "", periods = 10, break_encounter = 0):
   # Generate the output, create a directory for it and move all files into it.
-  if (filename == ""):
-    filename = name
+  if (input_filename == ""):
+    input_filename = name
 
   folder_name = str(name) + "-result";
 
   encounter = ""
   if (break_encounter):
-    encounter = "-e"
+    encounter = "-e 1"
 
-  call = "./nbody -o output-%s -i %d -f %s -c %d -t %s" % (name, method, filename, periods, encounter)
+  call = "./nbody -o 'output-%s' -f '%s' -i %d -c %d -t 1 %s" % (name, input_filename, method, periods, encounter)
   print call
   result = os.system(call)
   os.system("rm %s -Rf" %(folder_name))
   os.mkdir(folder_name)
   os.system("mv output-%s* %s/" % (name, folder_name))
-  os.chdir(folder_name)
 
   return result
 
