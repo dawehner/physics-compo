@@ -21,7 +21,7 @@ def nbody_output_helper(name, method, input_filename = "", periods = 10, break_e
   if (break_encounter):
     encounter = "-e 1"
 
-  call = "./nbody -o 'output-%s' -f '%s' -i %d -c %d -t 1 %s" % (name, input_filename, method, periods, encounter)
+  call = "./nbody -o 'output-%s' -i %d -f '%s' -c %d %s" % (name, method, input_filename, periods, encounter)
   print call
   result = os.system(call)
   os.system("rm %s -Rf" %(folder_name))
