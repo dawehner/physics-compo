@@ -76,7 +76,6 @@ int main(int argc, char **argv) {
     }
   }
 
-
   switch (_integration_method) {
     case INTEGRATION_EULER:
       integration_method = integration_euler;
@@ -147,13 +146,13 @@ int main(int argc, char **argv) {
 
   // Here comes the main loop
   int count = 0;
-  const double time_per_step = P / (double) steps_per_orbit;
+  const double time_per_step = P / steps_per_orbit;
   // dt is the actual used time per step, but maybe changed during runtime.
   double dt = time_per_step;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
   double ti = 0.0;
 
-  h = P / 100;
+  h = P / 100.0;
 
   while (count < t_max) {
     calc_accel_multiple(r, a, m);
@@ -179,7 +178,8 @@ int main(int argc, char **argv) {
       double great_half_axis = calc_great_half_axis(r_rel, v_rel, m) - start_great_half_axis;
       double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis) - start_excentric;
       double energy = calc_energy(r, v, m) - start_energy;
-      double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
+//       double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
+      double angular_momentum = 0.0;
       vector3d j = calc_specific_angular_momentum(r[0], v[0]);
       vector2d R = calc_mass_center(r, m, total_mass);
       vector3d runge_lenz_e = calc_runge_lenz(j, v[0], r[0], total_mass);
