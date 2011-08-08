@@ -10,23 +10,30 @@ import Gnuplot, Gnuplot.funcutils
 #
 # @return boolean
 # Did the nbody code finished without problems. 0 for successs
-def nbody_output_helper(name, method, input_filename = "", periods = 10, break_encounter = 0):
+def nbody_output_helper(name, method, input_filename = "", periods = 10, break_encounter = 0, output = True):
   # Generate the output, create a directory for it and move all files into it.
   if (input_filename == ""):
     input_filename = name
 
   folder_name = str(name) + "-result";
 
+  args = []
+
   encounter = ""
   if (break_encounter):
     encounter = "-e 1"
 
-  call = "./nbody -o 'output-%s' -i %d -f '%s' -c %d %s" % (name, method, input_filename, periods, encounter)
+  if (output):
+    args.append("-o 'output-{}'".format(name))
+
+  call = "./nbody %s -i %d -f '%s' -c %d %s" % (" ".join(args), method, input_filename, periods, encounter)
   print call
   result = os.system(call)
-  os.system("rm %s -Rf" %(folder_name))
-  os.mkdir(folder_name)
-  os.system("mv output-%s* %s/" % (name, folder_name))
+
+  if output:
+    os.system("rm %s -Rf" %(folder_name))
+    os.mkdir(folder_name)
+    os.system("mv output-%s* %s/" % (name, folder_name))
 
   return result
 
@@ -57,7 +64,11 @@ def nbody_provide_data(name, values):
   input_file.write(output)
   input_file.close()
 
-def nbody_output_gnuplot(name):
+def nbody_output_gnuplot(name, directory = ""):
+  if directory == "":
+    directory = name + "-result"
+
+  os.chdir(directory)
   plot = Gnuplot.Gnuplot()
   plot("set terminal png size 1024x1024")
   plot("set output '{0}.png'".format(name))

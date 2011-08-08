@@ -101,10 +101,14 @@ int main(int argc, char **argv) {
   string output_filename = filename + ".dat";
   output_file.open(output_filename.c_str());
 
-
   ofstream output_file_conserved;
   output_filename = filename + "-conserved.dat";
   output_file_conserved.open(output_filename.c_str());
+
+  ofstream output_file_encounters;
+  output_filename = filename + "-encounters.dat";
+  output_file_encounters.open(output_filename.c_str());
+
 
   if (!output_file.is_open()) {
     cout << "Couldn't open file to write." << endl;
@@ -188,7 +192,8 @@ int main(int argc, char **argv) {
       double runge_lenz_e_amount = norm(runge_lenz_e);
 
       output_converseved_quantities(output_file_conserved, ti, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R);
-      if (!main_detect_closed_encounter(count_encounter, m, R_in, r, ti) && break_closed_encounter) {
+      double closed_encounter = main_detect_closed_encounter(count_encounter, m, R_in, r, ti);
+      if (closed_encounter && break_closed_encounter) {
         return EXIT_FAILURE;
       }
     }
@@ -366,7 +371,9 @@ bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdoubl
         double distance = metrik(r[i], r[j]);
         double R_in_heavier = m[i] < m[j] ? R_in[i] : R_in[j];
         if (distance < R_in_heavier) {
-          cout << ti << " " << i << " " << j << " " << distance << " " << R_in[i] << endl;
+          cout << ti << " " << i << " " << j << " " << distance << " " << R_in_heavier << endl;
+          cout << r[i] << endl;
+          cout << r[j] << endl;
           count_encounter++;
           ret = true;
         }
