@@ -89,9 +89,9 @@ int main(int argc, char **argv) {
     case INTEGRATION_VERLET:
       integration_method = integration_verlet;
       break;
-    case INTEGRATION_ANALYTIC:
-      integration_method = integration_analytic;
-      break;
+//     case INTEGRATION_ANALYTIC:
+//       integration_method = integration_analytic;
+//       break;
     case INTEGRATION_LEAPFROG:
       integration_method = integration_leap_frog;
       break;
@@ -141,12 +141,18 @@ int main(int argc, char **argv) {
   main_calc_influence_radius(R_in, m, r);
 
   // Calc initial values.
-  vector2d r_rel = r[1] - r[0];
-  vector2d v_rel = v[1] - v[0];
-  double total_mass = calc_total_mass(m);
-  double start_energy = calc_energy(r, v, m);
-  double start_great_half_axis = calc_great_half_axis(r_rel, v_rel, m);
-  double start_excentric = calc_excentric(r_rel, v_rel, m, start_great_half_axis);
+  listdouble list_total_mass, list_start_energy, list_start_great_half_axis, list_start_excentric;
+  for (int i = 1; i < ITEMS; i++) {
+    vector2d r_rel = r[i] - r[0];
+    vector2d v_rel = v[i] - v[0];
+
+    list_total_mass.push_back(calc_total_mass(m, i));
+    list_start_energy.push_back(calc_energy(r, v, m, i));
+    vector3d j = calc_specific_angular_momentum(r_rel, v_rel);
+    vector3d e = calc_runge_lenz(j, r_rel, v_rel, list_total_mass[i-1]);
+    list_start_excentric.push_back(norm(e));
+    list_start_great_half_axis.push_back(calc_great_half_axis(j, list_total_mass[i-1], list_start_excentric[i-1]));
+  }
 
   // Here comes the main loop
   int count = 0;
@@ -173,25 +179,26 @@ int main(int argc, char **argv) {
     if (write_to_files) {
       output_movement_data(r, v, a, m, output_file);
 
-      // Calc all needed variab10les and output them into files.
-      vector2d r_rel = r[1] - r[0];
-      vector2d v_rel = v[1] - v[0];
 
       // @todo
       // Move this all to a new funciton.
-      double great_half_axis = calc_great_half_axis(r_rel, v_rel, m) - start_great_half_axis;
-      double excentric = calc_excentric(r_rel, v_rel, m, great_half_axis) - start_excentric;
-      double energy = calc_energy(r, v, m) - start_energy;
-//       double angular_momentum = calc_angular_momentum(m, great_half_axis, excentric);
-      double angular_momentum = 0.0;
-      vector3d j = calc_specific_angular_momentum(r[0], v[0]);
-      vector2d R = calc_mass_center(r, m, total_mass);
-      vector3d runge_lenz_e = calc_runge_lenz(j, v[0], r[0], total_mass);
-      double j_amount = norm(j);
-      double R_amount = norm(R);
-      double runge_lenz_e_amount = norm(runge_lenz_e);
+      int size = r.size();
+      for (int i = 1; i < size; i++) {
+        // Calc all needed variab10les and output them into files.
+        vector2d r_rel = r[i] - r[0];
+        vector2d v_rel = v[i] - v[0];
 
-      output_converseved_quantities(output_file_conserved, ti, energy, angular_momentum, great_half_axis, excentric, j_amount, runge_lenz_e_amount, R);
+        double energy = calc_energy(r, v, m, i) - list_start_energy[i-1];
+        vector3d j = calc_specific_angular_momentum(r_rel, v_rel);
+        vector3d e = calc_runge_lenz(j, r_rel, v_rel, list_total_mass[i-1]);
+        double excentric = norm(e) - list_start_excentric[i-1];
+        double great_half_axis = calc_great_half_axis(j, list_total_mass[i-1], excentric) - list_start_great_half_axis[i-1];
+
+        vector2d R = calc_mass_center(r, m, list_total_mass[i-1], i);
+
+        output_converseved_quantities(output_file_conserved,
+                                      ti, abs(energy), norm(j) * m[i], great_half_axis, excentric, norm(j), R);
+      }
       double closed_encounter = main_detect_closed_encounter(count_encounter, m, R_in, r, ti);
       if (closed_encounter && break_closed_encounter) {
         return EXIT_FAILURE;
@@ -236,7 +243,8 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 /**
  * Output the energy/angular momentum and many more.
  */
-void output_converseved_quantities(std::ofstream& output_file_conserved, double ti, double E1, double L1, double great_half_axis, double excentric, const double j, const double e, const vector2d& R) {
+void output_converseved_quantities(std::ofstream& output_file_conserved,
+    double ti, double E1, double L1, double great_half_axis, double excentric, const double j, const vector2d& R) {
   if (output_file_conserved.is_open()) {
     output_file_conserved << scientific
     << ti << "\t"
@@ -245,7 +253,6 @@ void output_converseved_quantities(std::ofstream& output_file_conserved, double 
     << great_half_axis << "\t"
     << excentric << "\t"
     << j << "\t" 
-    << e << "\t" 
     << R.x << "\t"  << R.y << endl;
   }
 }

@@ -9,28 +9,16 @@ double calc_t_max(double periode, double count_periods, double steps_per_orbit) 
   return count_periods * steps_per_orbit;
 }
 
-double calc_great_half_axis(vector2d& r, vector2d& v, const listdouble& m) {
-  // @todo include G
-  return pow(
-    2/norm(r) - pow(norm(v), 2)/(m[0] + m[1])
-  , -1);
+double calc_great_half_axis(vector3d& j, double& total_mass, double& excentric) {
+  return pow(norm(j), 2.0) / (total_mass * (1 - pow(excentric, 2.0)));
 }
 
-double calc_excentric(vector2d& r, vector2d& v, const listdouble& m, double& great_half_axis) {
-  // @todo include G
-  double h = r.x * v.y - r.y * v.x;
-  return sqrt(
-    1 - pow(h, 2) / ((m[0] + m[1]) * great_half_axis)
-  );
-}
-
-double calc_energy(listv2d r, listv2d v, listdouble m) {
+double calc_energy(listv2d r, listv2d v, listdouble m, int j) {
   double energy_kinetic = 0.0;
-  int size = v.size();
-  for (int i = 0; i < size; i++) {
-    energy_kinetic += 0.5 * m[i] * pow(norm(v[i]), 2);
-  }
-  double energy_potential = - m[0] * m[1] / (norm(r[0] - r[1]));
+  energy_kinetic += 0.5 * m[0] * pow(norm(v[0]), 2);
+  energy_kinetic += 0.5 * m[j] * pow(norm(v[j]), 2);
+
+  double energy_potential = - m[0] * m[j] / (norm(r[0] - r[j]));
   return energy_potential + energy_kinetic;
 }
 
@@ -45,14 +33,7 @@ double calc_periode(const listdouble& m) {
 }
 
 vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
-  vector3d j;
-  j.x = 0.0;
-  j.y = 0.0;
-//   j.x = r.y * v.z - r.z * v.y;
-//   j.y = r.z * v.x - r.x * v.z;
-  j.z = r.x * v.y - r.y * v.x;
-
-  return j;
+  return cross(vector2d_3d(r), vector2d_3d(v));
 }
 
 vector3d calc_runge_lenz(const vector3d& j, const vector2d& r, const vector2d& v, const double total_mass) {
@@ -62,33 +43,22 @@ vector3d calc_runge_lenz(const vector3d& j, const vector2d& r, const vector2d& v
   vector3d v1 = vector2d_3d(v);
 
   e = cross(v1, j) / (1.0 * total_mass) - r1 / norm(r1);
-  e.x = 0.0;
-  e.y = 0.0;
-//   R.z = 0.0;
 
   return e;
 }
 
-vector2d calc_mass_center(listv2d& r, listdouble& m, const double& total_mass) {
-  int size = r.size();
+vector2d calc_mass_center(listv2d& r, listdouble& m, const double& total_mass, int i = 0) {
   vector2d mass_center;
   mass_center.x = 0.0;
   mass_center.y = 0.0;
 
-  for (int i = 0; i < size; i++) {
-    mass_center = mass_center + r[i] * m[i];
-  }
+  mass_center = r[0] * m[0] + r[i] * m[i];
+
   return mass_center / total_mass;
 }
 
-double calc_total_mass(listdouble& m) {
-  double total_mass = 0.0;
-  int size = m.size();
-  for (int i = 0; i < size; i++) {
-    total_mass += m[i];
-  }
-
-  return total_mass;
+double calc_total_mass(listdouble& m, int j) {
+  return m[0] + m[j];
 }
 
 

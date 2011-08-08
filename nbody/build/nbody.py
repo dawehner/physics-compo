@@ -10,7 +10,7 @@ import Gnuplot, Gnuplot.funcutils
 #
 # @return boolean
 # Did the nbody code finished without problems. 0 for successs
-def nbody_output_helper(name, method, input_filename = "", periods = 10, break_encounter = 0, output = True):
+def nbody_output_helper(name, method, input_filename = "", periods = 10, break_encounter = 0, output = True, steps_per_orbit = 100):
   # Generate the output, create a directory for it and move all files into it.
   if (input_filename == ""):
     input_filename = name
@@ -26,8 +26,9 @@ def nbody_output_helper(name, method, input_filename = "", periods = 10, break_e
   if (output):
     args.append("-o 'output-{}'".format(name))
 
+  args.append("-s {}".format(steps_per_orbit));
+
   call = "./nbody %s -i %d -f '%s' -c %d %s" % (" ".join(args), method, input_filename, periods, encounter)
-  print call
   result = os.system(call)
 
   if output:

@@ -121,26 +121,26 @@ void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble&
 /**
  * The analytic method only works for the two body problem, and only for the gravitation WW.
  */
-void integration_analytic(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
-  // Initialize some static stuff.
-  static double P = 0.0;
-  static double excent = 0.0;
-  static double great_half_axis = 1.0;
-  if (P == 0.0) {
-    P = calc_periode(m);
-  }
-  if (excent == 0.0) {
-    vector2d r1 = r[1] - r[0];
-    vector2d v1 = v[1] - v[0];
-    excent = calc_excentric(r1, v1, m, great_half_axis);
-  }
-
-  double anomalie_excent = generate_anomalie_excent_per_time(excent, ti, 0.0, P);
-  double phi = anomalie_calc_phi(anomalie_excent, excent);
-  double r_ = anomalie_calc_r(great_half_axis, excent, phi, 0.0);
-  r[1].x = anomalie_calc_x(r_, phi, 0.0);
-  r[1].y = anomalie_calc_y(r_, phi, 0.0);
-}
+// void integration_analytic(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
+//   // Initialize some static stuff.
+//   static double P = 0.0;
+//   static double excent = 0.0;
+//   static double great_half_axis = 1.0;
+//   if (P == 0.0) {
+//     P = calc_periode(m);
+//   }
+//   if (excent == 0.0) {
+//     vector2d r1 = r[1] - r[0];
+//     vector2d v1 = v[1] - v[0];
+//     excent = calc_excentric(r1, v1, m, great_half_axis);
+//   }
+// 
+//   double anomalie_excent = generate_anomalie_excent_per_time(excent, ti, 0.0, P);
+//   double phi = anomalie_calc_phi(anomalie_excent, excent);
+//   double r_ = anomalie_calc_r(great_half_axis, excent, phi, 0.0);
+//   r[1].x = anomalie_calc_x(r_, phi, 0.0);
+//   r[1].y = anomalie_calc_y(r_, phi, 0.0);
+// }
 
 
 
