@@ -110,4 +110,25 @@ for plt in ["euler", "runge_kutta", "verlet"]:
     energy_plots.append("'{}' using 1:2 title '{}' with lines".format("{name}-result/output-{name}-conserved.dat".format(name = nam), nam))
   plot("plot " + ", ".join(energy_plots))
 
+  # Plot Excentric
+  string = "set title '2-Body Exzentrizitaet; Methode: {} tmax = 10 P'".format(plt)
+  plot(string)
+  plot("set output 'nbody-2d/nbody-2d-excentric-{}.png".format(plt))
+  excentric_plots = []
+  for steps in [10, 50, 100, 500, 1000]:
+    nam = plt + "-" + str(steps)
+    excentric_plots.append("'{}' using 1:5 title '{}' with lines".format("{name}-result/output-{name}-conserved.dat".format(name = nam), nam))
+  plot("plot " + ", ".join(excentric_plots))
+
+  # Plot Axis
+  string = "set title '2-Body Great Half Axis; Methode: {} tmax = 10 P'".format(plt)
+  plot(string)
+  plot("set output 'nbody-2d/nbody-2d-axis-{}.png".format(plt))
+  axis_plots = []
+  for steps in [50]:
+    nam = plt + "-" + str(steps)
+    axis_plots.append("'{}' using 1:4 title '{}' with lines".format("{name}-result/output-{name}-conserved.dat".format(name = nam), nam))
+  plot("plot " + ", ".join(axis_plots))
+
+
 plot("quit")

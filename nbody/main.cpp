@@ -197,7 +197,7 @@ int main(int argc, char **argv) {
         vector2d R = calc_mass_center(r, m, list_total_mass[i-1], i);
 
         output_converseved_quantities(output_file_conserved,
-                                      ti, abs(energy), norm(j) * m[i], great_half_axis, excentric, norm(j), R);
+                                      ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric, norm(j), R);
       }
       double closed_encounter = main_detect_closed_encounter(count_encounter, m, R_in, r, ti);
       if (closed_encounter && break_closed_encounter) {
