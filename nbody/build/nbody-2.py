@@ -125,7 +125,7 @@ for plt in ["euler", "runge_kutta", "verlet"]:
   plot(string)
   plot("set output 'nbody-2d/nbody-2d-axis-{}.png".format(plt))
   axis_plots = []
-  for steps in [50]:
+  for steps in [10, 50, 100, 500, 1000]:
     nam = plt + "-" + str(steps)
     axis_plots.append("'{}' using 1:4 title '{}' with lines".format("{name}-result/output-{name}-conserved.dat".format(name = nam), nam))
   plot("plot " + ", ".join(axis_plots))
