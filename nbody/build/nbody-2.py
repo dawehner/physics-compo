@@ -80,8 +80,10 @@ plot("set xrange [-3:10]")
 plot("set yrange [-4:4]")
 
 plots = []
+index = 0
 for ft in formats:
-  plots.append("'{}' title '{}' with points".format('{}-result/output-{}.dat'.format(ft, ft), ft))
+  plots.append("'{}' every {}::1 title '{}' with lines".format('{}-result/output-{}.dat'.format(ft, ft), 2, ft))
+  index = index + 1
 
 plot("plot " + ", ".join(plots))
 
@@ -95,9 +97,9 @@ plot('set logscale y')
 for steps in [10, 50, 100, 500, 1000]:
   plots = []
   steps = str(steps)
-  nbody_output_helper("euler-"+steps, 0, "2body", 10, 0, True, steps)
-  nbody_output_helper("runge_kutta-"+steps, 2, "2body", 10, 0, True, steps)
-  nbody_output_helper("verlet-"+steps, 3, "2body", 10, 0, True, steps)
+  nbody_output_helper("euler-"+steps, 0, "2body", 10, 0, True, steps, True)
+  nbody_output_helper("runge_kutta-"+steps, 2, "2body", 10, 0, True, steps, True)
+  nbody_output_helper("verlet-"+steps, 3, "2body", 10, 0, True, steps, True)
 
 for plt in ["euler", "runge_kutta", "verlet"]:
   # Plot energy 
