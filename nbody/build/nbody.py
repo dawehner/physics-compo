@@ -33,7 +33,6 @@ def nbody_output_helper(name, method, input_filename = "", periods = 10, break_e
 
   call = "./nbody %s -i %d -f '%s' -c %d" % (" ".join(args), method, input_filename, periods)
   result = os.system(call)
-  print call
 
   if output:
     os.system("rm %s -Rf" %(folder_name))

@@ -199,7 +199,7 @@ int main(int argc, char **argv) {
         output_converseved_quantities(output_file_conserved,
                                       ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric, norm(j), R);
       }
-      double closed_encounter = main_detect_closed_encounter(count_encounter, m, R_in, r, ti);
+      bool closed_encounter = main_detect_closed_encounter(count_encounter, m, R_in, r, ti);
       if (closed_encounter && break_closed_encounter) {
         return EXIT_FAILURE;
       }
@@ -215,8 +215,10 @@ int main(int argc, char **argv) {
   }
 
   if (!break_closed_encounter) {
+    output_file_encounters << count_encounter << endl;
     cout << "encounters: " << count_encounter << endl;
   }
+  output_file_encounters.close();
 
   return 0;
 }
@@ -378,9 +380,9 @@ bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdoubl
         double distance = metrik(r[i], r[j]);
         double R_in_heavier = m[i] < m[j] ? R_in[i] : R_in[j];
         if (distance < R_in_heavier) {
-          cout << ti << " " << i << " " << j << " " << distance << " " << R_in_heavier << endl;
-          cout << r[i] << endl;
-          cout << r[j] << endl;
+//           cout << ti << " " << i << " " << j << " " << distance << " " << R_in_heavier << endl;
+//           cout << r[i] << endl;
+//           cout << r[j] << endl;
           count_encounter++;
           ret = true;
         }
