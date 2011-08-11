@@ -5,6 +5,12 @@
 #include "vector.cpp"
 #include <vector>
 
+/**
+ * Calculate the amount of time the simulation should run.
+ *
+ * @todo
+ * Is this formula really what it should be?
+ */
 double calc_t_max(double periode, double count_periods, double steps_per_orbit) {
   return count_periods * steps_per_orbit;
 }

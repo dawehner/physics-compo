@@ -32,8 +32,6 @@ int main(int argc, char **argv) {
 
   string input_filename = "";
 
-  double h = 0.0;
-  double tk = 0.0;
   int P_count = 10;
   int steps_per_orbit = 100;
 
@@ -53,9 +51,6 @@ int main(int argc, char **argv) {
     ("integration-method,i", po::value<int>(&integration_method_value)->default_value(0), "Integration method")
     ("output,o", po::value<string>(&output_filename_prefix)->default_value("output"), "The output file prefix")
     ("write-to-files,w", po::value<bool>(&write_to_files)->default_value(true), "Write to files at all")
-    // @todo: This should be named different.
-    ("time-step,h", po::value<double>(&h)->default_value(0.0), "The default time-step size")
-    ("tk", po::value<double>(&tk)->default_value(0.0), "@todo find out :(")
     ("period-counts,c", po::value<int>(&P_count)->default_value(10), "How many orbits should be calculated")
     ("steps-per-orbit,s", po::value<int>(&steps_per_orbit)->default_value(100), "The initial amount of steps per orbit")
     ("input,f", po::value<string>(&input_filename)->default_value(""), "Specify the file which has the initial parameters")
@@ -151,21 +146,20 @@ int main(int argc, char **argv) {
 
   // Here comes the main loop
   int count = 0;
-  const double time_per_step = P / steps_per_orbit;
+  const double eta = P / steps_per_orbit;
   // dt is the actual used time per step, but maybe changed during runtime.
-  double dt = time_per_step;
+  double dt = eta;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
   double ti = 0.0;
 
-  h = P / 100.0;
 
   while (count < t_max) {
     calc_accel_multiple(r, a, m);
-    integration_method(r, v, a, m, h, ti);
+    integration_method(r, v, a, m, dt, ti);
 
     if (false) {
       calc_accel_change_multiple(r, v, da, m);
-      nbody_adapt_timestamp(time_per_step, dt, a, da);
+      nbody_adapt_timestamp(eta, dt, a, da);
     }
 
     count++;
