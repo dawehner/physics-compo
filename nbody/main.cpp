@@ -142,14 +142,14 @@ int main(int argc, char **argv) {
     list_start_great_half_axis.push_back(calc_great_half_axis(j, list_total_mass[i-1], list_start_excentric[i-1]));
   }
 
-  double P = calc_periode(m, list_start_great_half_axis[0], 1);
+  double P = calc_periode(m, list_start_great_half_axis[1 - 1], 1);
   int count = 0;
   // Eta is the initial value of the time per step.
   const double eta = P / steps_per_orbit;
 
   // dt is the actual used time per step, but maybe changed during runtime.
   double dt = eta;
-  int t_max = calc_t_max(P, P_count);
+  double t_max = calc_t_max(P, P_count);
   double ti = 0.0;
 
   // Here comes the main loop
