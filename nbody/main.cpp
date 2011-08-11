@@ -118,17 +118,17 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
   else {
-    main_body_load_from_file(r, v, a, da, m, input_filename);
+    nbody_load_from_file(r, v, a, da, m, input_filename);
   }
 
   double P = calc_periode(m);
 
-  main_prepare_mass_center_system(r, v, m);
+  nbody_prepare_mass_center_system(r, v, m);
   integration_start(r, v, a, m);
 
   // The hill-radius
   listdouble R_in(r.size());
-  main_calc_influence_radius(R_in, m, r);
+  nbody_calc_influence_radius(R_in, m, r);
 
   // Calc initial values.
   listdouble list_total_mass, list_start_energy, list_start_great_half_axis, list_start_excentric;
@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
         output_converseved_quantities(output_file_conserved,
                                       ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric, norm(j), R);
       }
-      bool closed_encounter = main_detect_closed_encounter(count_encounter, m, R_in, r, ti);
+      bool closed_encounter = nbody_detect_closed_encounter(count_encounter, m, R_in, r, ti);
       if (closed_encounter && break_closed_encounter) {
         return EXIT_FAILURE;
       }
@@ -260,7 +260,7 @@ void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv
   dt = dt_begin * min;
 }
 
-void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listdouble& m, string& filename) {
+void nbody_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listdouble& m, string& filename) {
   ifstream file(filename.c_str());
   string input_str;
 
@@ -307,7 +307,7 @@ void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, l
   }
 }
 
-void main_calc_influence_radius(listdouble& R_in, const listdouble& m, const listv2d& r) {
+void nbody_calc_influence_radius(listdouble& R_in, const listdouble& m, const listv2d& r) {
   int central_body = 0;
 
   int size = m.size();
@@ -318,7 +318,7 @@ void main_calc_influence_radius(listdouble& R_in, const listdouble& m, const lis
   }
 }
 
-void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
+void nbody_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
   listv2d r_ = r;
   listv2d v_ = v;
 
@@ -354,7 +354,7 @@ void main_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
 }
 
 
-bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble& R_in, listv2d& r, const double ti) {
+bool nbody_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble& R_in, listv2d& r, const double ti) {
   bool ret = false;
   int size = R_in.size();
 

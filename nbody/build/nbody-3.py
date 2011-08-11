@@ -43,7 +43,7 @@ values_orig = [[1.0, 0.0, 0.0], [0.00001, 0.0, 1.0, 1.0], [0.00001, 0.0, 1.0, -1
 subprocess.call(['mkdir', 'nbody-3c', '-p'])
 file_delta_crit = open("nbody-3c/delta_crit.dat", 'w')
 
-for i in range(1, 6):
+for i in range(1, 8):
   power = -5.0 - i / 2.0
   m3 = pow(10.0, power)
   print "m3:{}".format(power)
