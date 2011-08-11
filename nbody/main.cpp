@@ -196,6 +196,7 @@ int main(int argc, char **argv) {
     }
 
   }
+  cout << ti << endl;
 
   if (output_file.is_open()) {
     output_file.close();

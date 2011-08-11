@@ -17,7 +17,7 @@ void integration_euler(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, 
   }
 }
 
-void integration_heun(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, double h, double ti) {
+void integration_heun(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, const double h, double ti) {
   listv3d r1(ITEMS);
   listv3d v1(ITEMS);
   listv3d a1(ITEMS);
