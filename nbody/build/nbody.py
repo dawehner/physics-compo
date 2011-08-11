@@ -71,15 +71,16 @@ def nbody_provide_data(name, values):
   input_file.write(output)
   input_file.close()
 
-def nbody_output_gnuplot(name, directory = ""):
+def nbody_output_gnuplot(name, directory = "", every = ""):
   if directory == "":
     directory = name + "-result"
 
   os.chdir(directory)
   plot = Gnuplot.Gnuplot()
-  plot("set terminal png size 1024x1024")
+  plot("set terminal png")
+  plot("set size square")
   plot("set output '{0}.png'".format(name))
-  plot_line = "plot '{0}' with lines".format("output-"+ name + ".dat")
+  plot_line = "plot '{0}' {1} with lines".format("output-"+ name + ".dat", every)
   plot(plot_line)
   plot("quit")
   os.chdir("..")

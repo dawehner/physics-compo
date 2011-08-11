@@ -1,8 +1,8 @@
 from nbody import *
 import subprocess
 
-#deltas = [0.028, 0.029, 0.030, 0.0301]
-deltas = [0.030, 0.0301, 0.0302, 0.0305]
+deltas = [0.028, 0.029, 0.030, 0.0301]
+#deltas = [0.030, 0.0301, 0.0302, 0.0305]
 
 subprocess.call(['mkdir', 'nbody-4', '-p'])
 
@@ -19,4 +19,4 @@ for delta in deltas:
   nbody_output_helper(name, 2, periods=1000, adapt_timestamp=True)
   encounters = nbody_load_encounters(name + "-result", "output-{}".format(name))
   # Aufgabe 4.2
-  nbody_output_gnuplot(name)
+  nbody_output_gnuplot(name, every="every 3")

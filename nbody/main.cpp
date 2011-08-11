@@ -24,7 +24,7 @@ namespace po = boost::program_options;
 ofstream emptystream;
 
 int main(int argc, char **argv) {
-  void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti);
+  void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) = integration_rk4;
 
   int integration_method_value = INTEGRATION_RUNGE_KUTTA;
   string output_filename_prefix = "output";
@@ -149,12 +149,11 @@ int main(int argc, char **argv) {
 
   // dt is the actual used time per step, but maybe changed during runtime.
   double dt = eta;
-  int t_max = calc_t_max(P, P_count, steps_per_orbit);
+  int t_max = calc_t_max(P, P_count);
   double ti = 0.0;
 
-
   // Here comes the main loop
-  while (count < t_max) {
+  while (ti < t_max) {
     calc_accel_multiple(r, a, m);
     integration_method(r, v, a, m, dt, ti);
 
