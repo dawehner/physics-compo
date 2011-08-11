@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
   double tk = 0.0;
   int P_count = 10;
   int steps_per_orbit = 100;
+
   int count_encounter = 0;
 
   // Should the timestamp be changed based on the values.
@@ -54,6 +55,7 @@ int main(int argc, char **argv) {
     ("write-to-files,w", po::value<bool>(&write_to_files)->default_value(true), "Write to files at all")
     // @todo: This should be named different.
     ("time-step,h", po::value<double>(&h)->default_value(0.0), "The default time-step size")
+    ("tk", po::value<double>(&tk)->default_value(0.0), "@todo find out :(")
     ("period-counts,c", po::value<int>(&P_count)->default_value(10), "How many orbits should be calculated")
     ("steps-per-orbit,s", po::value<int>(&steps_per_orbit)->default_value(100), "The initial amount of steps per orbit")
     ("input,f", po::value<string>(&input_filename)->default_value(""), "Specify the file which has the initial parameters")
@@ -121,7 +123,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
   else {
-    main_body_load_from_file(r, v, a, da, m, h, tk, input_filename);
+    main_body_load_from_file(r, v, a, da, m, input_filename);
   }
 
   double P = calc_periode(m);
@@ -263,12 +265,7 @@ void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv
   dt = dt_begin * min;
 }
 
-void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listdouble& m, double& h, double& tk, string& filename) {
-  // @TODO
-  //   - Allow to load this values.
-  h = 0.1;
-  tk = 0.0;
-
+void main_body_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listdouble& m, string& filename) {
   ifstream file(filename.c_str());
   string input_str;
 
