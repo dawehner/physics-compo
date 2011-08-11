@@ -168,7 +168,7 @@ int main(int argc, char **argv) {
     calc_accel_multiple(r, a, m);
     integration_method(r, v, a, m, h, ti);
 
-    if (adapt_timestamp) {
+    if (false) {
       calc_accel_change_multiple(r, v, da, m);
       nbody_adapt_timestamp(time_per_step, dt, a, da);
     }
@@ -265,7 +265,7 @@ void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv
   int size = a.size();
   for (int i = 0; i < size; i++) {
     val = norm(a[i]) / norm(da[i]);
-    min = min >= val ? min : val;
+    min = min <= val ? min : val;
   }
   dt = dt_begin * min;
 }
@@ -377,10 +377,11 @@ bool main_detect_closed_encounter(int& count_encounter, listdouble& m, listdoubl
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
       if (i != j) {
-        double distance = metrik(r[i], r[j]);
+        double distance = metrik(r[j], r[i]);
         double R_in_heavier = m[i] < m[j] ? R_in[i] : R_in[j];
+//         cout << R_in_heavier << endl;
         if (distance < R_in_heavier) {
-//           cout << ti << " " << i << " " << j << " " << distance << " " << R_in_heavier << endl;
+//         cout << ti << " " << i << " " << j << " " << distance << " " << R_in_heavier << endl;
 //           cout << r[i] << endl;
 //           cout << r[j] << endl;
           count_encounter++;

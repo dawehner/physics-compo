@@ -1,7 +1,8 @@
 from nbody import *
 import subprocess
 
-deltas = [0.028, 0.029, 0.030, 0.0301]
+#deltas = [0.028, 0.029, 0.030, 0.0301]
+deltas = [0.030, 0.0301, 0.0302, 0.0305]
 
 subprocess.call(['mkdir', 'nbody-4', '-p'])
 

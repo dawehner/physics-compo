@@ -54,15 +54,15 @@ def nbody_plot_data_output(name, directory):
 values = [[1.0, 0.0, 0.0, 1.0], [0.001, 0.5, 1.0, 1.0]]
 nbody_provide_data("2body", values)
 
-nbody_output_helper("euler", 0, "2body")
+nbody_output_helper("euler", 0, "2body", adapt_timestamp = True)
 #folder_name = "euler-result";
 #nbody_plot_data_output("euler", folder_name)
 
-nbody_output_helper("runge_kutta", 2, "2body")
+nbody_output_helper("runge_kutta", 2, "2body", adapt_timestamp = True)
 #folder_name = "runge_kutta-result";
 #nbody_plot_data_output("runge_kutta", folder_name)
 
-nbody_output_helper("verlet", 3, "2body")
+nbody_output_helper("verlet", 3, "2body", adapt_timestamp = True)
 #folder_name = "verlet-result";
 #nbody_plot_data_output("verlet", folder_name)
 

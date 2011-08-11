@@ -33,6 +33,7 @@ def nbody_output_helper(name, method, input_filename = "", periods = 10, break_e
 
   call = "./nbody %s -i %d -f '%s' -c %d" % (" ".join(args), method, input_filename, periods)
   result = os.system(call)
+  print call
 
   if output:
     os.system("rm %s -Rf" %(folder_name))
@@ -43,7 +44,7 @@ def nbody_output_helper(name, method, input_filename = "", periods = 10, break_e
 
 def nbody_provide_data(name, values):
   output = ""
-  m1 = 0
+  m1 = 0.0
   counter = 0
 
   for value in values:
@@ -52,14 +53,18 @@ def nbody_provide_data(name, values):
       output += "{0} {1} {2} {3} {4}\n".format(0.0, 0.0, 0.0, 0.0, m1)
 
     else:
-      m = value[0]
-      e = value[1]
-      a = value[2]
-      v = value[3]
+      m = float(value[0])
+      e = float(value[1])
+      a = float(value[2])
+      v = float(value[3])
       x = a * (1.0 + e) * v
       y = 0.0
       vx = 0.0
       vy = sqrt(((1.0 * (m1 + m)) / a) * (1.0 - e) / (1.0 + e)) * v
+      #print m,e,a,m1,v,vy
+      print (1.0 * (m1 + m))
+      #/ a)
+      #sqrt(((1.0 * (m1 + m)) / a) * (1.0 - e) / (1.0 + e))
       output += "{0} {1} {2} {3} {4}\n".format(x, y, vx, vy, m);
 
     counter = counter + 1
@@ -76,7 +81,7 @@ def nbody_output_gnuplot(name, directory = ""):
   plot = Gnuplot.Gnuplot()
   plot("set terminal png size 1024x1024")
   plot("set output '{0}.png'".format(name))
-  plot_line = "plot '{0}'".format("output-"+ name + ".dat")
+  plot_line = "plot '{0}' with lines".format("output-"+ name + ".dat")
   plot(plot_line)
   plot("quit")
   os.chdir("..")
