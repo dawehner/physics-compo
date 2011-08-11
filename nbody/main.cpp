@@ -157,7 +157,9 @@ int main(int argc, char **argv) {
     calc_accel_multiple(r, a, m);
     integration_method(r, v, a, m, dt, ti);
 
-    if (false) {
+    // @fixme
+    // The timestamp doesn't seem to be calculated right at the moment.
+    if (false && adapt_timestamp) {
       calc_accel_change_multiple(r, v, da, m);
       nbody_adapt_timestamp(eta, dt, a, da);
     }

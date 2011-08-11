@@ -47,9 +47,9 @@ plot('set logscale y')
 for steps in [10, 50, 100, 500, 1000]:
   plots = []
   steps = str(steps)
-  nbody_output_helper("euler-"+steps, 0, "2body", 10, 0, True, steps, True)
-  nbody_output_helper("runge_kutta-"+steps, 2, "2body", 10, 0, True, steps, True)
-  nbody_output_helper("verlet-"+steps, 3, "2body", 10, 0, True, steps, True)
+  nbody_output_helper("euler-"+steps, 0, "2body", steps_per_orbit=steps, adapt_timestamp=True)
+  nbody_output_helper("runge_kutta-"+steps, 2, "2body", steps_per_orbit=steps, adapt_timestamp=True)
+  nbody_output_helper("verlet-"+steps, 3, "2body", steps_per_orbit=steps, adapt_timestamp=True)
 
 for plt in ["euler", "runge_kutta", "verlet"]:
   # Plot energy 
