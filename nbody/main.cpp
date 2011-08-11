@@ -10,6 +10,7 @@
 
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/program_options.hpp>
 
 /**
  * @TODO
@@ -18,6 +19,7 @@
 
 using namespace std;
 using namespace boost;
+namespace po = boost::program_options;
 
 ofstream emptystream;
 
@@ -25,7 +27,7 @@ int main(int argc, char **argv) {
   int c;
   void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti);
 
-  int _integration_method = INTEGRATION_RUNGE_KUTTA;
+  int integration_method_value = INTEGRATION_RUNGE_KUTTA;
   string filename = "output";
   bool write_to_files = true;
 
@@ -42,12 +44,33 @@ int main(int argc, char **argv) {
   // Should the programm stop, once a closed encounter got detected
   bool break_closed_encounter = false;
 
+
+  // Describe the availible programm options.
+  po::options_description desc("Allowed options", 1024);
+  desc.add_options()
+    ("help", "Produce help message")
+    ("timestamp-adaption,t", po::value<bool>(&adapt_timestamp)->default_value(false), "Adapt timestamp")
+    ("integration-method,i", po::value<int>(&integration_method_value)->default_value(0), "Integration method")
+    ;
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, desc), vm);
+  po::notify(vm);
+
+  if (vm.count("help")) {
+    cout << desc << endl;
+    return EXIT_FAILURE;
+  }
+
+  cout << adapt_timestamp << endl;
+  return 0;
+
   // Load data from input
   while ((c = getopt(argc, argv, "i:o:h:c:s:t::f:e::")) != -1) {
     switch (c) {
       // Set interation method
       case 'i':
-        _integration_method = atof(optarg);
+        integration_method_value = atof(optarg);
       // set excent value
         break;
       case 'o':
@@ -76,7 +99,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  switch (_integration_method) {
+  switch (integration_method_value) {
     case INTEGRATION_EULER:
       integration_method = integration_euler;
       break;
