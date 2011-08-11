@@ -231,9 +231,6 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
   }
 }
 
-/**
- * Output the energy/angular momentum and many more.
- */
 void output_converseved_quantities(std::ofstream& output_file_conserved,
     double ti, double E1, double L1, double great_half_axis, double excentric, const double j, const vector2d& R) {
   if (output_file_conserved.is_open()) {

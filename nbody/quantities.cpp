@@ -63,8 +63,19 @@ vector2d calc_mass_center(listv2d& r, listdouble& m, const double& total_mass, i
   return mass_center / total_mass;
 }
 
-double calc_total_mass(listdouble& m, int j) {
-  return m[0] + m[j];
+double calc_total_mass(listdouble& m, int j = 0) {
+  double total_mass = 0.0;
+  if (j == 0) {
+    int size = m.size();
+    for (int i = 0; i < size; i++) {
+      total_mass += m[i];
+    }
+  }
+  else {
+    total_mass = m[0] + m[j];
+  }
+
+  return total_mass;
 }
 
 
