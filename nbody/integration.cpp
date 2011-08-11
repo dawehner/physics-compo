@@ -4,12 +4,12 @@
 
 int ITEMS = 0;
 
-void integration_start(listv2d& r, listv2d& v, listv2d& a, listdouble& m) {
+void integration_start(listv3d& r, listv3d& v, listv3d& a, listdouble& m) {
   ITEMS = r.size();
   return;
 }
 
-void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
+void integration_euler(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, const double h, double ti) {
   for (int i = 0; i < ITEMS; i++) {
     // Calculate the next positions for r and v.
     r[i] = r[i] + h * v[i];
@@ -17,10 +17,10 @@ void integration_euler(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, 
   }
 }
 
-void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
-  listv2d r1(ITEMS);
-  listv2d v1(ITEMS);
-  listv2d a1(ITEMS);
+void integration_heun(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, double h, double ti) {
+  listv3d r1(ITEMS);
+  listv3d v1(ITEMS);
+  listv3d a1(ITEMS);
 
   // Die Beschleunigung wurde schon für die aktuellen r berechnet
   // => Berechne schätzwerte
@@ -40,19 +40,19 @@ void integration_heun(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, d
   }
 }
 
-void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
-  listv2d r1(ITEMS);
-  listv2d r2(ITEMS);
-  listv2d r3(ITEMS);
-  listv2d r4(ITEMS);
+void integration_rk4(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, const double h, double ti) {
+  listv3d r1(ITEMS);
+  listv3d r2(ITEMS);
+  listv3d r3(ITEMS);
+  listv3d r4(ITEMS);
 
-  listv2d v2(ITEMS);
-  listv2d v3(ITEMS);
-  listv2d v4(ITEMS);
+  listv3d v2(ITEMS);
+  listv3d v3(ITEMS);
+  listv3d v4(ITEMS);
 
-  listv2d a2(ITEMS);
-  listv2d a3(ITEMS);
-  listv2d a4(ITEMS);
+  listv3d a2(ITEMS);
+  listv3d a3(ITEMS);
+  listv3d a4(ITEMS);
 
   for (int i = 0; i < ITEMS; i++) {
     r2[i] = r[i] + 0.5 * h * v[i];
@@ -83,17 +83,17 @@ void integration_rk4(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, co
  * @todo:
  *   Make the storage of the previous calculated acceleration working.
  */
-void integration_verlet(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
+void integration_verlet(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, double h, double ti) {
 
   // Store the previous accellerations so they don't have to be calculcated again
-  static listv2d previous_accel;
+  static listv3d previous_accel;
   if (previous_accel.size() == 0) {
     for (int i = 0; i < ITEMS; i++) {
       previous_accel.push_back(calc_accel(r, m, i));
     }
   }
 
-  listv2d v1(ITEMS);
+  listv3d v1(ITEMS);
   for (int i = 0; i < ITEMS; i++) {
     // Use previous calculated f(t) for the new speed.
     v1[i] = v[i] + 0.5 * h * previous_accel[i];
@@ -107,7 +107,7 @@ void integration_verlet(listv2d& r, listv2d& v, listv2d& a, const listdouble& m,
   }
 }
 
-void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, const double h, double ti) {
+void integration_leap_frog(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, const double h, double ti) {
   if (ti == 0.0) {
     r[0] = r[0] + v[0] * h / 2.0; 
   }
@@ -121,7 +121,7 @@ void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble&
 /**
  * The analytic method only works for the two body problem, and only for the gravitation WW.
  */
-// void integration_analytic(listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) {
+// void integration_analytic(listv3d& r, listv3d& v, listv3d& a, const listdouble& m, double h, double ti) {
 //   // Initialize some static stuff.
 //   static double P = 0.0;
 //   static double excent = 0.0;
@@ -130,8 +130,8 @@ void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble&
 //     P = calc_periode(m);
 //   }
 //   if (excent == 0.0) {
-//     vector2d r1 = r[1] - r[0];
-//     vector2d v1 = v[1] - v[0];
+//     vector3d r1 = r[1] - r[0];
+//     vector3d v1 = v[1] - v[0];
 //     excent = calc_excentric(r1, v1, m, great_half_axis);
 //   }
 // 
@@ -147,13 +147,15 @@ void integration_leap_frog(listv2d& r, listv2d& v, listv2d& a, const listdouble&
 /**
  * Calculate the accelleration of one body.
  */
-inline vector2d calc_accel(const listv2d& r, const listdouble m, const int j) {
-  vector2d a;
+inline vector3d calc_accel(const listv3d& r, const listdouble m, const int j) {
+  vector3d a;
   a.x = 0.0;
   a.y = 0.0;
-  vector2d connection;
+  a.z = 0.0;
+  vector3d connection;
   connection.x = 0.0;
   connection.y = 0.0;
+  connection.z = 0.0;
   for (int i = 0; i < ITEMS; i++) {
     if (i != j) {
       connection = r[i] - r[j];
@@ -169,13 +171,14 @@ inline vector2d calc_accel(const listv2d& r, const listdouble m, const int j) {
 /**
  * Calculate the change of the acceleration of one body.
  */
-inline vector2d calc_accel_change(const listv2d&r, const listv2d& v, listdouble m, const int j) {
-  vector2d a_dot;
+inline vector3d calc_accel_change(const listv3d&r, const listv3d& v, listdouble m, const int j) {
+  vector3d a_dot;
   a_dot.x = 0.0;
   a_dot.y = 0.0;
-  vector2d connection;
-  vector2d connection_speed;
-  connection.x = connection.y = connection_speed.x = connection_speed.y = 0.0;
+  a_dot.z = 0.0;
+  vector3d connection;
+  vector3d connection_speed;
+  connection.x = connection.y = connection.z = connection_speed.x = connection_speed.y = connection_speed.z = 0.0;
 
   for (int i = 0; i < ITEMS; i++) {
     if (i != j) {
@@ -192,7 +195,7 @@ inline vector2d calc_accel_change(const listv2d&r, const listv2d& v, listdouble 
 /**
  * Calculate the accelleration of all bodies.
  */
-void calc_accel_multiple(const listv2d& r, listv2d& a, const vector<double>&m) {
+void calc_accel_multiple(const listv3d& r, listv3d& a, const vector<double>&m) {
   for (int i = 0; i < ITEMS; i++) {
     a[i] = calc_accel(r, m, i);
   }
@@ -201,7 +204,7 @@ void calc_accel_multiple(const listv2d& r, listv2d& a, const vector<double>&m) {
 /**
  * Calculate the change of acceleration of all bodies.
  */
-void calc_accel_change_multiple(const listv2d& r, const listv2d& v, listv2d& a_dot, const vector<double>&m) {
+void calc_accel_change_multiple(const listv3d& r, const listv3d& v, listv3d& a_dot, const vector<double>&m) {
     for (int i = 0; i < ITEMS; i++) {
     a_dot[i] = calc_accel_change(r, v, m, i);
   }

@@ -14,7 +14,7 @@
 
 /**
  * @TODO
- * Big major todo: throw away the vector2d code and just use an array!!!!
+ * Big major todo: throw away the vector3d code and just use an array!!!!
  */
 
 using namespace std;
@@ -24,7 +24,7 @@ namespace po = boost::program_options;
 ofstream emptystream;
 
 int main(int argc, char **argv) {
-  void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti) = integration_rk4;
+  void (*integration_method) (listv3d& r, listv3d& v, listv3d& a, const listdouble& m, double h, double ti) = integration_rk4;
 
   int integration_method_value = INTEGRATION_RUNGE_KUTTA;
   string output_filename_prefix = "output";
@@ -105,10 +105,10 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  listv2d r; // Place of the bodies
-  listv2d v; // Speed of the bodies
-  listv2d a; // Accel. of the bodies
-  listv2d da; // Change of the accel. of the bodies
+  listv3d r; // Place of the bodies
+  listv3d v; // Speed of the bodies
+  listv3d a; // Accel. of the bodies
+  listv3d da; // Change of the accel. of the bodies
   listdouble m;
 
   // Load the startup config, or use some default configuration.
@@ -131,8 +131,8 @@ int main(int argc, char **argv) {
   // Calc initial values.
   listdouble list_total_mass, list_start_energy, list_start_great_half_axis, list_start_excentric;
   for (int i = 1; i < ITEMS; i++) {
-    vector2d r_rel = r[i] - r[0];
-    vector2d v_rel = v[i] - v[0];
+    vector3d r_rel = r[i] - r[0];
+    vector3d v_rel = v[i] - v[0];
 
     list_total_mass.push_back(calc_total_mass(m, i));
     list_start_energy.push_back(calc_energy(r, v, m, i));
@@ -175,8 +175,8 @@ int main(int argc, char **argv) {
       int size = r.size();
       for (int i = 1; i < size; i++) {
         // Calc all needed variab10les and output them into files.
-        vector2d r_rel = r[i] - r[0];
-        vector2d v_rel = v[i] - v[0];
+        vector3d r_rel = r[i] - r[0];
+        vector3d v_rel = v[i] - v[0];
 
         double energy = calc_energy(r, v, m, i) - list_start_energy[i-1];
         vector3d j = calc_specific_angular_momentum(r_rel, v_rel);
@@ -184,7 +184,7 @@ int main(int argc, char **argv) {
         double excentric = norm(e) - list_start_excentric[i-1];
         double great_half_axis = calc_great_half_axis(j, list_total_mass[i-1], excentric) - list_start_great_half_axis[i-1];
 
-        vector2d R = calc_mass_center(r, m, list_total_mass[i-1], i);
+        vector3d R = calc_mass_center(r, m, list_total_mass[i-1], i);
 
         output_converseved_quantities(output_file_conserved,
                                       ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric, norm(j), R);
@@ -216,7 +216,7 @@ int main(int argc, char **argv) {
 /**
  * Output the movement of the bodies itself to a file.
  */
-void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, ofstream &output_file = emptystream) {
+void output_movement_data(vector< vector3d >& r, vector< vector3d >& v, vector< vector3d >& a, std::vector< double >& m, ofstream &output_file = emptystream) {
   // headers
   if (output_file.is_open()) {
     int size = r.size();
@@ -232,7 +232,7 @@ void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< 
 }
 
 void output_converseved_quantities(std::ofstream& output_file_conserved,
-    double ti, double E1, double L1, double great_half_axis, double excentric, const double j, const vector2d& R) {
+    double ti, double E1, double L1, double great_half_axis, double excentric, const double j, const vector3d& R) {
   if (output_file_conserved.is_open()) {
     output_file_conserved << scientific
     << ti << "\t"
@@ -245,7 +245,7 @@ void output_converseved_quantities(std::ofstream& output_file_conserved,
   }
 }
 
-void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv2d& da) {
+void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv3d& a, listv3d& da) {
   double min = numeric_limits<double>::max();
   double val = 0.0;
   int size = a.size();
@@ -257,21 +257,23 @@ void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv
   dt = dt_begin * min;
 }
 
-void nbody_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listdouble& m, string& filename) {
+void nbody_load_from_file(listv3d& r, listv3d& v, listv3d& a, listv3d& da, listdouble& m, string& filename) {
   ifstream file(filename.c_str());
   string input_str;
 
-  vector2d a_dot_i;
+  vector3d a_dot_i;
   a_dot_i.x = 0.0;
   a_dot_i.y = 0.0;
+  a_dot_i.z = 0.0;
 
   while (getline(file, input_str)) {
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
     char_separator<char> sep(" ", "", boost::keep_empty_tokens);
     tokenizer tokens(input_str, sep);
 
-    vector2d ri, vi, ai;
+    vector3d ri, vi, ai;
     double mi = 0.0;
+    ri.z = vi.z = ai.z = 0.0;
 
     int count = 0;
     for (tokenizer::iterator beg = tokens.begin(); beg != tokens.end(); ++beg) {
@@ -294,7 +296,7 @@ void nbody_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listd
           break;
       }
     }
-    ai.y = ai.x = 0.0;
+    ai.y = ai.x = ai.z = 0.0;
 
     r.push_back(ri);
     v.push_back(vi);
@@ -304,7 +306,7 @@ void nbody_load_from_file(listv2d& r, listv2d& v, listv2d& a, listv2d& da, listd
   }
 }
 
-void nbody_calc_influence_radius(listdouble& R_in, const listdouble& m, const listv2d& r) {
+void nbody_calc_influence_radius(listdouble& R_in, const listdouble& m, const listv3d& r) {
   int central_body = 0;
 
   int size = m.size();
@@ -315,13 +317,13 @@ void nbody_calc_influence_radius(listdouble& R_in, const listdouble& m, const li
   }
 }
 
-void nbody_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
-  listv2d r_ = r;
-  listv2d v_ = v;
+void nbody_prepare_mass_center_system(listv3d& r, listv3d& v, listdouble m) {
+  listv3d r_ = r;
+  listv3d v_ = v;
 
   // First find the center of mass.
-  vector2d rcm;
-  rcm.x = rcm.y = 0.0;
+  vector3d rcm;
+  rcm.x = rcm.y = rcm.z = 0.0;
   double total_mass = 0.0;
 
   int size = r.size();
@@ -337,8 +339,8 @@ void nbody_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
   }
 
   // Now do the same for the speeds.
-  vector2d vcm;
-  vcm.x = vcm.y = 0.0;
+  vector3d vcm;
+  vcm.x = vcm.y = vcm.z = 0.0;
 
   for (int i = 0; i < size; i++) {
     vcm = vcm + m[i] * v[i];
@@ -351,7 +353,7 @@ void nbody_prepare_mass_center_system(listv2d& r, listv2d& v, listdouble m) {
 }
 
 
-bool nbody_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble& R_in, listv2d& r, const double ti) {
+bool nbody_detect_closed_encounter(int& count_encounter, listdouble& m, listdouble& R_in, listv3d& r, const double ti) {
   bool ret = false;
   int size = R_in.size();
 

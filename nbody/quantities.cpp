@@ -23,7 +23,7 @@ double calc_great_half_axis(vector3d& j, double& total_mass, double& excentric) 
   return pow(norm(j), 2.0) / (total_mass * (1 - pow(excentric, 2.0)));
 }
 
-double calc_energy(listv2d r, listv2d v, listdouble m, int j) {
+double calc_energy(listv3d r, listv3d v, listdouble m, int j) {
   double energy_kinetic = 0.0;
   energy_kinetic += 0.5 * m[0] * pow(norm(v[0]), 2);
   energy_kinetic += 0.5 * m[j] * pow(norm(v[j]), 2);
@@ -59,25 +59,23 @@ double calc_periode(const listdouble& m, double& great_half_axis, int j) {
   return 1.0 / sqrt(1.0 * total_mass / pow(great_half_axis, 3.0));
 }
 
-vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
-  return cross(vector2d_3d(r), vector2d_3d(v));
+vector3d calc_specific_angular_momentum(vector3d& r, vector3d& v) {
+  return cross(r, v);
 }
 
-vector3d calc_runge_lenz(const vector3d& j, const vector2d& r, const vector2d& v, const double total_mass) {
+vector3d calc_runge_lenz(const vector3d& j, const vector3d& r, const vector3d& v, const double total_mass) {
   vector3d e;
 
-  vector3d r1 = vector2d_3d(r);
-  vector3d v1 = vector2d_3d(v);
-
-  e = cross(v1, j) / (1.0 * total_mass) - r1 / norm(r1);
+  e = cross(v, j) / (1.0 * total_mass) - r / norm(r);
 
   return e;
 }
 
-vector2d calc_mass_center(listv2d& r, listdouble& m, const double& total_mass, int i = 0) {
-  vector2d mass_center;
+vector3d calc_mass_center(listv3d& r, listdouble& m, const double& total_mass, int i = 0) {
+  vector3d mass_center;
   mass_center.x = 0.0;
   mass_center.y = 0.0;
+  mass_center.z = 0.0;
 
   mass_center = r[0] * m[0] + r[i] * m[i];
 
