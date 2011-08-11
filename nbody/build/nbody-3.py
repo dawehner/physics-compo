@@ -30,8 +30,7 @@ def nbody_find_stable(values, delta_start, delta_end, steps = 100, brk = False, 
     os.system("mv test-3b-* {}".format(collection_folder))
 
   #subprocess.call(['mv', 'test-3b-*', 'nbody-3b'])
-  return True
-
+  return {'delta': 0.0, 'prefix': prefix}
 
 
 values_orig = [[1.0, 0.0, 0.0], [0.00001, 0.0, 1.0, 1.0], [0.00001, 0.0, 1.0, -1.0]]
@@ -50,6 +49,7 @@ for i in range(1, 6):
   print "m3:{}".format(power)
   values_orig[2][0] = m3
   result = nbody_find_stable(values_orig, 0.07, 0.00, 100, True, 'nbody-3c', "m3-{}".format(power), False)
-  file_delta_crit.write("{} {}".format(pow(10.0, power), result['delta']))
+
+  file_delta_crit.write("{} {}\n".format(pow(10.0, power), result['delta']))
 
 file_delta_crit.close()

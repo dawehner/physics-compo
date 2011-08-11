@@ -170,7 +170,6 @@ int main(int argc, char **argv) {
     if (write_to_files) {
       output_movement_data(r, v, a, m, output_file);
 
-
       // @todo
       // Move this all to a new funciton.
       int size = r.size();
