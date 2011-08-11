@@ -26,8 +26,8 @@ def nbody_output_helper(name, method, input_filename = "", periods = 10, break_e
   if (output):
     args.append("-o 'output-{}'".format(name))
 
-  #if (adapt_timestamp):
-    #args.append('-t')
+  if (adapt_timestamp):
+    args.append('-t 1')
 
   args.append("-s {}".format(steps_per_orbit));
 
