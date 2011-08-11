@@ -24,7 +24,6 @@ namespace po = boost::program_options;
 ofstream emptystream;
 
 int main(int argc, char **argv) {
-  int c;
   void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti);
 
   int integration_method_value = INTEGRATION_RUNGE_KUTTA;
@@ -52,6 +51,13 @@ int main(int argc, char **argv) {
     ("timestamp-adaption,t", po::value<bool>(&adapt_timestamp)->default_value(false), "Adapt timestamp")
     ("integration-method,i", po::value<int>(&integration_method_value)->default_value(0), "Integration method")
     ("output,o", po::value<string>(&output_filename_prefix)->default_value("output"), "The output file prefix")
+    ("write-to-files,w", po::value<bool>(&write_to_files)->default_value(true), "Write to files at all")
+    // @todo: This should be named different.
+    ("time-step,h", po::value<double>(&h)->default_value(0.0), "The default time-step size")
+    ("period-counts,c", po::value<int>(&P_count)->default_value(10), "How many orbits should be calculated")
+    ("steps-per-orbit,s", po::value<int>(&steps_per_orbit)->default_value(100), "The initial amount of steps per orbit")
+    ("input,f", po::value<string>(&input_filename)->default_value(""), "Specify the file which has the initial parameters")
+    ("break-closed-encounters,e", po::value<bool>(&break_closed_encounter)->default_value(false), "Should the programm be stoped if a closed encounter is detected")
     ;
 
   po::variables_map vm;
@@ -61,40 +67,6 @@ int main(int argc, char **argv) {
   if (vm.count("help")) {
     cout << desc << endl;
     return EXIT_FAILURE;
-  }
-
-  cout << adapt_timestamp << endl;
-  cout << integration_method_value << endl;
-  return 0;
-
-  // Load data from input
-  while ((c = getopt(argc, argv, "i:o:h:c:s:t::f:e::")) != -1) {
-    switch (c) {
-        break;
-      case 'o':
-        output_filename_prefix = optarg;
-        write_to_files = true;
-        break;
-      case 'h':
-        h = atof(optarg);
-        break;
-      case 'c':
-        P_count = (int) atof(optarg);
-        break;
-      case 's':
-        steps_per_orbit = atof(optarg);
-        break;
-      case 't':
-        adapt_timestamp = true;
-      case 'f':
-        if (input_filename == "") {
-          input_filename = optarg;
-        }
-        break;
-      case 'e':
-        break_closed_encounter = true;
-        break;
-    }
   }
 
   switch (integration_method_value) {
