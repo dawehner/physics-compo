@@ -16,7 +16,7 @@ for delta in deltas:
   # Aufgabe 4.1
   name = "number-4-{0}".format(delta);
   nbody_provide_data(name, values)
-  nbody_output_helper(name, 2, "", 1000, 0)
+  nbody_output_helper(name, 2, periods=1000, adapt_timestamp=True)
   encounters = nbody_load_encounters(name + "-result", "output-{}".format(name))
   # Aufgabe 4.2
   nbody_output_gnuplot(name)

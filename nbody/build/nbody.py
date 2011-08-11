@@ -63,10 +63,6 @@ def nbody_provide_data(name, values):
       y = 0.0
       vx = 0.0
       vy = sqrt(((1.0 * (m1 + m)) / a) * (1.0 - e) / (1.0 + e)) * v
-      #print m,e,a,m1,v,vy
-      print (1.0 * (m1 + m))
-      #/ a)
-      #sqrt(((1.0 * (m1 + m)) / a) * (1.0 - e) / (1.0 + e))
       output += "{0} {1} {2} {3} {4}\n".format(x, y, vx, vy, m);
 
     counter = counter + 1

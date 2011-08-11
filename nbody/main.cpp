@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 
     // @fixme
     // The timestamp doesn't seem to be calculated right at the moment.
-    if (false && adapt_timestamp) {
+    if (adapt_timestamp) {
       calc_accel_change_multiple(r, v, da, m);
       nbody_adapt_timestamp(eta, dt, a, da);
     }
@@ -219,7 +219,6 @@ int main(int argc, char **argv) {
  */
 void output_movement_data(vector< vector2d >& r, vector< vector2d >& v, vector< vector2d >& a, std::vector< double >& m, ofstream &output_file = emptystream) {
   // headers
-//   cout << "x \t y \t vx \t vy \t ax \t ay \t m" << endl;
   if (output_file.is_open()) {
     int size = r.size();
     for (int i = 0; i < size; i++) {
@@ -258,6 +257,7 @@ void nbody_adapt_timestamp(const double& dt_begin, double& dt, listv2d& a, listv
     val = norm(a[i]) / norm(da[i]);
     min = min <= val ? min : val;
   }
+//   cout << dt_begin << "\t" << dt_begin * min << endl;
   dt = dt_begin * min;
 }
 
