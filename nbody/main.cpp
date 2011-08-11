@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
   void (*integration_method) (listv2d& r, listv2d& v, listv2d& a, const listdouble& m, double h, double ti);
 
   int integration_method_value = INTEGRATION_RUNGE_KUTTA;
-  string filename = "output";
+  string output_filename_prefix = "output";
   bool write_to_files = true;
 
   string input_filename = "";
@@ -51,6 +51,7 @@ int main(int argc, char **argv) {
     ("help", "Produce help message")
     ("timestamp-adaption,t", po::value<bool>(&adapt_timestamp)->default_value(false), "Adapt timestamp")
     ("integration-method,i", po::value<int>(&integration_method_value)->default_value(0), "Integration method")
+    ("output,o", po::value<string>(&output_filename_prefix)->default_value("output"), "The output file prefix")
     ;
 
   po::variables_map vm;
@@ -63,18 +64,15 @@ int main(int argc, char **argv) {
   }
 
   cout << adapt_timestamp << endl;
+  cout << integration_method_value << endl;
   return 0;
 
   // Load data from input
   while ((c = getopt(argc, argv, "i:o:h:c:s:t::f:e::")) != -1) {
     switch (c) {
-      // Set interation method
-      case 'i':
-        integration_method_value = atof(optarg);
-      // set excent value
         break;
       case 'o':
-        filename = optarg;
+        output_filename_prefix = optarg;
         write_to_files = true;
         break;
       case 'h':
@@ -121,15 +119,15 @@ int main(int argc, char **argv) {
   }
 
   ofstream output_file;
-  string output_filename = filename + ".dat";
+  string output_filename = output_filename_prefix + ".dat";
   output_file.open(output_filename.c_str());
 
   ofstream output_file_conserved;
-  output_filename = filename + "-conserved.dat";
+  output_filename = output_filename_prefix + "-conserved.dat";
   output_file_conserved.open(output_filename.c_str());
 
   ofstream output_file_encounters;
-  output_filename = filename + "-encounters.dat";
+  output_filename = output_filename_prefix + "-encounters.dat";
   output_file_encounters.open(output_filename.c_str());
 
 
