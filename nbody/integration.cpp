@@ -1,5 +1,5 @@
 #include "integration.h"
-#include "quantities.cpp"
+#include "quantities.h"
 #include "anomalie.cpp"
 
 int ITEMS = 0;

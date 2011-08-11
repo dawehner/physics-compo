@@ -2,8 +2,12 @@
 #define QUANTITIES_CPP
 
 #include <cmath>
+
 #include "vector.cpp"
 #include <vector>
+
+#include "quantities.h"
+
 
 /**
  * Calculate the amount of time the simulation should run.
@@ -34,8 +38,24 @@ double calc_angular_momentum(vector <double> & m, double& great_half_axis, doubl
   return mu * sqrt((1 - pow(excentric, 2)) * M * great_half_axis);
 }
 
-double calc_periode(const listdouble& m) {
-  return 2 * M_PI / sqrt(m[0] + m[1]);
+double calc_total_mass(const listdouble& m, int j) {
+  double total_mass = 0.0;
+  if (j == 0) {
+    int size = m.size();
+    for (int i = 0; i < size; i++) {
+      total_mass += m[i];
+    }
+  }
+  else {
+    total_mass = m[0] + m[j];
+  }
+
+  return total_mass;
+}
+
+double calc_periode(const listdouble& m, double& great_half_axis, int j) {
+  double total_mass = calc_total_mass(m, j);
+  return 2 * M_PI / sqrt(1.0 * total_mass / pow(great_half_axis, 3.0));
 }
 
 vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
@@ -63,20 +83,6 @@ vector2d calc_mass_center(listv2d& r, listdouble& m, const double& total_mass, i
   return mass_center / total_mass;
 }
 
-double calc_total_mass(listdouble& m, int j = 0) {
-  double total_mass = 0.0;
-  if (j == 0) {
-    int size = m.size();
-    for (int i = 0; i < size; i++) {
-      total_mass += m[i];
-    }
-  }
-  else {
-    total_mass = m[0] + m[j];
-  }
-
-  return total_mass;
-}
 
 
 #endif

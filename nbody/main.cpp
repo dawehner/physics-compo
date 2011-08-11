@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "integration.cpp"
 #include <fstream>
-#include "quantities.cpp"
+#include "quantities.h"
 #include <vector>
 #include <limits>
 #include "main.h"
@@ -105,7 +105,6 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-
   listv2d r; // Place of the bodies
   listv2d v; // Speed of the bodies
   listv2d a; // Accel. of the bodies
@@ -121,7 +120,6 @@ int main(int argc, char **argv) {
     nbody_load_from_file(r, v, a, da, m, input_filename);
   }
 
-  double P = calc_periode(m);
 
   nbody_prepare_mass_center_system(r, v, m);
   integration_start(r, v, a, m);
@@ -144,15 +142,18 @@ int main(int argc, char **argv) {
     list_start_great_half_axis.push_back(calc_great_half_axis(j, list_total_mass[i-1], list_start_excentric[i-1]));
   }
 
-  // Here comes the main loop
+  double P = calc_periode(m, list_start_great_half_axis[1], 1);
   int count = 0;
+  // Eta is the initial value of the time per step.
   const double eta = P / steps_per_orbit;
+
   // dt is the actual used time per step, but maybe changed during runtime.
   double dt = eta;
   int t_max = calc_t_max(P, P_count, steps_per_orbit);
   double ti = 0.0;
 
 
+  // Here comes the main loop
   while (count < t_max) {
     calc_accel_multiple(r, a, m);
     integration_method(r, v, a, m, dt, ti);

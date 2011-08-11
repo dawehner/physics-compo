@@ -22,12 +22,13 @@ formats = ['euler', 'runge_kutta', 'verlet']
 subprocess.call(['mkdir', 'nbody-2d', '-p'])
 
 plot = Gnuplot.Gnuplot()
-plot("set terminal png size 1024, 1024")
+plot("set terminal png")
+plot("set size square")
 
 plot("set title '2-Body Problem; eta = 0.01 P, tmax = 10 P'")
 plot("set output 'nbody-2d/nbody-2d-positions.png'")
-plot("set xrange [-3:10]")
-plot("set yrange [-4:4]")
+plot("set xrange [-3:7]")
+plot("set yrange [-3:7]")
 
 plots = []
 index = 0
@@ -47,9 +48,9 @@ plot('set logscale y')
 for steps in [10, 50, 100, 500, 1000]:
   plots = []
   steps = str(steps)
-  nbody_output_helper("euler-"+steps, 0, "2body", steps_per_orbit=steps, adapt_timestamp=True)
-  nbody_output_helper("runge_kutta-"+steps, 2, "2body", steps_per_orbit=steps, adapt_timestamp=True)
-  nbody_output_helper("verlet-"+steps, 3, "2body", steps_per_orbit=steps, adapt_timestamp=True)
+  nbody_output_helper("euler-"+steps, 0, "2body", steps_per_orbit=steps, adapt_timestamp=False)
+  nbody_output_helper("runge_kutta-"+steps, 2, "2body", steps_per_orbit=steps, adapt_timestamp=False)
+  nbody_output_helper("verlet-"+steps, 3, "2body", steps_per_orbit=steps, adapt_timestamp=False)
 
 for plt in ["euler", "runge_kutta", "verlet"]:
   # Plot energy 
