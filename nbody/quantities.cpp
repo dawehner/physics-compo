@@ -55,8 +55,8 @@ double calc_total_mass(const listdouble& m, int j) {
 
 double calc_periode(const listdouble& m, double& great_half_axis, int j) {
   double total_mass = calc_total_mass(m, j);
-//   return 2 * M_PI / sqrt(1.0 * total_mass / pow(great_half_axis, 3.0));
-  return 1.0 / sqrt(1.0 * total_mass / pow(great_half_axis, 3.0));
+  return 2 * M_PI / sqrt(1.0 * total_mass / pow(great_half_axis, 3.0));
+//   return 1.0 / sqrt(1.0 * total_mass / pow(great_half_axis, 3.0));
 }
 
 vector3d calc_specific_angular_momentum(vector2d& r, vector2d& v) {
