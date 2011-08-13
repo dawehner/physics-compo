@@ -85,4 +85,51 @@ def nbody_output_gnuplot(name, directory = "", every = ""):
   plot("quit")
   os.chdir("..")
 
+# Next iteration.....
+#
+# Provide a flexible handler for printing a plot for nbody
+# @param typ
+# The position or the conserved
+def nbody_output_gnuplot_abstract(output_typ = "pos", name = "", rows = [], custom_settings = {}):
+  # Provide some default settings
+  settings = {"terminal": "png", "size": "square", "output": "'{0}.png'".format(name)}
 
+  settings.update(custom_settings)
+
+  if (output_typ == "pos"):
+    suffix = ""
+  else:
+    suffix = "conserved"
+
+  filename = "output-{}-{}.dat".format(name, suffix)
+  directory = name + "-result"
+
+  plot = Gnuplot.Gnuplot()
+
+  # Apply the settings
+  for key,value in settings.iteritems():
+    if key == 'size':
+      plot("set {} {}".format(key, value))
+    else:
+      plot("set {} '{}'".format(key, value))
+
+
+  plots = []
+
+  for value in rows:
+    args = {'using':'', 'title':'', 'every':'','style':''}
+    if value.has_key('using'):
+      args['using'] = "using {}".format(value['using'])
+    if value.has_key('title'):
+      args['title'] = "title '{}'".format(value['title'])
+    if value.has_key('every'):
+      args['every'] = "every {}".format(value['every'])
+    if value.has_key('style'):
+      args['style'] = "with {}".format(value['style'])
+    args['filename'] = "{}/{}".format(directory, filename)
+
+    plots.append("'{filename}' {using} {every} {title} {style}".format(**args))
+
+  plot("plot {}".format(", ".join(plots)))
+
+  plot("quit")
