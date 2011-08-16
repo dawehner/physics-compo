@@ -359,11 +359,12 @@ bool nbody_detect_closed_encounter(int& count_encounter, listdouble& m, listdoub
   int size = R_in.size();
 
   // Check the encounter foreach particle to each particle.
-  for (int i = 0; i < size; i++) {
-    for (int j = 0; j < size; j++) {
+  const int start_particle = 1;
+  for (int i = start_particle; i < size; i++) {
+    for (int j = start_particle; j < size; j++) {
       if (i != j) {
         double distance = metrik(r[j], r[i]);
-        double R_in_heavier = m[i] < m[j] ? R_in[i] : R_in[j];
+        double R_in_heavier = m[i] > m[j] ? R_in[i] : R_in[j];
 //         cout << R_in_heavier << endl;
         if (distance < R_in_heavier) {
 //         cout << ti << " " << i << " " << j << " " << distance << " " << R_in_heavier << endl;

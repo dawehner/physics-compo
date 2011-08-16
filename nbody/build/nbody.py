@@ -71,7 +71,7 @@ def nbody_provide_data(name, values):
   input_file.write(output)
   input_file.close()
 
-def nbody_output_gnuplot(name, directory = "", every = ""):
+def nbody_output_gnuplot(name, directory = "", everies = [""]):
   if directory == "":
     directory = name + "-result"
 
@@ -80,8 +80,13 @@ def nbody_output_gnuplot(name, directory = "", every = ""):
   plot("set terminal png")
   plot("set size square")
   plot("set output '{0}.png'".format(name))
-  plot_line = "plot '{0}' {1} with lines".format("output-"+ name + ".dat", every)
-  plot(plot_line)
+
+  plots = []
+  for every in everies:
+    plots.append("'{0}' {1} with lines".format("output-"+ name + ".dat", every))
+    plot_line = ", ".join(plots)
+
+  plot("plot {}".format(plot_line))
   plot("quit")
   os.chdir("..")
 
