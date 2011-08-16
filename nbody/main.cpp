@@ -21,6 +21,8 @@ using namespace std;
 using namespace boost;
 namespace po = boost::program_options;
 
+ofstream emptystream;
+
 int main(int argc, char **argv) {
   void (*integration_method) (listv3d& r, listv3d& v, listv3d& a, const listdouble& m, double h, double ti) = integration_rk4;
 
@@ -162,11 +164,14 @@ int main(int argc, char **argv) {
       nbody_adapt_timestamp(eta, dt, a, da);
     }
 
+    count++;
+    ti += dt;
 
     if (write_to_files) {
-      output_movement_data(r, v, a, m, ti, output_file);
+      output_movement_data(r, v, a, m, output_file);
 
-      // @todo: Move this all to a new funciton.
+      // @todo
+      // Move this all to a new funciton.
       int size = r.size();
       for (int i = 1; i < size; i++) {
         // Calc all needed variab10les and output them into files.
@@ -184,15 +189,11 @@ int main(int argc, char **argv) {
         output_converseved_quantities(output_file_conserved,
                                       ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric, norm(j), R);
       }
+      bool closed_encounter = nbody_detect_closed_encounter(count_encounter, m, R_in, r, ti);
+      if (closed_encounter && break_closed_encounter) {
+        return EXIT_FAILURE;
+      }
     }
-
-    bool closed_encounter = nbody_detect_closed_encounter(count_encounter, m, R_in, r, ti);
-    if (closed_encounter && break_closed_encounter) {
-      return EXIT_FAILURE;
-    }
-
-    count++;
-    ti += dt;
 
   }
   cout << ti << endl;
@@ -216,7 +217,7 @@ int main(int argc, char **argv) {
 /**
  * Output the movement of the bodies itself to a file.
  */
-void output_movement_data(vector< vector3d >& r, vector< vector3d >& v, vector< vector3d >& a, std::vector< double >& m, const double& ti, ofstream &output_file) {
+void output_movement_data(vector< vector3d >& r, vector< vector3d >& v, vector< vector3d >& a, std::vector< double >& m, ofstream &output_file = emptystream) {
   // headers
   if (output_file.is_open()) {
     int size = r.size();
@@ -225,8 +226,7 @@ void output_movement_data(vector< vector3d >& r, vector< vector3d >& v, vector< 
       output_file << scientific << r[i] << "\t";
       output_file << scientific << v[i] << "\t";
       output_file << scientific << a[i] << "\t";
-      output_file << m[i] << "\t";
-      output_file << ti << "\t";
+      output_file << m[i];
       output_file << endl;
     }
   }
@@ -311,16 +311,7 @@ void nbody_load_from_file(listv3d& r, listv3d& v, listv3d& a, listv3d& da, listd
     a.push_back(ai);
     m.push_back(mi);
     da.push_back(a_dot_i);
-
   }
-
-//   int size = r.size();
-//   for (int i = 0; i < size; i++) {
-//     cout << "start:" << i << endl;
-//     cout << r[i] << endl;
-//     cout << v[i] << endl;
-//     cout << "------------------" << endl;
-//   }
 }
 
 /**
@@ -341,19 +332,15 @@ void nbody_calc_influence_radius(listdouble& R_in, const listdouble& m, const li
  * Calculate the mass center and change the positions relative to this mass center.
  */
 void nbody_prepare_mass_center_system(listv3d& r, listv3d& v, listdouble m) {
-  int size = r.size();
-//   for (int i = 0; i < size; i++) {
-//     cout << "start:" << i << endl;
-//     cout << scientific << r[i] << endl;
-//     cout << scientific << v[i] << endl;
-//     cout << "------------------" << endl;
-//   }
+  listv3d r_ = r;
+  listv3d v_ = v;
 
   // First find the center of mass.
   vector3d rcm;
   rcm.x = rcm.y = rcm.z = 0.0;
   double total_mass = 0.0;
 
+  int size = r.size();
   for (int i = 0; i < size; i++) {
     rcm = rcm + m[i] * r[i];
     total_mass += m[i];
@@ -377,13 +364,6 @@ void nbody_prepare_mass_center_system(listv3d& r, listv3d& v, listdouble m) {
   for (int i = 0; i < size; i++) {
     v[i] = v[i] - vcm;
   }
-
-//   for (int i = 0; i < size; i++) {
-//     cout << "start:" << i << endl;
-//     cout << scientific << r[i].x << "\t" << r[i].y << endl;
-//     cout << scientific << v[i].x << "\t" << v[i].y << endl;
-//     cout << "------------------" << endl;
-//   }
 }
 
 /**

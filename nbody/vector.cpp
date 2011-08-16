@@ -103,7 +103,7 @@ double metrik(vector3d vec1, vector3d vec2) {
 }
 
 ostream& operator<<(ostream& out, const vector3d& vec) {
-  out << scientific << vec.x << "\t" << vec.y;
+  out << vec.x << "\t" << vec.y;
   return out;
 }
 
