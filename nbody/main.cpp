@@ -322,7 +322,7 @@ void nbody_calc_influence_radius(listdouble& R_in, const listdouble& m, const li
   int size = m.size();
   for (int i = 0; i < size; i++) {
     double mu = m[i] / m[central_body];
-    R_in[i] = pow(mu, 2.0/5.0) * norm(r[i]);
+    R_in[i] = pow(mu, 2.0/5.0) * norm(r[i] - r[central_body]);
 //     cout << R_in[i] << endl;
   }
 }

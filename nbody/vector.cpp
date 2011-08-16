@@ -91,11 +91,8 @@ template<typename _Tp>
     return norm(__a - __b);
   }
 
-// @todo:
-//   A fast metrik for vector2d/vector3d could be written here.
-
 double norm(vector3d vec) {
-  return sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2));
+  return sqrt(pow(vec.x, 2.0) + pow(vec.y, 2.0) + pow(vec.z, 2.0));
 }
 
 double metrik(vector3d vec1, vector3d vec2) {
