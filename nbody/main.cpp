@@ -189,14 +189,13 @@ int main(int argc, char **argv) {
         output_converseved_quantities(output_file_conserved,
                                       ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric, norm(j), R);
       }
-      bool closed_encounter = nbody_detect_closed_encounter(count_encounter, m, R_in, r, ti);
-      if (closed_encounter && break_closed_encounter) {
-        return EXIT_FAILURE;
-      }
     }
 
+    bool closed_encounter = nbody_detect_closed_encounter(count_encounter, m, R_in, r, ti);
+    if (closed_encounter && break_closed_encounter) {
+      return EXIT_FAILURE;
+    }
   }
-  cout << ti << endl;
 
   if (output_file.is_open()) {
     output_file.close();
