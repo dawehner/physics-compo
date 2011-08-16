@@ -164,9 +164,6 @@ int main(int argc, char **argv) {
       nbody_adapt_timestamp(eta, dt, a, da);
     }
 
-    count++;
-    ti += dt;
-
     if (write_to_files) {
       output_movement_data(r, v, a, m, output_file);
 
@@ -195,6 +192,9 @@ int main(int argc, char **argv) {
     if (closed_encounter && break_closed_encounter) {
       return EXIT_FAILURE;
     }
+
+    count++;
+    ti += dt;
   }
 
   if (output_file.is_open()) {
