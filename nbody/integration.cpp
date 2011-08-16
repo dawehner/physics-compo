@@ -156,10 +156,12 @@ inline vector3d calc_accel(const listv3d& r, const listdouble m, const int j) {
   connection.x = 0.0;
   connection.y = 0.0;
   connection.z = 0.0;
+
+  const double epsilon = 1e-4;
   for (int i = 0; i < ITEMS; i++) {
     if (i != j) {
       connection = r[i] - r[j];
-      a = a + (m[i] / pow(norm(connection), 3)) * (connection);
+      a = a + (m[i] / (pow(norm(connection), 3) + epsilon)) * (connection);
     }
   }
 

@@ -1,8 +1,9 @@
+ofstream emptystream;
 
 /**
  * Write the current positions, velocities, accells etc. into the output file.
  */
-void output_movement_data(vector< vector3d >& r, vector< vector3d >& v, vector< vector3d >& a, vector< double >& m, ofstream& output_file);
+void output_movement_data(std::vector< vector3d, std::allocator< vector3d > >& r, std::vector< vector3d, std::allocator< vector3d > >& v, std::vector< vector3d, std::allocator< vector3d > >& a, std::vector< double, std::allocator< double > >& m, const double& ti, std::ofstream& output_file = emptystream);
 
 /**
  * Write the control quantities into it's output file.
@@ -44,3 +45,4 @@ void nbody_calc_influence_radius(listdouble& R_in, const listdouble& m, const li
  * Calculate the mass center and change the positions relative to this mass center.
  */
 void nbody_prepare_mass_center_system(listv3d& r, listv3d& v, listdouble m);
+
