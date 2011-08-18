@@ -178,13 +178,14 @@ int main(int argc, char **argv) {
         double energy = calc_energy(r, v, m, i) - list_start_energy[i-1];
         vector3d j = calc_specific_angular_momentum(r_rel, v_rel);
         vector3d e = calc_runge_lenz(j, r_rel, v_rel, list_total_mass[i-1]);
-        double excentric = norm(e) - list_start_excentric[i-1];
+        double excentric = norm(e);
+        double excentric_diff = excentric - list_start_excentric[i-1];
         double great_half_axis = calc_great_half_axis(j, list_total_mass[i-1], excentric) - list_start_great_half_axis[i-1];
 
         vector3d R = calc_mass_center(r, m, list_total_mass[i-1], i);
 
         output_converseved_quantities(output_file_conserved,
-                                      ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric, norm(j), R);
+                                      ti, abs(energy), norm(j) * m[i], abs(great_half_axis), excentric_diff, norm(j), R);
       }
     }
 
